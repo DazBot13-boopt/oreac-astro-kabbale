@@ -1,0 +1,8 @@
+{
+  "appId": "com.oreac.astrokabbale",
+  "appName": "OREAC Astro Kabbale",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
