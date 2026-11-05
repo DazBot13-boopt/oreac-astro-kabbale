@@ -23,7 +23,7 @@ installateur Windows signé nécessitera les clés correspondantes.
 
 ## Compiler soi-même
 
-Prérequis : Node.js 22 ou plus récent. Pour Android, installer aussi Java 17 et
+Prérequis : Node.js 22 ou plus récent. Pour Android, installer aussi Java 21 et
 le SDK Android 36.
 
 ```sh
