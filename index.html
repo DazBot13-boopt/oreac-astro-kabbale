@@ -12,6 +12,8 @@
 <script src="js/interp-store.js"></script>
 <script src="js/biorythme-data.js"></script>
 <script src="js/biorythme.js"></script>
+<script src="js/atlas-world.js"></script>
+<script src="js/atlas-ui.js"></script>
 <style>
 @font-face{
   font-family:"StarFisher";
@@ -362,6 +364,29 @@ body.cal-modal-open{overflow:hidden}
   .row{grid-template-columns:1fr}
 }
 
+
+.ville-wrap{position:relative;margin-bottom:8px}
+#villeSearch{
+  width:100%;font:inherit;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+}
+.ville-suggest{
+  position:absolute;left:0;right:0;top:100%;z-index:40;
+  max-height:280px;overflow:auto;margin-top:4px;
+  background:#fff;border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 12px 28px rgba(31,42,34,.18);
+}
+.ville-item{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  width:100%;text-align:left;padding:9px 12px;border:0;border-bottom:1px solid rgba(0,0,0,.06);
+  background:#fff;cursor:pointer;font:inherit;color:var(--ink);
+}
+.ville-item:hover,.ville-item:focus{background:rgba(58,90,64,.1);outline:none}
+.ville-name{font-weight:700}
+.ville-meta{font-size:.78rem;color:var(--muted)}
+.ville-empty{padding:12px;color:var(--muted);font-size:.88rem}
+#villeInfo{font-size:.84rem;color:var(--muted);margin:0 0 12px;line-height:1.4}
+#villeInfo strong{color:var(--bark)}
 .offer-box{
   background:linear-gradient(165deg,#fffef9 0%,#f3efe6 100%);
   border:1.5px solid rgba(176,137,104,.45);
@@ -396,8 +421,12 @@ body.cal-modal-open{overflow:hidden}
 
 <section class="panel">
     <h2>Thème natal</h2>
-    <label for="ville">Ville (Bénin)</label>
-    <select id="ville"></select>
+    <label for="villeSearch">Ville (origine Bénin · atlas mondial)</label>
+    <div class="ville-wrap">
+      <input id="villeSearch" type="search" autocomplete="off" placeholder="Tapez une ville… ex. Lokossa, Cotonou, Parakou…">
+      <div id="villeSuggest" class="ville-suggest" hidden></div>
+    </div>
+    <p id="villeInfo">Chargement de l’atlas…</p>
     <label for="nomClient">Nom du client (PDF)</label>
     <input id="nomClient" placeholder="Ex. Ave MARIAH">
     <div class="row">
@@ -406,7 +435,7 @@ body.cal-modal-open{overflow:hidden}
       <div><label for="jour">Jour</label><select id="jour"></select></div>
     </div>
     <div class="row-2">
-      <div><label for="heure">Heure (GMT+1)</label><select id="heure"></select></div>
+      <div><label for="heure">Heure locale</label><select id="heure"></select></div>
       <div><label for="minute">Minute</label><select id="minute"></select></div>
     </div>
     <p class="hint" id="info">Chargement…</p>
@@ -517,7 +546,7 @@ body.cal-modal-open{overflow:hidden}
 </div>
 
 <script>
-const VILLES={"Abomey-Calavi":[6.448,2.355],"Cotonou":[6.37,2.391],"Abomey":[7.182,1.991],"Porto-Novo":[6.496,2.603],"Parakou":[9.337,2.63],"Djougou":[9.708,1.665],"Bohicon":[7.178,2.067],"Kandi":[11.134,2.938],"Ouidah":[6.363,2.085],"Natitingou":[10.304,1.379],"Lokossa":[6.637,1.72],"Allada":[6.666,2.15],"Come":[6.407,1.882],"Dassa-Zoume":[7.781,2.182],"Save":[8.036,2.486],"Malanville":[11.864,3.387],"Bembereke":[10.219,2.662],"Bassila":[9.005,1.666],"Tanguieta":[10.623,1.264],"Banikoara":[11.298,2.438],"Gogounou":[10.838,2.838],"Segbana":[10.928,3.695],"Karimama":[12.073,3.179],"Materi":[10.695,1.065],"Cobly":[10.483,1.0],"Kouande":[10.33,1.688],"Boukoumbe":[10.184,1.105],"Ouesse":[8.486,2.432],"Glazoue":[7.985,2.242],"Savalou":[7.929,1.979],"Bante":[8.412,1.678],"Djidja":[7.344,1.929],"Agbangnizoun":[7.071,1.988],"Zakpota":[7.065,2.053],"Zogbodomey":[7.08,2.102],"Cove":[7.219,2.342],"Ouinhi":[7.28,2.479],"Zagnanado":[7.265,2.35],"Ketou":[7.362,2.602],"Pobe":[6.978,2.667],"Adja-Ouere":[6.882,2.597],"Sakete":[6.732,2.663],"Ifangni":[6.722,2.715],"Avrankou":[6.554,2.673],"Adjarra":[6.528,2.666],"Akpro-Misserete":[6.561,2.586],"Aguegues":[6.5,2.533],"Seme-Podji":[6.37,2.59],"So-Ava":[6.466,2.413],"Athieme":[6.58,1.668],"Grand-Popo":[6.28,1.827],"Houeyogbe":[6.503,1.868],"Bopa":[6.583,1.972],"Dogbo":[6.8,1.783],"Lalo":[6.916,1.933],"Toviklin":[6.833,1.817],"Klouekanme":[6.979,1.843],"Djakotomey":[6.9,1.716]};
+/* Atlas mondial : js/atlas-world.js (StarFisher) */
 const MOIS_NOM=["","Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
 const PHYS=["Véhuiah","Véhuiah","Véhuiah","Véhuiah","Véhuiah","Yéliel","Yéliel","Yéliel","Yéliel","Yéliel","Sitael","Sitael","Sitael","Sitael","Sitael","Elémiah","Elémiah","Elémiah","Elémiah","Elémiah","Mahasiah","Mahasiah","Mahasiah","Mahasiah","Mahasiah","Lélahel","Lélahel","Lélahel","Lélahel","Lélahel","Achaiah","Achaiah","Achaiah","Achaiah","Achaiah","Cahétel","Cahétel","Cahétel","Cahétel","Cahétel","Haziel","Haziel","Haziel","Haziel","Haziel","Aladiah","Aladiah","Aladiah","Aladiah","Aladiah","Lauviah","Lauviah","Lauviah","Lauviah","Lauviah","Hahaiah","Hahaiah","Hahaiah","Hahaiah","Hahaiah","Yézalel","Yézalel","Yézalel","Yézalel","Yézalel","Mébahel","Mébahel","Mébahel","Mébahel","Mébahel","Hariel","Hariel","Hariel","Hariel","Hariel","Hékamiah","Hékamiah","Hékamiah","Hékamiah","Hékamiah","Lauviah","Lauviah","Lauviah","Lauviah","Lauviah","Caliel","Caliel","Caliel","Caliel","Caliel","Leuviah","Leuviah","Leuviah","Leuviah","Leuviah","Pahaliah","Pahaliah","Pahaliah","Pahaliah","Pahaliah","Nelchael","Nelchael","Nelchael","Nelchael","Nelchael","Yéiayel","Yéiayel","Yéiayel","Yéiayel","Yéiayel","Mélahel","Mélahel","Mélahel","Mélahel","Mélahel","Haheuiah","Haheuiah","Haheuiah","Haheuiah","Haheuiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Haaiah","Haaiah","Haaiah","Haaiah","Haaiah","Yératel","Yératel","Yératel","Yératel","Yératel","Séhéiah","Séhéiah","Séhéiah","Séhéiah","Séhéiah","Reiyel","Reiyel","Reiyel","Reiyel","Reiyel","Omael","Omael","Omael","Omael","Omael","Lécabel","Lécabel","Lécabel","Lécabel","Lécabel","Vasariah","Vasariah","Vasariah","Vasariah","Vasariah","Yéhuiah","Yéhuiah","Yéhuiah","Yéhuiah","Yéhuiah","Léhahiah","Léhahiah","Léhahiah","Léhahiah","Léhahiah","Khavaquiah","Khavaquiah","Khavaquiah","Khavaquiah","Khavaquiah","Ménadel","Ménadel","Ménadel","Ménadel","Ménadel","Aniel","Aniel","Aniel","Aniel","Aniel","Haamiah","Haamiah","Haamiah","Haamiah","Haamiah","Réhael","Réhael","Réhael","Réhael","Réhael","Yéiazel","Yéiazel","Yéiazel","Yéiazel","Yéiazel","Hahahel","Hahahel","Hahahel","Hahahel","Hahahel","Mikael","Mikael","Mikael","Mikael","Mikael","Véuliah","Véuliah","Véuliah","Véuliah","Véuliah","Yélahiah","Yélahiah","Yélahiah","Yélahiah","Yélahiah","Séaliah","Séaliah","Séaliah","Séaliah","Séaliah","Ariel","Ariel","Ariel","Ariel","Ariel","Asaliah","Asaliah","Asaliah","Asaliah","Asaliah","Mihael","Mihael","Mihael","Mihael","Mihael","Véhuel","Véhuel","Véhuel","Véhuel","Véhuel","Daniel","Daniel","Daniel","Daniel","Daniel","Hahasiah","Hahasiah","Hahasiah","Hahasiah","Hahasiah","Imamaiah","Imamaiah","Imamaiah","Imamaiah","Imamaiah","Nanael","Nanael","Nanael","Nanael","Nanael","Nithael","Nithael","Nithael","Nithael","Nithael","Mébahiah","Mébahiah","Mébahiah","Mébahiah","Mébahiah","Poyel","Poyel","Poyel","Poyel","Poyel","Némamiah","Némamiah","Némamiah","Némamiah","Némamiah","Yéyalel","Yéyalel","Yéyalel","Yéyalel","Yéyalel","Harahel","Harahel","Harahel","Harahel","Harahel","Mitzrael","Mitzrael","Mitzrael","Mitzrael","Mitzrael","Umabel","Umabel","Umabel","Umabel","Umabel","Iah-Hel","Iah-Hel","Iah-Hel","Iah-Hel","Iah-Hel","Anauel","Anauel","Anauel","Anauel","Anauel","Méhiel","Méhiel","Méhiel","Méhiel","Méhiel","Damabiah","Damabiah","Damabiah","Damabiah","Damabiah","Manakel","Manakel","Manakel","Manakel","Manakel","Ayael","Ayael","Ayael","Ayael","Ayael","Habuiah","Habuiah","Habuiah","Habuiah","Habuiah","Rahael","Rahael","Rahael","Rahael","Rahael","Yabamiah","Yabamiah","Yabamiah","Yabamiah","Yabamiah","Haiaiel","Haiaiel","Haiaiel","Haiaiel","Haiaiel","Mumiah","Mumiah","Mumiah","Mumiah","Mumiah"];
 const EMO=["Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah"];
@@ -648,8 +677,13 @@ function longitudeAbsolue(body,dateUTC){
   return normLong(Astronomy.Ecliptic(vec).elon);
 }
 /** Instant UTC depuis heure civile Bénin (GMT+1 fixe, sans DST ni fuseau machine). */
+/** Heure civile locale → UTC via décalage standard du fuseau (atlas StarFisher, sans DST). */
+function dateLocalVersUTC(annee,mois,jour,heure,minute,offsetHours){
+  let off=(offsetHours==null?1:offsetHours);
+  return new Date(Date.UTC(annee,mois-1,jour,heure,minute)-off*3600000);
+}
 function dateBeninVersUTC(annee,mois,jour,heure,minute){
-  return new Date(Date.UTC(annee,mois-1,jour,heure,minute)-3600000);
+  return dateLocalVersUTC(annee,mois,jour,heure,minute,1);
 }
 function calculerAscendant(date,lat,lon){
   let gst=Astronomy.SiderealTime(date);
@@ -780,9 +814,8 @@ document.addEventListener("keydown",function(e){
 
 window.onload=async function(){
   await chargerInterpretations();
-  let sV=document.getElementById("ville");
-  for(let v in VILLES){let o=document.createElement("option");o.value=v;o.textContent=v;sV.appendChild(o);}
-  sV.value="Lokossa";
+  if(typeof AtlasUI!=="undefined") AtlasUI.initVilleUI("Lokossa");
+  else document.getElementById("villeInfo").textContent="Atlas indisponible.";
   let sA=document.getElementById("annee");
   let sCal=document.getElementById("calAnnee");
   for(let y=2035;y>=1930;y--){
@@ -804,7 +837,7 @@ window.onload=async function(){
   let sMin=document.getElementById("minute");
   for(let m=0;m<=59;m++){let o=document.createElement("option");o.value=m;o.textContent=m+" min";sMin.appendChild(o);}
   sMin.value="40";
-  document.getElementById("info").textContent="OREAC Astro Kabbale · mode hors ligne · 77 villes · interprétations intégrées";
+  document.getElementById("info").textContent="OREAC Astro Kabbale · origine Bénin · atlas mondial · hors ligne";
   genererCalendrierAnnuel();
 };
 
@@ -916,7 +949,9 @@ function genererInterpretations(sentiers){
 }
 
 function calculerTout(){
-  let ville=document.getElementById("ville").value;
+  let city=typeof AtlasUI!=="undefined"?AtlasUI.getVille():null;
+  if(!city){alert("Choisissez une ville (tapez le nom puis sélectionnez dans la liste).");return;}
+  let ville=city.name;
   let annee=+document.getElementById("annee").value;
   let mois=+document.getElementById("mois").value;
   let jour=+document.getElementById("jour").value;
@@ -924,16 +959,13 @@ function calculerTout(){
   let minute=+document.getElementById("minute").value;
   let dateStr=annee+"-"+String(mois).padStart(2,"0")+"-"+String(jour).padStart(2,"0");
   let heureStr=String(heure).padStart(2,"0")+":"+String(minute).padStart(2,"0");
-  let [lat,lon]=VILLES[ville];
+  let lat=city.lat, lon=city.lon, tzOff=city.offset;
 
-  let heureUT=heure-1,anneeUT=annee,moisUT=mois,jourUT=jour;
-  if(heureUT<0){
-    heureUT+=24;
-    let d=new Date(dateStr);d.setDate(d.getDate()-1);
-    anneeUT=d.getFullYear();moisUT=d.getMonth()+1;jourUT=d.getDate();
-  }
+  let dateUTC=dateLocalVersUTC(annee,mois,jour,heure,minute,tzOff);
+  let anneeUT=dateUTC.getUTCFullYear(),moisUT=dateUTC.getUTCMonth()+1,jourUT=dateUTC.getUTCDate();
+  let heureUT=dateUTC.getUTCHours(), minuteUT=dateUTC.getUTCMinutes();
 
-  let sun=sunLongitudePrecise(anneeUT,moisUT,jourUT,heureUT,minute);
+  let sun=sunLongitudePrecise(anneeUT,moisUT,jourUT,heureUT,minuteUT);
   let lambda=sun.lambda,degre=Math.floor(lambda);
   let lever=calcLever(dateStr,lat,lon);
   if(ville==="Lokossa"&&dateStr==="1992-10-24")lever="06:39";
@@ -951,8 +983,7 @@ function calculerTout(){
   let idx=Math.floor(minutesEcoule/20)%72;
   let angePhys=PHYS[degreFinal],angeEmo=EMO[degreFinal],angeMent=MENT[idx];
 
-  // 12h40 Bénin (GMT+1) → 11h40 UTC — ne pas utiliser new Date(y,m,d,h,min) (double décalage machine)
-  let dateUTC=dateBeninVersUTC(annee,mois,jour,heure,minute);
+  // dateUTC déjà calculé via fuseau atlas (standard)
   let bodies=[
     {id:"a",body:Astronomy.Body.Sun},{id:"b",body:Astronomy.Body.Moon},
     {id:"c",body:Astronomy.Body.Mercury},{id:"d",body:Astronomy.Body.Venus},
@@ -975,11 +1006,11 @@ function calculerTout(){
   });
   themeActuel.Asc=degToZod(calculerAscendant(dateUTC,lat,lon));
 
-  globalData={ville,annee,mois,jour,heureStr,lambda:lambdaFinal,degreFinal,lever,minutesEcoule,angePhys,angeEmo,angeMent,idx,theme:themeActuel};
+  globalData={ville,villeLabel:city.label,lat,lon,tzId:city.tzId,tzOffset:tzOff,country:city.country,annee,mois,jour,heureStr,lambda:lambdaFinal,degreFinal,lever,minutesEcoule,angePhys,angeEmo,angeMent,idx,theme:themeActuel};
 
   document.getElementById("cardAnges").innerHTML=`
     <h2>Trois anges gardiens</h2>
-    <div class="meta">${ville} · ${jour}/${mois}/${annee} ${heureStr} · Lever ${lever} · Soleil abs. ${lambdaFinal.toFixed(4)}°</div>
+    <div class="meta">${city.label} · ${jour}/${mois}/${annee} ${heureStr} (UTC${tzOff>=0?"+":""}${tzOff}) · Lever ${lever} · Soleil abs. ${lambdaFinal.toFixed(4)}°</div>
     <div class="table-wrap"><table class="anges-table">
       <tr><th>Type</th><th>Ange</th><th>Détail</th></tr>
       <tr><td class="type-cell">Physique</td><td class="ange">${angePhys}</td><td>${degreFinal}° soleil</td></tr>
@@ -1002,6 +1033,10 @@ function sauverThemePourBiorythme(){
   BiorythmeKabbale.sauverTheme({
     nom,
     ville:globalData.ville,
+    villeLabel:globalData.villeLabel,
+    lat:globalData.lat,
+    lon:globalData.lon,
+    tzId:globalData.tzId,
     annee:globalData.annee,
     mois:globalData.mois,
     jour:globalData.jour,
@@ -1275,14 +1310,15 @@ function dessinerCarteCiel(){
 
   // En-tête méta (sans nom logiciel tiers)
   let nom=document.getElementById("nomClient").value||"Thème";
-  let ville=globalData.ville||"";
-  let coords=VILLES[ville]||[0,0];
-  let lat=coords[0],lon=coords[1];
+  let ville=globalData.villeLabel||globalData.ville||"";
+  let lat=globalData.lat||0,lon=globalData.lon||0;
   let latTxt=(lat>=0?lat.toFixed(2)+"N":(-lat).toFixed(2)+"S");
   let lonTxt=(lon>=0?lon.toFixed(2)+"E":(-lon).toFixed(2)+"W");
+  let tz=globalData.tzId||"";
+  let off=globalData.tzOffset; if(off==null)off=1;
   if(meta){
     meta.innerHTML=
-      `<strong>${nom}</strong> (${globalData.jour}.${globalData.mois}.${globalData.annee} ${globalData.heureStr} GMT+1) ${ville} (${latTxt} ${lonTxt})`+
+      `<strong>${nom}</strong> (${globalData.jour}.${globalData.mois}.${globalData.annee} ${globalData.heureStr} UTC${off>=0?"+":""}${off}) ${ville} (${latTxt} ${lonTxt}`+(tz?" · "+tz:"")+`)`+
       `<br>Tropical, Géocentrique / Maisons égales`;
   }
 
@@ -1449,7 +1485,7 @@ async function genererPDF(){
 
   h2("Identité du thème");
   kv("Consultant",nom);
-  kv("Lieu",globalData.ville);
+  kv("Lieu",globalData.villeLabel||globalData.ville);
   kv("Date",globalData.jour+" / "+globalData.mois+" / "+globalData.annee);
   kv("Heure",globalData.heureStr+" (GMT+1)");
   kv("Lever du Soleil",globalData.lever);
