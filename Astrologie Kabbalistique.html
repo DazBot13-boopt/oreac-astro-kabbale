@@ -269,13 +269,48 @@ table.seph-table td{border-bottom:1px solid rgba(0,0,0,.08)}
 }
 .cal-deg .sym-sf{font-size:.92rem;font-weight:normal}
 .cal-num{font-size:.88rem;font-weight:800;margin-top:auto;letter-spacing:.02em}
-.cal-detail{
-  margin-top:14px;padding:12px 14px;border-radius:10px;
-  background:#fff;border:1.5px solid #c8c2b6;
-  font-size:.9rem;line-height:1.45;color:#111;min-height:3.2em;
+.cal-modal{
+  position:fixed;inset:0;z-index:9999;display:none;
+  align-items:center;justify-content:center;padding:16px;
+  background:rgba(15,22,18,.55);backdrop-filter:blur(3px);
 }
-.cal-detail strong{color:#1f2a22}
-.cal-detail .sym-sf{font-size:1.15rem}
+.cal-modal.open{display:flex}
+.cal-modal-card{
+  width:min(560px,100%);max-height:min(86vh,720px);overflow:auto;
+  background:#faf7f0;border-radius:16px;border:1.5px solid #c8c2b6;
+  box-shadow:0 20px 50px rgba(0,0,0,.28);padding:0;position:relative;
+  animation:calPop .18s ease-out;
+}
+@keyframes calPop{from{transform:translateY(10px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.cal-modal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:14px 16px 10px;border-bottom:1px solid rgba(0,0,0,.08);
+  position:sticky;top:0;background:#faf7f0;z-index:1;
+}
+.cal-modal-head h3{margin:0;font-size:1.05rem;color:#1f2a22;line-height:1.3}
+.cal-modal-close{
+  flex:none;appearance:none;border:1.5px solid #c8c2b6;background:#fff;
+  color:#1f2a22;font:inherit;font-weight:800;font-size:.95rem;
+  padding:8px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;
+}
+.cal-modal-close:hover{background:#eee8dc}
+.cal-modal-body{padding:14px 16px 18px;font-size:.95rem;line-height:1.55;color:#243028}
+.cal-modal-meta{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;
+  font-size:.88rem;color:#3a5a40;font-weight:600;
+}
+.cal-modal-anges{
+  background:rgba(58,90,64,.07);border-radius:10px;padding:10px 12px;margin:0 0 12px;
+  font-size:.88rem;
+}
+.cal-modal-propos{
+  font-size:1rem;line-height:1.6;color:#1f2a22;
+  padding:12px 14px;border-left:4px solid var(--moss,#3a5a40);
+  background:#fff;border-radius:0 10px 10px 0;
+}
+.cal-modal-propos .interp-missing{font-style:italic;opacity:.85;color:#a63d2f}
+.cal-modal .sym-sf{font-size:1.25rem}
+body.cal-modal-open{overflow:hidden}
 
 /* Couleurs par signe (soleil du jour) — lisibles / imprimables */
 .cal-sig-belier{background:#ffcdd2;border-color:#c62828;color:#7f0000}
@@ -311,7 +346,7 @@ table.seph-table td{border-bottom:1px solid rgba(0,0,0,.08)}
   .cal-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px}
   .cal-month{box-shadow:none;border:1px solid #333}
   .cal-day{min-height:42px}
-  .cal-detail{break-before:page}
+  .cal-modal{display:none!important}
   #panelCalendrier,.cal-day,.cal-legend-swatch{
     -webkit-print-color-adjust:exact;print-color-adjust:exact;
   }
@@ -380,7 +415,7 @@ table.seph-table td{border-bottom:1px solid rgba(0,0,0,.08)}
 
   <section class="panel" id="panelCalendrier">
     <h2>Calendrier annuel — degrés symboliques</h2>
-    <p class="hint">Chaque case est colorée selon le signe du Soleil ce jour-là. Degré devant la date · clic = texte symbolique · bouton Imprimer pour une version lisible.</p>
+    <p class="hint">Chaque case est colorée selon le signe du Soleil. Cliquez une date pour lire le propos à l’écran · Sortir pour fermer · Imprimer pour une version papier.</p>
     <div class="cal-toolbar">
       <div>
         <label for="calAnnee">Année</label>
@@ -391,8 +426,17 @@ table.seph-table td{border-bottom:1px solid rgba(0,0,0,.08)}
     </div>
     <div class="cal-legend" id="calLegend" aria-label="Légende des couleurs par signe"></div>
     <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-detail" id="calDetail">Sélectionnez un jour pour afficher son degré symbolique.</div>
   </section>
+
+  <div class="cal-modal" id="calModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle" onclick="if(event.target===this)fermerJourCalendrier()">
+    <div class="cal-modal-card">
+      <div class="cal-modal-head">
+        <h3 id="calModalTitle">Degré symbolique</h3>
+        <button type="button" class="cal-modal-close" onclick="fermerJourCalendrier()">Sortir</button>
+      </div>
+      <div class="cal-modal-body" id="calModalBody"></div>
+    </div>
+  </div>
 
   <div id="res">
     <section class="panel" id="cardAnges"></section>
@@ -697,8 +741,6 @@ function genererCalendrierAnnuel(){
   grid.innerHTML=html;
   if(calSelected&&calSelected.y===annee){
     ouvrirJourCalendrier(calSelected.y,calSelected.m,calSelected.d);
-  }else{
-    document.getElementById("calDetail").innerHTML="Sélectionnez un jour pour afficher son degré symbolique.";
   }
 }
 
@@ -710,13 +752,31 @@ function ouvrirJourCalendrier(y,m,d){
   let info=degreSymboliqueJour(y,m,d);
   let meta=CAL_SIGNE_META[info.signeIdx];
   let sab=InterpStore.hasText(info.sabian)?info.sabian:'<span class="interp-missing">Interprétation non renseignée</span>';
-  document.getElementById("calDetail").innerHTML=
-    `<strong>${d} ${MOIS_NOM[m]} ${y}</strong> — `+
-    `<span class="cal-legend-swatch" style="background:${meta.swatch};display:inline-block;vertical-align:middle;margin-right:4px"></span>`+
-    `<span class="sym-sf">${signeSF(info.z.signe)}</span> ${info.z.deg}° ${info.z.signeNom} ${String(info.z.min).padStart(2,"0")}′ `+
-    `(long. abs. ${info.lambda.toFixed(2)}° · degré ${info.degAbs}/360)<br>`+
-    `<em>Ange 5° :</em> ${info.ange5} · <em>Ange biorythme :</em> ${info.angeSym}<br>${sab}`;
+  document.getElementById("calModalTitle").textContent=d+" "+MOIS_NOM[m]+" "+y;
+  document.getElementById("calModalBody").innerHTML=
+    `<div class="cal-modal-meta">`+
+      `<span class="cal-legend-swatch" style="background:${meta.swatch}"></span>`+
+      `<span class="sym-sf">${signeSF(info.z.signe)}</span>`+
+      `<span>${info.z.deg}° ${info.z.signeNom} ${String(info.z.min).padStart(2,"0")}′</span>`+
+      `<span>· degré ${info.degAbs}/360</span>`+
+    `</div>`+
+    `<div class="cal-modal-anges"><em>Ange 5° :</em> ${info.ange5}<br><em>Ange biorythme :</em> ${info.angeSym}<br><em>Longitude abs. :</em> ${info.lambda.toFixed(2)}°</div>`+
+    `<div class="cal-modal-propos"><strong>Propos du degré</strong><br>${sab}</div>`;
+  let modal=document.getElementById("calModal");
+  modal.classList.add("open");
+  document.body.classList.add("cal-modal-open");
 }
+
+function fermerJourCalendrier(){
+  let modal=document.getElementById("calModal");
+  if(!modal)return;
+  modal.classList.remove("open");
+  document.body.classList.remove("cal-modal-open");
+}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape")fermerJourCalendrier();
+});
 
 window.onload=async function(){
   await chargerInterpretations();
