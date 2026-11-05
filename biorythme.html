@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#3a5a40">
 <script src="js/biorythme-data.js"></script>
 <script src="js/biorythme.js"></script>
+<script src="js/print-bridge.js"></script>
 <style>
 @font-face{
   font-family:"StarFisher";
@@ -125,7 +126,7 @@ tr.seph-malkuth td{background:#eceff1;font-weight:700}
         <input id="nomEdit" placeholder="Nom du consultant">
       </div>
       <button class="btn" type="button" onclick="rafraichirBiorythme()">Actualiser</button>
-      <button class="btn btn-alt no-print" type="button" onclick="window.print()">Imprimer</button>
+      <button class="btn btn-alt no-print" type="button" onclick="OreacPrint.printPage('Biorythme kabbalistique').catch(e=>alert('Impression impossible : '+e.message))">Imprimer</button>
       <a class="btn btn-alt no-print" href="index.html">← Thème natal</a>
     </div>
     <p class="hint">
