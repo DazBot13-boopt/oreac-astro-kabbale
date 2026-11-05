@@ -11,7 +11,7 @@ permissions:
 jobs:
   android:
     name: APK Android
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,9 +21,9 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
       - name: Installer le SDK Android
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"
       - name: Installer les dépendances
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
