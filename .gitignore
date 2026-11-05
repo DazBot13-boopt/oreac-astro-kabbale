@@ -24,3 +24,8 @@ Thumbs.db
 .vscode/
 *.swp
 *~
+
+# Résultats des compilations d'applications
+www/
+android/
+dist/
