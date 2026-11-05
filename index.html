@@ -12,6 +12,7 @@
 <script src="js/interp-store.js"></script>
 <script src="js/biorythme-data.js"></script>
 <script src="js/biorythme.js"></script>
+<script src="js/print-bridge.js"></script>
 <script src="js/atlas-world.js"></script>
 <script src="js/atlas-ui.js"></script>
 <style>
@@ -451,7 +452,7 @@ body.cal-modal-open{overflow:hidden}
         <select id="calAnnee"></select>
       </div>
       <button class="btn btn-alt" type="button" onclick="genererCalendrierAnnuel()">Afficher le calendrier</button>
-      <button class="btn btn-alt" type="button" onclick="window.print()">Imprimer le calendrier</button>
+      <button class="btn btn-alt" type="button" onclick="OreacPrint.printPage('Calendrier annuel').catch(e=>alert('Impression impossible : '+e.message))">Imprimer le calendrier</button>
     </div>
     <div class="cal-legend" id="calLegend" aria-label="Légende des couleurs par signe"></div>
     <div class="cal-grid" id="calGrid"></div>
@@ -1592,7 +1593,11 @@ async function genererPDF(){
   }
 
   footer();
-  doc.save("OREAC_Astro_Kabbale_"+nom.replace(/\s+/g,"_")+"_"+globalData.jour+"-"+globalData.mois+"-"+globalData.annee+".pdf");
+  try {
+    await window.OreacPrint.savePdf(doc, "OREAC_Astro_Kabbale_"+nom.replace(/\s+/g,"_")+"_"+globalData.jour+"-"+globalData.mois+"-"+globalData.annee+".pdf");
+  } catch (error) {
+    alert("Impossible d’imprimer ou d’enregistrer le PDF : "+(error?.message||error));
+  }
 }
 </script>
 </body>
