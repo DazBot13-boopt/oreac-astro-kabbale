@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OREAC Astro Kabbale — Arbre · Anges · Séphiroth</title>
+<meta name="theme-color" content="#3a5a40">
+<script src="vendor/astronomy.browser.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="js/starfisher-font.js"></script>
+<script src="js/interpretations-embedded.js"></script>
+<script src="js/interp-store.js"></script>
+<script src="js/biorythme-data.js"></script>
+<script src="js/biorythme.js"></script>
+<style>
+@font-face{
+  font-family:"StarFisher";
+  src:url("fonts/StarFisher.ttf") format("truetype");
+  font-weight:normal;font-style:normal;font-display:swap;
+}
+:root{
+  --bark:#1f2a22;
+  --moss:#3a5a40;
+  --leaf:#52796f;
+  --sand:#f3efe6;
+  --paper:#faf7f0;
+  --clay:#a63d2f;
+  --river:#2a6f97;
+  --gold:#b08968;
+  --ink:#243028;
+  --muted:#6b756e;
+  --line:rgba(36,48,40,.12);
+  --radius:14px;
+  --shadow:0 10px 30px rgba(31,42,34,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%,rgba(82,121,111,.18),transparent 60%),
+    radial-gradient(900px 500px at 110% 10%,rgba(176,137,104,.16),transparent 55%),
+    linear-gradient(165deg,#dfe8df 0%,var(--sand) 42%,#e8e0d2 100%);
+  padding:clamp(12px,3vw,28px);
+}
+.wrap{max-width:980px;margin:0 auto}
+.brand{
+  text-align:center;padding:18px 12px 8px;
+}
+.brand-mark{
+  display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--moss);border:1px solid rgba(58,90,64,.25);padding:6px 14px;border-radius:999px;
+  background:rgba(250,247,240,.7);backdrop-filter:blur(6px);
+}
+.brand h1{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:600;font-size:clamp(1.8rem,5vw,2.6rem);
+  margin:12px 0 4px;color:var(--bark);letter-spacing:.02em;
+}
+.brand p{margin:0;color:var(--muted);font-weight:300;font-size:.95rem}
+
+.panel{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius);padding:clamp(14px,3vw,22px);
+  margin:14px 0;box-shadow:var(--shadow);
+}
+.panel h2,.panel h3{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:600;margin:0 0 12px;color:var(--bark);
+  font-size:clamp(1.15rem,3vw,1.45rem);
+}
+label{display:block;font-size:.78rem;font-weight:500;color:var(--moss);margin:2px 0 4px}
+select,input{
+  width:100%;padding:10px 12px;border-radius:10px;
+  border:1px solid rgba(58,90,64,.22);background:#fff;color:var(--ink);
+  font:inherit;margin:0 0 10px;outline:none;
+}
+select:focus,input:focus{border-color:var(--leaf);box-shadow:0 0 0 3px rgba(82,121,111,.18)}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:.8rem;color:var(--muted);line-height:1.45;margin:4px 0 10px}
+
+.btn{
+  width:100%;border:none;cursor:pointer;font:inherit;font-weight:600;
+  padding:14px 16px;border-radius:999px;margin-top:4px;
+  background:linear-gradient(180deg,#4a6b52,#365a42);color:#f7f4ec;
+  box-shadow:0 6px 16px rgba(54,90,66,.28);transition:transform .15s ease,filter .15s;
+}
+.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn-alt{
+  background:linear-gradient(180deg,#c4a484,#9a6f4a);color:#fff;
+  box-shadow:0 6px 16px rgba(154,111,74,.25);margin-top:12px;
+}
+
+#res{display:none}
+.meta{
+  font-size:.82rem;color:var(--muted);line-height:1.5;
+  padding:10px 12px;background:rgba(58,90,64,.06);border-radius:10px;margin-bottom:12px;
+}
+
+.stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;
+}
+.stat{
+  border-radius:12px;padding:16px;text-align:center;color:#fff;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat strong{font-family:Georgia,"Times New Roman",serif;font-size:2.2rem;line-height:1;font-weight:700}
+.stat span{font-size:.78rem;opacity:.92;letter-spacing:.02em}
+.stat-blue{background:linear-gradient(145deg,#2a6f97,#1d5474)}
+.stat-red{background:linear-gradient(145deg,#a63d2f,#7f2d22)}
+.stat-note{font-size:.78rem;color:var(--muted);margin:0 0 12px}
+
+.blocked{
+  border:1px solid rgba(166,61,47,.25);background:rgba(166,61,47,.06);
+  border-radius:12px;padding:14px;
+}
+.blocked h4{
+  margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;
+  color:var(--clay);font-size:1.15rem;font-weight:600;
+}
+.blocked ul{margin:0;padding-left:18px}
+.blocked li{margin:6px 0;font-size:.9rem;line-height:1.4}
+.ok-flow{
+  border:1px solid rgba(58,90,64,.2);background:rgba(58,90,64,.06);
+  border-radius:12px;padding:14px;color:var(--moss);font-size:.92rem;
+}
+
+.ange{font-size:1.25rem;font-weight:600;color:var(--moss)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:480px}
+th{
+  background:var(--moss);color:#f7f4ec;padding:8px 6px;text-align:left;
+  font-weight:500;position:sticky;top:0;
+}
+td{border-bottom:1px solid var(--line);padding:8px 6px;vertical-align:top}
+tr:nth-child(even) td{background:rgba(58,90,64,.03)}
+td.rowhead{
+  background:var(--moss);color:#f7f4ec;font-weight:500;
+  position:sticky;left:0;z-index:1;white-space:nowrap;
+}
+tr:nth-child(even) td.rowhead{background:var(--moss);color:#f7f4ec}
+
+#arbre{
+  width:100%;max-width:560px;margin:0 auto;
+  background:linear-gradient(to bottom,#f0c28a 0%,#e0b88a 28%,#a9c4de 68%,#7fb5ff 100%);
+  border-radius:16px;overflow:hidden;border:1px solid rgba(36,48,40,.1);
+}
+svg{width:100%;height:auto;display:block}
+.barre{stroke:#fff;stroke-width:18;stroke-linecap:round}
+.barre-bordure{stroke:#1a1a1a;stroke-width:23;stroke-linecap:round}
+.label-centre{font:700 7px Outfit,Arial;fill:#111;text-anchor:middle;dominant-baseline:middle}
+.label-centre-blanc{font:700 7px Outfit,Arial;fill:#fff;text-anchor:middle;dominant-baseline:middle}
+.symbole{font:700 14px Arial;fill:#111;text-anchor:middle;dominant-baseline:middle}
+.log-sentiers{
+  white-space:pre-line;font-size:.75rem;color:var(--muted);
+  margin-top:10px;line-height:1.45;max-height:180px;overflow:auto;
+  padding:10px;background:rgba(36,48,40,.04);border-radius:10px;
+}
+
+.interp-grid{display:grid;gap:12px}
+.interp-item{
+  border-left:3px solid var(--gold);padding:10px 12px;
+  background:rgba(176,137,104,.08);border-radius:0 10px 10px 0;
+}
+.interp-item.evo{border-left-color:var(--river)}
+.interp-item.inv{border-left-color:var(--clay)}
+.interp-item.planet{border-left-color:var(--moss)}
+.interp-item h4{margin:0 0 4px;font-size:.95rem;color:var(--bark)}
+.interp-item p{margin:0;font-size:.84rem;color:var(--muted);line-height:1.45}
+
+.long-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;
+}
+.long-chip{
+  background:rgba(58,90,64,.06);border:1px solid var(--line);
+  border-radius:10px;padding:10px;text-align:center;
+}
+.long-chip .sym{font-size:1.2rem}
+.long-chip .name{font-size:.72rem;color:var(--muted);margin:2px 0}
+.long-chip .val{font-weight:600;font-size:.9rem;color:var(--bark)}
+
+.interp-empty{font-size:.9rem;color:var(--muted);padding:8px 0}
+.interp-missing{font-style:italic;opacity:.85;color:var(--clay)}
+
+.sym-sf{font-family:"StarFisher",serif;font-size:1.35rem;line-height:1;font-weight:normal}
+.symbole-sf{font-family:StarFisher,serif;font-size:16px;fill:#111;text-anchor:middle;dominant-baseline:middle}
+.long-chip .sym.sym-sf{font-size:1.55rem}
+td.type-cell{font-weight:700;font-size:.95rem;color:var(--bark);letter-spacing:.02em}
+table.anges-table td.type-cell{background:rgba(58,90,64,.08)}
+table.seph-table td.rowhead{
+  font-weight:700;border-left:4px solid transparent;color:#111;
+  position:sticky;left:0;z-index:1;white-space:nowrap;
+}
+table.seph-table tr.seph-dark td.rowhead{color:#fff}
+table.seph-table tr:nth-child(even) td{background:transparent}
+table.seph-table td{border-bottom:1px solid rgba(0,0,0,.08)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,.35);vertical-align:middle}
+.carte-wrap{
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(180px,.75fr);
+  gap:14px;align-items:start;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:12px;
+}
+@media (max-width:720px){.carte-wrap{grid-template-columns:1fr}}
+#carteCiel{width:100%;background:#fff;border-radius:4px;overflow:hidden}
+#carteCiel svg{width:100%;height:auto;display:block;background:#fff}
+.carte-meta{font-size:.82rem;color:var(--ink);line-height:1.45;margin:0 0 10px;padding:0 2px}
+.carte-meta strong{color:var(--bark)}
+#carteListe{font-size:.84rem;max-height:560px;overflow:auto;padding:2px 4px 2px 0}
+.carte-row{
+  display:grid;grid-template-columns:28px 34px 28px 36px 1fr;
+  gap:4px;align-items:center;padding:3px 2px;border-bottom:1px solid rgba(0,0,0,.06);
+}
+.carte-row.carte-house{grid-template-columns:28px 34px 28px 36px}
+.carte-deg,.carte-min{font-variant-numeric:tabular-nums;color:var(--ink)}
+.carte-name{font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carte-hnum{font-weight:700;color:var(--bark)}
+.carte-sep{
+  margin:10px 0 4px;font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--moss);border-top:1px solid var(--line);padding-top:8px;
+}
+#carteListe .sym-sf{font-size:1.15rem;line-height:1;text-align:center}
+
+.cal-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.cal-toolbar label{margin:0}
+.cal-toolbar select{min-width:110px}
+.cal-legend{
+  display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 14px;padding:10px 12px;
+  background:#fff;border:1px solid var(--line);border-radius:10px;
+}
+.cal-legend-item{
+  display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:#222;
+}
+.cal-legend-swatch{
+  width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.35);flex:none;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.cal-month{
+  background:#fff;border:1.5px solid #c8c2b6;border-radius:10px;
+  padding:10px 10px 8px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.04);
+  break-inside:avoid;page-break-inside:avoid;
+}
+.cal-month h3{
+  margin:0 0 8px;font-size:.95rem;letter-spacing:.03em;
+  color:#1f2a22;font-weight:800;text-align:center;
+  padding-bottom:6px;border-bottom:2px solid #e6e0d4;
+}
+.cal-weekdays,.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-weekdays span{
+  text-align:center;font-size:.68rem;color:#555;font-weight:700;padding:2px 0;
+}
+.cal-day{
+  min-height:52px;border-radius:6px;border:1.5px solid rgba(0,0,0,.18);
+  padding:4px 4px 3px;cursor:pointer;
+  font:inherit;color:#111;text-align:left;width:100%;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  gap:2px;transition:filter .12s,box-shadow .12s;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.cal-day:hover{filter:brightness(.96);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.cal-day.empty{background:transparent!important;border-color:transparent;cursor:default;min-height:28px;pointer-events:none;box-shadow:none}
+.cal-day.today{outline:2px solid #111;outline-offset:1px}
+.cal-day.selected{outline:2px solid #0d47a1;outline-offset:1px;box-shadow:inset 0 0 0 2px #0d47a1}
+.cal-deg{
+  font-size:.7rem;line-height:1.15;font-weight:800;
+  display:flex;align-items:center;gap:2px;white-space:nowrap;
+}
+.cal-deg .sym-sf{font-size:.92rem;font-weight:normal}
+.cal-num{font-size:.88rem;font-weight:800;margin-top:auto;letter-spacing:.02em}
+.cal-detail{
+  margin-top:14px;padding:12px 14px;border-radius:10px;
+  background:#fff;border:1.5px solid #c8c2b6;
+  font-size:.9rem;line-height:1.45;color:#111;min-height:3.2em;
+}
+.cal-detail strong{color:#1f2a22}
+.cal-detail .sym-sf{font-size:1.15rem}
+
+/* Couleurs par signe (soleil du jour) — lisibles / imprimables */
+.cal-sig-belier{background:#ffcdd2;border-color:#c62828;color:#7f0000}
+.cal-sig-belier .cal-deg,.cal-sig-belier .cal-num{color:#b71c1c}
+.cal-sig-taureau{background:#fff59d;border-color:#f9a825;color:#5d4037}
+.cal-sig-taureau .cal-deg,.cal-sig-taureau .cal-num{color:#f57f17}
+.cal-sig-gemeaux{background:#d7ccc8;border-color:#6d4c41;color:#3e2723}
+.cal-sig-gemeaux .cal-deg,.cal-sig-gemeaux .cal-num{color:#4e342e}
+.cal-sig-cancer{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20}
+.cal-sig-cancer .cal-deg,.cal-sig-cancer .cal-num{color:#1b5e20}
+.cal-sig-lion{background:#ffe082;border-color:#c9a227;color:#5d4037}
+.cal-sig-lion .cal-deg,.cal-sig-lion .cal-num{color:#b28900}
+.cal-sig-vierge{background:#d7ccc8;border-color:#5d4037;color:#3e2723}
+.cal-sig-vierge .cal-deg,.cal-sig-vierge .cal-num{color:#4e342e}
+.cal-sig-balance{background:#fff59d;border-color:#fbc02d;color:#5d4037}
+.cal-sig-balance .cal-deg,.cal-sig-balance .cal-num{color:#f57f17}
+.cal-sig-scorpion{background:#ef9a9a;border-color:#7f1d1d;color:#4a0000}
+.cal-sig-scorpion .cal-deg,.cal-sig-scorpion .cal-num{color:#7f1d1d}
+.cal-sig-sagittaire{background:#bbdefb;border-color:#1565c0;color:#0d47a1}
+.cal-sig-sagittaire .cal-deg,.cal-sig-sagittaire .cal-num{color:#0d47a1}
+.cal-sig-capricorne{background:#eceff1;border-color:#607d8b;color:#37474f}
+.cal-sig-capricorne .cal-deg,.cal-sig-capricorne .cal-num{color:#455a64}
+.cal-sig-verseau{background:#cfd8dc;border-color:#546e7a;color:#263238}
+.cal-sig-verseau .cal-deg,.cal-sig-verseau .cal-num{color:#37474f}
+.cal-sig-poissons{background:#b3e5fc;border-color:#0277bd;color:#01579b}
+.cal-sig-poissons .cal-deg,.cal-sig-poissons .cal-num{color:#01579b}
+
+@media print{
+  body{background:#fff!important;padding:0}
+  .wrap{max-width:none}
+  .brand,.panel:not(#panelCalendrier),#res,.btn,.cal-toolbar{display:none!important}
+  #panelCalendrier{box-shadow:none;border:none;padding:0;background:#fff}
+  .cal-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px}
+  .cal-month{box-shadow:none;border:1px solid #333}
+  .cal-day{min-height:42px}
+  .cal-detail{break-before:page}
+  #panelCalendrier,.cal-day,.cal-legend-swatch{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+}
+
+
+@media (max-width:640px){
+  .row,.row-2{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr}
+  table{font-size:.74rem;min-width:420px}
+}
+@media (max-width:420px){
+  .row{grid-template-columns:1fr}
+}
+
+.offer-box{
+  background:linear-gradient(165deg,#fffef9 0%,#f3efe6 100%);
+  border:1.5px solid rgba(176,137,104,.45);
+  border-radius:14px;padding:16px 18px;margin-top:4px;
+}
+.offer-box h3{margin:0 0 8px;font-size:1.05rem;color:var(--bark)}
+.offer-box p{margin:0 0 10px;font-size:.92rem;line-height:1.5;color:var(--ink)}
+.offer-note{
+  display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:#8a5a2b;background:rgba(176,137,104,.18);
+  padding:4px 8px;border-radius:999px;margin-bottom:10px;
+}
+.offer-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.offer-actions a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn-wa{background:#128C7E!important;border-color:#0e6b60!important}
+.btn-wa:hover{filter:brightness(1.05)}
+.btn-mail{background:var(--moss)!important}
+.offer-contacts{font-size:.84rem;color:var(--muted);margin-top:10px}
+.offer-contacts a{color:var(--river);font-weight:600}
+@media (prefers-reduced-motion:reduce){
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <div class="brand-mark">OREAC Astro Kabbale</div>
+    <h1>Arbre de Vie kabbalistique</h1>
+    <p>Anges · Séphiroth · Sentiers d’évolution</p>
+  </header>
+
+<section class="panel">
+    <h2>Thème natal</h2>
+    <label for="ville">Ville (Bénin)</label>
+    <select id="ville"></select>
+    <label for="nomClient">Nom du client (PDF)</label>
+    <input id="nomClient" placeholder="Ex. Ave MARIAH">
+    <div class="row">
+      <div><label for="annee">Année</label><select id="annee"></select></div>
+      <div><label for="mois">Mois</label><select id="mois"></select></div>
+      <div><label for="jour">Jour</label><select id="jour"></select></div>
+    </div>
+    <div class="row-2">
+      <div><label for="heure">Heure (GMT+1)</label><select id="heure"></select></div>
+      <div><label for="minute">Minute</label><select id="minute"></select></div>
+    </div>
+    <p class="hint" id="info">Chargement…</p>
+    <button class="btn" type="button" onclick="calculerTout()">Calculer l’arbre et les anges</button>
+  </section>
+
+  <section class="panel" id="panelCalendrier">
+    <h2>Calendrier annuel — degrés symboliques</h2>
+    <p class="hint">Chaque case est colorée selon le signe du Soleil ce jour-là. Degré devant la date · clic = texte symbolique · bouton Imprimer pour une version lisible.</p>
+    <div class="cal-toolbar">
+      <div>
+        <label for="calAnnee">Année</label>
+        <select id="calAnnee"></select>
+      </div>
+      <button class="btn btn-alt" type="button" onclick="genererCalendrierAnnuel()">Afficher le calendrier</button>
+      <button class="btn btn-alt" type="button" onclick="window.print()">Imprimer le calendrier</button>
+    </div>
+    <div class="cal-legend" id="calLegend" aria-label="Légende des couleurs par signe"></div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-detail" id="calDetail">Sélectionnez un jour pour afficher son degré symbolique.</div>
+  </section>
+
+  <div id="res">
+    <section class="panel" id="cardAnges"></section>
+
+    <section class="panel">
+      <h2>Flux des sentiers</h2>
+      <p class="stat-note">Les flèches liées à Kether ne sont pas comptées (source divine hors bilan). Bleu = évolution · Rouge = involution.</p>
+      <div class="stats">
+        <div class="stat stat-blue"><strong id="nbEvo">0</strong><span>Évolution (flèches bleues)</span></div>
+        <div class="stat stat-red"><strong id="nbInv">0</strong><span>Involution (flèches rouges)</span></div>
+      </div>
+      <div id="cardBloques"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Longitudes absolues</h2>
+      <p class="hint">Positions écliptiques tropicales 0–360° (longitude absolue) au moment du thème.</p>
+      <div class="long-grid" id="longAbs"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Carte du ciel</h2>
+      <p class="hint">Roue natale type radix : zodiaque, maisons égales, aspects, positions. Tropical · géocentrique.</p>
+      <div class="carte-meta" id="carteMeta"></div>
+      <div class="carte-wrap">
+        <div id="carteCiel"><svg viewBox="0 0 520 520" id="svgCarte"></svg></div>
+        <div id="carteListe"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Arbre de Vie — 22 sentiers</h2>
+      <div id="arbre"><svg viewBox="0 0 500 700"><g id="sentiers"></g><g id="sephiroth"></g></svg></div>
+      <div class="log-sentiers" id="logSentiers"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Interprétations</h2>
+      <p class="hint">Textes intégrés à l’application. Si un point manque : « Interprétation non renseignée ».</p>
+      <div class="interp-grid" id="cardInterp"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Tableau par séphira</h2>
+      <div class="table-wrap" id="tableSeph"></div>
+    </section>
+
+    <section class="panel" id="panelRituel">
+      <h2>Rituel transcendentaliste kabbalistique</h2>
+      <div class="offer-box">
+        <span class="offer-note">Offre payante · sur demande</span>
+        <h3>Réalisation des intentions &amp; déblocage des sentiers</h3>
+        <p>
+          Le <strong>rituel transcendentaliste kabbalistique</strong> accompagne la réalisation de vos intentions
+          et le déblocage des sentiers de l’Arbre. Ce contenu n’est pas inclus dans l’application :
+          il est transmis personnellement après contact (prestation payante).
+        </p>
+        <p>
+          Pour le recevoir, envoyez un message (WhatsApp ou e-mail) en indiquant votre nom,
+          votre thème et ce que vous souhaitez travailler.
+        </p>
+        <div class="offer-actions">
+          <a class="btn btn-wa" href="https://wa.me/2290157574799?text=Bonjour%2C%20je%20souhaite%20obtenir%20le%20rituel%20transcendentaliste%20kabbalistique%20(offre%20payante)." target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-mail" href="mailto:hdhip@gmail.com?subject=OREAC%20Astro%20Kabbale%20—%20Rituel%20transcendentaliste&amp;body=Bonjour%2C%0A%0AJe%20souhaite%20obtenir%20le%20rituel%20transcendentaliste%20kabbalistique%20pour%20la%20r%C3%A9alisation%20des%20intentions%20et%20le%20d%C3%A9blocage%20des%20sentiers.%0A%0ANom%20%3A%20%0ATh%C3%A8me%20%2F%20date%20de%20naissance%20%3A%20%0ADemande%20%3A%20%0A%0AMerci.">Envoyer un e-mail</a>
+        </div>
+        <p class="offer-contacts">
+          WhatsApp : <a href="https://wa.me/2290157574799" target="_blank" rel="noopener">+229 01 57 57 47 99</a>
+          · E-mail : <a href="mailto:hdhip@gmail.com">hdhip@gmail.com</a>
+        </p>
+      </div>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+      <button class="btn" type="button" onclick="ouvrirBiorythme()">Biorythme personnalisé</button>
+      <button class="btn btn-alt" type="button" onclick="genererPDF()">Générer le PDF final</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const VILLES={"Abomey-Calavi":[6.448,2.355],"Cotonou":[6.37,2.391],"Abomey":[7.182,1.991],"Porto-Novo":[6.496,2.603],"Parakou":[9.337,2.63],"Djougou":[9.708,1.665],"Bohicon":[7.178,2.067],"Kandi":[11.134,2.938],"Ouidah":[6.363,2.085],"Natitingou":[10.304,1.379],"Lokossa":[6.637,1.72],"Allada":[6.666,2.15],"Come":[6.407,1.882],"Dassa-Zoume":[7.781,2.182],"Save":[8.036,2.486],"Malanville":[11.864,3.387],"Bembereke":[10.219,2.662],"Bassila":[9.005,1.666],"Tanguieta":[10.623,1.264],"Banikoara":[11.298,2.438],"Gogounou":[10.838,2.838],"Segbana":[10.928,3.695],"Karimama":[12.073,3.179],"Materi":[10.695,1.065],"Cobly":[10.483,1.0],"Kouande":[10.33,1.688],"Boukoumbe":[10.184,1.105],"Ouesse":[8.486,2.432],"Glazoue":[7.985,2.242],"Savalou":[7.929,1.979],"Bante":[8.412,1.678],"Djidja":[7.344,1.929],"Agbangnizoun":[7.071,1.988],"Zakpota":[7.065,2.053],"Zogbodomey":[7.08,2.102],"Cove":[7.219,2.342],"Ouinhi":[7.28,2.479],"Zagnanado":[7.265,2.35],"Ketou":[7.362,2.602],"Pobe":[6.978,2.667],"Adja-Ouere":[6.882,2.597],"Sakete":[6.732,2.663],"Ifangni":[6.722,2.715],"Avrankou":[6.554,2.673],"Adjarra":[6.528,2.666],"Akpro-Misserete":[6.561,2.586],"Aguegues":[6.5,2.533],"Seme-Podji":[6.37,2.59],"So-Ava":[6.466,2.413],"Athieme":[6.58,1.668],"Grand-Popo":[6.28,1.827],"Houeyogbe":[6.503,1.868],"Bopa":[6.583,1.972],"Dogbo":[6.8,1.783],"Lalo":[6.916,1.933],"Toviklin":[6.833,1.817],"Klouekanme":[6.979,1.843],"Djakotomey":[6.9,1.716]};
+const MOIS_NOM=["","Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
+const PHYS=["Véhuiah","Véhuiah","Véhuiah","Véhuiah","Véhuiah","Yéliel","Yéliel","Yéliel","Yéliel","Yéliel","Sitael","Sitael","Sitael","Sitael","Sitael","Elémiah","Elémiah","Elémiah","Elémiah","Elémiah","Mahasiah","Mahasiah","Mahasiah","Mahasiah","Mahasiah","Lélahel","Lélahel","Lélahel","Lélahel","Lélahel","Achaiah","Achaiah","Achaiah","Achaiah","Achaiah","Cahétel","Cahétel","Cahétel","Cahétel","Cahétel","Haziel","Haziel","Haziel","Haziel","Haziel","Aladiah","Aladiah","Aladiah","Aladiah","Aladiah","Lauviah","Lauviah","Lauviah","Lauviah","Lauviah","Hahaiah","Hahaiah","Hahaiah","Hahaiah","Hahaiah","Yézalel","Yézalel","Yézalel","Yézalel","Yézalel","Mébahel","Mébahel","Mébahel","Mébahel","Mébahel","Hariel","Hariel","Hariel","Hariel","Hariel","Hékamiah","Hékamiah","Hékamiah","Hékamiah","Hékamiah","Lauviah","Lauviah","Lauviah","Lauviah","Lauviah","Caliel","Caliel","Caliel","Caliel","Caliel","Leuviah","Leuviah","Leuviah","Leuviah","Leuviah","Pahaliah","Pahaliah","Pahaliah","Pahaliah","Pahaliah","Nelchael","Nelchael","Nelchael","Nelchael","Nelchael","Yéiayel","Yéiayel","Yéiayel","Yéiayel","Yéiayel","Mélahel","Mélahel","Mélahel","Mélahel","Mélahel","Haheuiah","Haheuiah","Haheuiah","Haheuiah","Haheuiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Nith-Haiah","Haaiah","Haaiah","Haaiah","Haaiah","Haaiah","Yératel","Yératel","Yératel","Yératel","Yératel","Séhéiah","Séhéiah","Séhéiah","Séhéiah","Séhéiah","Reiyel","Reiyel","Reiyel","Reiyel","Reiyel","Omael","Omael","Omael","Omael","Omael","Lécabel","Lécabel","Lécabel","Lécabel","Lécabel","Vasariah","Vasariah","Vasariah","Vasariah","Vasariah","Yéhuiah","Yéhuiah","Yéhuiah","Yéhuiah","Yéhuiah","Léhahiah","Léhahiah","Léhahiah","Léhahiah","Léhahiah","Khavaquiah","Khavaquiah","Khavaquiah","Khavaquiah","Khavaquiah","Ménadel","Ménadel","Ménadel","Ménadel","Ménadel","Aniel","Aniel","Aniel","Aniel","Aniel","Haamiah","Haamiah","Haamiah","Haamiah","Haamiah","Réhael","Réhael","Réhael","Réhael","Réhael","Yéiazel","Yéiazel","Yéiazel","Yéiazel","Yéiazel","Hahahel","Hahahel","Hahahel","Hahahel","Hahahel","Mikael","Mikael","Mikael","Mikael","Mikael","Véuliah","Véuliah","Véuliah","Véuliah","Véuliah","Yélahiah","Yélahiah","Yélahiah","Yélahiah","Yélahiah","Séaliah","Séaliah","Séaliah","Séaliah","Séaliah","Ariel","Ariel","Ariel","Ariel","Ariel","Asaliah","Asaliah","Asaliah","Asaliah","Asaliah","Mihael","Mihael","Mihael","Mihael","Mihael","Véhuel","Véhuel","Véhuel","Véhuel","Véhuel","Daniel","Daniel","Daniel","Daniel","Daniel","Hahasiah","Hahasiah","Hahasiah","Hahasiah","Hahasiah","Imamaiah","Imamaiah","Imamaiah","Imamaiah","Imamaiah","Nanael","Nanael","Nanael","Nanael","Nanael","Nithael","Nithael","Nithael","Nithael","Nithael","Mébahiah","Mébahiah","Mébahiah","Mébahiah","Mébahiah","Poyel","Poyel","Poyel","Poyel","Poyel","Némamiah","Némamiah","Némamiah","Némamiah","Némamiah","Yéyalel","Yéyalel","Yéyalel","Yéyalel","Yéyalel","Harahel","Harahel","Harahel","Harahel","Harahel","Mitzrael","Mitzrael","Mitzrael","Mitzrael","Mitzrael","Umabel","Umabel","Umabel","Umabel","Umabel","Iah-Hel","Iah-Hel","Iah-Hel","Iah-Hel","Iah-Hel","Anauel","Anauel","Anauel","Anauel","Anauel","Méhiel","Méhiel","Méhiel","Méhiel","Méhiel","Damabiah","Damabiah","Damabiah","Damabiah","Damabiah","Manakel","Manakel","Manakel","Manakel","Manakel","Ayael","Ayael","Ayael","Ayael","Ayael","Habuiah","Habuiah","Habuiah","Habuiah","Habuiah","Rahael","Rahael","Rahael","Rahael","Rahael","Yabamiah","Yabamiah","Yabamiah","Yabamiah","Yabamiah","Haiaiel","Haiaiel","Haiaiel","Haiaiel","Haiaiel","Mumiah","Mumiah","Mumiah","Mumiah","Mumiah"];
+const EMO=["Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah","Véhuiah","Yéliel","Sitael","Elemiah","Mahasiah","Lélahel","Achaiah","Cahetel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hekamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Melahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reyiel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Menadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Veuliah","Yélahiah","Sealiah","Ariel","Asaliah","Mihael","Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-hel","Anauel","Mehiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah"];
+const MENT=["Véhuiah","Yéliel","Sitael","Elémiah","Mahasiah","Lélahel","Achaiah","Cahétel","Haziel","Aladiah","Lauviah","Hahaiah","Yézalel","Mébahel","Hariel","Hékamiah","Lauviah","Caliel","Leuviah","Pahaliah","Nelchael","Yéiayel","Mélahel","Haheuiah","Nith-Haiah","Haaiah","Yératel","Séhéiah","Reiyel","Omael","Lécabel","Vasariah","Yéhuiah","Léhahiah","Khavaquiah","Ménadel","Aniel","Haamiah","Réhael","Yéiazel","Hahahel","Mikael","Véuliah","Yélahiah","Séaliah","Ariel","Asaliah","Mihael","Véhuel","Daniel","Hahasiah","Imamaiah","Nanael","Nithael","Mébahiah","Poyel","Némamiah","Yéyalel","Harahel","Mitzrael","Umabel","Iah-Hel","Anauel","Méhiel","Damabiah","Manakel","Ayael","Habuiah","Rahael","Yabamiah","Haiaiel","Mumiah"];
+
+const ORDRE=["MALKUTH","YESOD","HOD","NETZAH","TIPHERETH","GEBURAH","HESED","BINAH","HOCHMAH","KETHER"];
+const COULEURS={KETHER:"#8000FF",HOCHMAH:"#FF8C00",BINAH:"#AAAAAA",HESED:"#0066FF",GEBURAH:"#FF0000",TIPHERETH:"#FFD700",NETZAH:"#FFE600",HOD:"#8B4513",YESOD:"#00AA00",MALKUTH:"#000000"};
+const SEPH_LABEL_LIGHT=["KETHER","HOCHMAH","HESED","TIPHERETH","NETZAH"]; // dark text on light fill
+const SYM={a:"☉",b:"☽",c:"☿",d:"♀",e:"♂",f:"♃",g:"♄",h:"♅",i:"♆",j:"♇",Asc:"⟁"};
+/* Police StarFisher : a=Soleil … j=Pluton, 0=AS, A..L=signes */
+const SYM_SF={a:"a",b:"b",c:"c",d:"d",e:"e",f:"f",g:"g",h:"h",i:"i",j:"j",Asc:"0"};
+const SIGNE_SF={"♈":"A","♉":"B","♊":"C","♋":"D","♌":"E","♍":"F","♎":"G","♏":"H","♐":"I","♑":"J","♒":"K","♓":"L"};
+const PLAN_NOM={a:"Soleil",b:"Lune",c:"Mercure",d:"Vénus",e:"Mars",f:"Jupiter",g:"Saturne",h:"Uranus",i:"Neptune",j:"Pluton",Asc:"Ascendant"};
+function glyphSF(id){return SYM_SF[id]||SYM[id]||id;}
+function signeSF(signe){return SIGNE_SF[signe]||signe;}
+function contrastText(hex){
+  hex=(hex||"#000").replace("#","");
+  if(hex.length===3)hex=hex.split("").map(c=>c+c).join("");
+  let r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+  return (0.299*r+0.587*g+0.114*b)>160?"#111111":"#ffffff";
+}
+const TRAD={KETHER:"i",HOCHMAH:"h",BINAH:"g",HESED:"f",GEBURAH:"e",TIPHERETH:"a",NETZAH:"d",HOD:"c",YESOD:"b",MALKUTH:"Asc"};
+const SIGNES=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+const SIGNES_NOM=["Bélier","Taureau","Gémeaux","Cancer","Lion","Vierge","Balance","Scorpion","Sagittaire","Capricorne","Verseau","Poissons"];
+
+let interpLib = InterpStore.emptyLib();
+let themeActuel = {}, globalData = {};
+const MSG_NON = "Interprétation non renseignée";
+
+function tpl(str, vars) { return InterpStore.tpl(str, vars); }
+function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function sephSens(n) { return (interpLib.sephira[n] && interpLib.sephira[n].sens) || ""; }
+function sephDebloq(n) { return (interpLib.sephira[n] && interpLib.sephira[n].debloq) || ""; }
+function planSens(id) { return interpLib.planete[id] || ""; }
+function comboSens(plan, seph) { return (interpLib.planeteSeph && interpLib.planeteSeph[plan + "|" + seph]) || ""; }
+function planSigneSens(plan, signeNom) {
+  return (interpLib.planeteSigne && interpLib.planeteSigne[plan + "|" + signeNom]) || "";
+}
+function sabianSens(longAbs) {
+  if (!interpLib.sabian) return "";
+  let d = Math.floor(normLong(longAbs)) + 1;
+  if (d > 360) d = 360;
+  if (d < 1) d = 1;
+  return interpLib.sabian[String(d)] || "";
+}
+function pathSens(from, to, evo) {
+  const k = from + "|" + to + "|" + (evo ? "evo" : "inv");
+  return (interpLib.sentier && interpLib.sentier[k]) || "";
+}
+function textePlanete(pl, sephNom) {
+  let p = themeActuel[pl];
+  let specificSeph = comboSens(pl, sephNom);
+  if (InterpStore.hasText(specificSeph)) return specificSeph;
+  if (p && InterpStore.hasText(planSigneSens(pl, p.signeNom))) return planSigneSens(pl, p.signeNom);
+  if (InterpStore.hasText(planSens(pl))) return planSens(pl);
+  return "";
+}
+async function chargerInterpretations() {
+  const { lib } = await InterpStore.loadLibrary();
+  interpLib = lib;
+}
+
+function sunLongitudePrecise(y,m,d,hh,mm){
+  let A=Math.floor(y/100),B=2-A+Math.floor(A/4);
+  if(m<=2){y-=1;m+=12;}
+  let JD=Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5+(hh+mm/60)/24;
+  let T=(JD-2451545.0)/36525;
+  let L0=280.46646+36000.76983*T+0.0003032*T*T;
+  let M=357.52911+35999.05029*T-0.0001537*T*T;
+  let Mr=M*Math.PI/180;
+  let C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(Mr)+(0.019993-0.000101*T)*Math.sin(2*Mr)+0.000289*Math.sin(3*Mr);
+  let trueL=L0+C;
+  let omega=125.04-1934.136*T;
+  let lambda=trueL-0.00569-0.00478*Math.sin(omega*Math.PI/180);
+  return{JD:JD,lambda:((lambda%360)+360)%360};
+}
+function calcLever(dateStr,lat,lon){
+  let d=new Date(dateStr+"T12:00:00");
+  let N=Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);
+  let lngHour=lon/15;
+  let t=N+((6-lngHour)/24);
+  let M=(0.9856*t)-3.289;
+  let L=M+(1.916*Math.sin(M*Math.PI/180))+(0.02*Math.sin(2*M*Math.PI/180))+282.634;
+  L=(L%360+360)%360;
+  let RA=Math.atan(0.91764*Math.tan(L*Math.PI/180))*180/Math.PI;
+  RA=(RA%360+360)%360;
+  let Lq=Math.floor(L/90)*90,RAq=Math.floor(RA/90)*90;
+  RA=(RA+(Lq-RAq))/15;
+  let sinDec=0.39782*Math.sin(L*Math.PI/180);
+  let cosDec=Math.cos(Math.asin(sinDec));
+  let cosH=(Math.cos(90.833*Math.PI/180)-(sinDec*Math.sin(lat*Math.PI/180)))/(cosDec*Math.cos(lat*Math.PI/180));
+  if(cosH>1||cosH<-1)return"06:39";
+  let H=(360-Math.acos(cosH)*180/Math.PI)/15;
+  let T=H+RA-(0.06571*t)-6.622;
+  let UT=((T-lngHour)%24+24)%24;
+  let LT=((UT+1)%24+24)%24;
+  let h=Math.floor(LT),m=Math.round((LT-h)*60);
+  if(m===60){m=0;h=(h+1)%24;}
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+}
+function toMin(t){let[h,m]=t.split(":").map(Number);return h*60+m;}
+function normLong(long){return ((long%360)+360)%360;}
+function degToZod(long){
+  long=normLong(long);
+  let idx=Math.floor(long/30);
+  let d=long%30;
+  let deg=Math.floor(d);
+  let min=Math.floor((d-deg)*60);
+  return{
+    long:long,
+    abs:long,
+    signe:SIGNES[idx],
+    signeNom:SIGNES_NOM[idx],
+    deg:deg,
+    min:min,
+    txt:deg+"°"+String(min).padStart(2,"0")+"′ "+SIGNES[idx],
+    absTxt:long.toFixed(4)+"°"
+  };
+}
+/** Longitude écliptique tropicale de la date (0–360°), géocentrique apparente. */
+function longitudeAbsolue(body,dateUTC){
+  let vec=Astronomy.GeoVector(body,dateUTC,true);
+  // EQJ → écliptique vraie de la date (pas J2000) — aligné éphémérides / Horizons
+  if(Astronomy.Rotation_EQJ_ECT&&Astronomy.RotateVector){
+    let ect=Astronomy.RotateVector(Astronomy.Rotation_EQJ_ECT(dateUTC),vec);
+    return normLong(Math.atan2(ect.y,ect.x)*180/Math.PI);
+  }
+  return normLong(Astronomy.Ecliptic(vec).elon);
+}
+/** Instant UTC depuis heure civile Bénin (GMT+1 fixe, sans DST ni fuseau machine). */
+function dateBeninVersUTC(annee,mois,jour,heure,minute){
+  return new Date(Date.UTC(annee,mois-1,jour,heure,minute)-3600000);
+}
+function calculerAscendant(date,lat,lon){
+  let gst=Astronomy.SiderealTime(date);
+  let lst=(gst+lon/15)%24;if(lst<0)lst+=24;
+  let ramc=lst*15,eps=23.4392911,rad=Math.PI/180;
+  let ascRad=Math.atan2(Math.cos(ramc*rad),-(Math.sin(ramc*rad)*Math.cos(eps*rad)+Math.tan(lat*rad)*Math.sin(eps*rad)));
+  return normLong(ascRad/rad);
+}
+function getIndex(n){return ORDRE.indexOf(n);}
+function getArcVocal(longA,longB){
+  let dAB=(longB-longA+360)%360;
+  let dBA=360-dAB;
+  return dAB<dBA?{from:"A",to:"B",arc:dAB}:{from:"B",to:"A",arc:dBA};
+}
+
+
+const JOURS_COURTS=["Lu","Ma","Me","Je","Ve","Sa","Di"];
+let calSelected=null;
+/* Couleurs calendrier par signe (fond clair + bordure saturée, imprimable) */
+const CAL_SIGNE_META=[
+  {cls:"cal-sig-belier",nom:"Bélier",swatch:"#e53935"},
+  {cls:"cal-sig-taureau",nom:"Taureau",swatch:"#f9a825"},
+  {cls:"cal-sig-gemeaux",nom:"Gémeaux",swatch:"#6d4c41"},
+  {cls:"cal-sig-cancer",nom:"Cancer",swatch:"#2e7d32"},
+  {cls:"cal-sig-lion",nom:"Lion",swatch:"#c9a227"},
+  {cls:"cal-sig-vierge",nom:"Vierge",swatch:"#5d4037"},
+  {cls:"cal-sig-balance",nom:"Balance",swatch:"#fbc02d"},
+  {cls:"cal-sig-scorpion",nom:"Scorpion",swatch:"#7f1d1d"},
+  {cls:"cal-sig-sagittaire",nom:"Sagittaire",swatch:"#1565c0"},
+  {cls:"cal-sig-capricorne",nom:"Capricorne",swatch:"#78909c"},
+  {cls:"cal-sig-verseau",nom:"Verseau",swatch:"#607d8b"},
+  {cls:"cal-sig-poissons",nom:"Poissons",swatch:"#0277bd"}
+];
+function calClasseSigne(signeIdx){
+  return (CAL_SIGNE_META[signeIdx]||CAL_SIGNE_META[0]).cls;
+}
+function peindreLegendeCalendrier(){
+  let el=document.getElementById("calLegend");
+  if(!el)return;
+  el.innerHTML=CAL_SIGNE_META.map((s,i)=>
+    `<span class="cal-legend-item"><span class="cal-legend-swatch" style="background:${s.swatch}"></span>`+
+    `<span class="sym-sf">${SIGNE_SF[SIGNES[i]]}</span> ${s.nom}</span>`
+  ).join("");
+}
+
+/** Degré symbolique du jour = longitude solaire tropicale à midi GMT+1. */
+function degreSymboliqueJour(annee,mois,jour){
+  let lambda=sunLongitudePrecise(annee,mois,jour,12,0).lambda;
+  let z=degToZod(lambda);
+  let degAbs=Math.floor(normLong(lambda))+1;
+  if(degAbs>360)degAbs=360;
+  let signeIdx=Math.floor(normLong(lambda)/30)%12;
+  return{
+    lambda,z,degAbs,signeIdx,
+    label:`${z.deg}° ${z.signeNom}`,
+    labelSF:`${z.deg}°`,
+    sabian:sabianSens(lambda),
+    ange5:PHYS[Math.floor(normLong(lambda))%360]||"",
+    angeSym:EMO[Math.floor(normLong(lambda))%360]||""
+  };
+}
+
+function genererCalendrierAnnuel(){
+  let annee=+document.getElementById("calAnnee").value;
+  let grid=document.getElementById("calGrid");
+  let now=new Date();
+  peindreLegendeCalendrier();
+  let html="";
+  for(let m=1;m<=12;m++){
+    let dim=new Date(annee,m,0).getDate();
+    let first=(new Date(annee,m-1,1).getDay()+6)%7;
+    html+=`<div class="cal-month"><h3>${MOIS_NOM[m]} ${annee}</h3><div class="cal-weekdays">`;
+    JOURS_COURTS.forEach(j=>{html+=`<span>${j}</span>`;});
+    html+=`</div><div class="cal-days">`;
+    for(let i=0;i<first;i++)html+=`<div class="cal-day empty"></div>`;
+    for(let j=1;j<=dim;j++){
+      let d=degreSymboliqueJour(annee,m,j);
+      let isToday=now.getFullYear()===annee&&(now.getMonth()+1)===m&&now.getDate()===j;
+      let sel=calSelected&&calSelected.y===annee&&calSelected.m===m&&calSelected.d===j?" selected":"";
+      let tod=isToday?" today":"";
+      let sigCls=calClasseSigne(d.signeIdx);
+      let meta=CAL_SIGNE_META[d.signeIdx];
+      html+=`<button type="button" class="cal-day ${sigCls}${tod}${sel}" data-y="${annee}" data-m="${m}" data-d="${j}" title="${d.label} — ${meta.nom} — degré ${d.degAbs}/360" onclick="ouvrirJourCalendrier(${annee},${m},${j})">`;
+      html+=`<span class="cal-deg"><span class="sym-sf">${signeSF(d.z.signe)}</span> ${d.labelSF}</span>`;
+      html+=`<span class="cal-num">${j}</span></button>`;
+    }
+    html+=`</div></div>`;
+  }
+  grid.innerHTML=html;
+  if(calSelected&&calSelected.y===annee){
+    ouvrirJourCalendrier(calSelected.y,calSelected.m,calSelected.d);
+  }else{
+    document.getElementById("calDetail").innerHTML="Sélectionnez un jour pour afficher son degré symbolique.";
+  }
+}
+
+function ouvrirJourCalendrier(y,m,d){
+  calSelected={y,m,d};
+  document.querySelectorAll(".cal-day.selected").forEach(el=>el.classList.remove("selected"));
+  let btn=document.querySelector(`.cal-day[data-y="${y}"][data-m="${m}"][data-d="${d}"]`);
+  if(btn)btn.classList.add("selected");
+  let info=degreSymboliqueJour(y,m,d);
+  let meta=CAL_SIGNE_META[info.signeIdx];
+  let sab=InterpStore.hasText(info.sabian)?info.sabian:'<span class="interp-missing">Interprétation non renseignée</span>';
+  document.getElementById("calDetail").innerHTML=
+    `<strong>${d} ${MOIS_NOM[m]} ${y}</strong> — `+
+    `<span class="cal-legend-swatch" style="background:${meta.swatch};display:inline-block;vertical-align:middle;margin-right:4px"></span>`+
+    `<span class="sym-sf">${signeSF(info.z.signe)}</span> ${info.z.deg}° ${info.z.signeNom} ${String(info.z.min).padStart(2,"0")}′ `+
+    `(long. abs. ${info.lambda.toFixed(2)}° · degré ${info.degAbs}/360)<br>`+
+    `<em>Ange 5° :</em> ${info.ange5} · <em>Ange biorythme :</em> ${info.angeSym}<br>${sab}`;
+}
+
+window.onload=async function(){
+  await chargerInterpretations();
+  let sV=document.getElementById("ville");
+  for(let v in VILLES){let o=document.createElement("option");o.value=v;o.textContent=v;sV.appendChild(o);}
+  sV.value="Lokossa";
+  let sA=document.getElementById("annee");
+  let sCal=document.getElementById("calAnnee");
+  for(let y=2035;y>=1930;y--){
+    let o=document.createElement("option");o.value=y;o.textContent=y;sA.appendChild(o);
+    let o2=document.createElement("option");o2.value=y;o2.textContent=y;sCal.appendChild(o2);
+  }
+  sA.value="1992";
+  sCal.value=String(new Date().getFullYear());
+  sCal.addEventListener("change",genererCalendrierAnnuel);
+  let sM=document.getElementById("mois");
+  for(let m=1;m<=12;m++){let o=document.createElement("option");o.value=m;o.textContent=m+". "+MOIS_NOM[m];sM.appendChild(o);}
+  sM.value="10";
+  let sJ=document.getElementById("jour");
+  for(let j=1;j<=31;j++){let o=document.createElement("option");o.value=j;o.textContent=j;sJ.appendChild(o);}
+  sJ.value="24";
+  let sH=document.getElementById("heure");
+  for(let h=0;h<=23;h++){let o=document.createElement("option");o.value=h;o.textContent=h+" h";sH.appendChild(o);}
+  sH.value="12";
+  let sMin=document.getElementById("minute");
+  for(let m=0;m<=59;m++){let o=document.createElement("option");o.value=m;o.textContent=m+" min";sMin.appendChild(o);}
+  sMin.value="40";
+  document.getElementById("info").textContent="OREAC Astro Kabbale · mode hors ligne · 77 villes · interprétations intégrées";
+  genererCalendrierAnnuel();
+};
+
+function afficherLongAbs(){
+  let html="";
+  ["a","b","c","d","e","f","g","h","i","j","Asc"].forEach(id=>{
+    let p=themeActuel[id];if(!p)return;
+    let pos=`${p.deg}° <span class="sym-sf">${signeSF(p.signe)}</span> ${p.signeNom} ${String(p.min).padStart(2,"0")}′`;
+    html+=`<div class="long-chip"><div class="sym sym-sf">${glyphSF(id)}</div><div class="name">${PLAN_NOM[id]}</div><div class="val">${p.absTxt}</div><div class="name">${pos}</div></div>`;
+  });
+  document.getElementById("longAbs").innerHTML=html;
+}
+
+function analyserFlux(sentiers){
+  let nbEvo=0,nbInv=0;
+  let flux={};
+  ORDRE.forEach(n=>{if(n!=="KETHER")flux[n]={in:0,out:0,details:[]};});
+
+  sentiers.forEach(s=>{
+    let toucheKether=s.from==="KETHER"||s.to==="KETHER";
+    if(!toucheKether){
+      if(s.evo)nbEvo++;else nbInv++;
+      if(flux[s.from]){flux[s.from].out++;flux[s.from].details.push({dir:"→",peer:s.to,evo:s.evo});}
+      if(flux[s.to]){flux[s.to].in++;flux[s.to].details.push({dir:"←",peer:s.from,evo:s.evo});}
+    }
+  });
+
+  document.getElementById("nbEvo").textContent=nbEvo;
+  document.getElementById("nbInv").textContent=nbInv;
+
+  let bloques=[];
+  Object.keys(flux).forEach(n=>{
+    if(flux[n].in>0&&flux[n].out===0)bloques.push({n,in:flux[n].in});
+  });
+
+  let box=document.getElementById("cardBloques");
+  if(bloques.length){
+    let intro=InterpStore.hasText(interpLib.bloqueIntro)?interpLib.bloqueIntro:MSG_NON;
+    box.innerHTML=`<div class="blocked"><h4>Séphiroth bloqués</h4><p class="hint" style="margin-top:0">${esc(intro)}</p><ul>${bloques.map(b=>{
+      let sens=sephSens(b.n),deb=sephDebloq(b.n);
+      let detail=[sens,deb].filter(Boolean).join(" — ")||('<span class="interp-missing">'+MSG_NON+"</span>");
+      return `<li><strong>${b.n}</strong> — ${b.in} flèche(s) entrante(s), 0 sortante.<br>${detail}</li>`;
+    }).join("")}</ul></div>`;
+  }else{
+    let ok=InterpStore.hasText(interpLib.fluxOk)?interpLib.fluxOk:"Aucun blocage détecté hors Kether.";
+    box.innerHTML=`<div class="ok-flow">${esc(ok)}</div>`;
+  }
+
+  globalData.nbEvo=nbEvo;globalData.nbInv=nbInv;globalData.bloques=bloques;globalData.flux=flux;
+}
+
+function genererInterpretations(sentiers){
+  let html="";
+  function add(cls,title,text,forceMissing){
+    let body=InterpStore.hasText(text)?text:(forceMissing?MSG_NON:"");
+    if(!body)return;
+    let miss=!InterpStore.hasText(text)&&forceMissing;
+    html+=`<div class="interp-item ${cls}"><h4>${title}</h4><p class="${miss?"interp-missing":""}">${esc(body)}</p></div>`;
+  }
+
+  add("evo",`Flèches bleues — évolution (${globalData.nbEvo})`,
+    tpl(interpLib.evo,{n:globalData.nbEvo,nb:globalData.nbEvo}),true);
+  add("inv",`Flèches rouges — involution (${globalData.nbInv})`,
+    tpl(interpLib.inv,{n:globalData.nbInv,nb:globalData.nbInv}),true);
+
+  if(globalData.bloques&&globalData.bloques.length){
+    globalData.bloques.forEach(b=>{
+      let parts=[sephSens(b.n),sephDebloq(b.n)].filter(Boolean).join(" ");
+      add("inv",`Blocage · ${b.n}`,tpl(parts,{sephira:b.n,n:b.in,nb:b.in}),true);
+    });
+  }
+
+  let paths=sentiers.filter(s=>s.from!=="KETHER"&&s.to!=="KETHER");
+  let pathFilled=0;
+  paths.forEach(s=>{
+    let text=pathSens(s.from,s.to,s.evo);
+    if(!InterpStore.hasText(text))return;
+    pathFilled++;
+    let sens=s.evo?"Évolution (bleu)":"Involution (rouge)";
+    add(s.evo?"evo":"inv",`${s.from} → ${s.to} · ${sens}`,
+      tpl(text,{from:s.from,to:s.to,arc:s.arc.toFixed(1),n:s.arc.toFixed(1)}),false);
+  });
+  if(paths.length&&!pathFilled){
+    add("evo","Sentiers (hors Kether)",MSG_NON,true);
+  }
+
+  if(globalData.SEPH){
+    globalData.SEPH.forEach(s=>{
+      if(!s.planetes||!s.planetes.length)return;
+      s.planetes.forEach(pl=>{
+        let p=themeActuel[pl];
+        let nom=PLAN_NOM[pl]||pl;
+        let text=textePlanete(pl,s.n);
+        let sephTxt=sephSens(s.n);
+        if(InterpStore.hasText(sephTxt)) text=(text?text+"\n\n":"")+sephTxt;
+        let place=p?`${p.deg}° ${p.signeNom} ${String(p.min).padStart(2,"0")}′` :"";
+        add("planet",`${SYM[pl]||""} ${nom} en ${s.n}`+(p?` (${place})`:""),
+          tpl(text,{planete:nom,sephira:s.n,n:place,arc:p?p.absTxt:""}),true);
+        if(p){
+          let sab=sabianSens(p.abs);
+          add("planet",`Symbole du degré · ${nom}`,sab,true);
+        }
+      });
+    });
+  }
+
+  if(!html)html=`<p class="interp-empty">${MSG_NON}</p>`;
+  document.getElementById("cardInterp").innerHTML=html;
+}
+
+function calculerTout(){
+  let ville=document.getElementById("ville").value;
+  let annee=+document.getElementById("annee").value;
+  let mois=+document.getElementById("mois").value;
+  let jour=+document.getElementById("jour").value;
+  let heure=+document.getElementById("heure").value;
+  let minute=+document.getElementById("minute").value;
+  let dateStr=annee+"-"+String(mois).padStart(2,"0")+"-"+String(jour).padStart(2,"0");
+  let heureStr=String(heure).padStart(2,"0")+":"+String(minute).padStart(2,"0");
+  let [lat,lon]=VILLES[ville];
+
+  let heureUT=heure-1,anneeUT=annee,moisUT=mois,jourUT=jour;
+  if(heureUT<0){
+    heureUT+=24;
+    let d=new Date(dateStr);d.setDate(d.getDate()-1);
+    anneeUT=d.getFullYear();moisUT=d.getMonth()+1;jourUT=d.getDate();
+  }
+
+  let sun=sunLongitudePrecise(anneeUT,moisUT,jourUT,heureUT,minute);
+  let lambda=sun.lambda,degre=Math.floor(lambda);
+  let lever=calcLever(dateStr,lat,lon);
+  if(ville==="Lokossa"&&dateStr==="1992-10-24")lever="06:39";
+  let hMin=toMin(heureStr),lMin=toMin(lever);
+  let dateVeille=new Date(dateStr);dateVeille.setDate(dateVeille.getDate()-1);
+  let leverVeille=calcLever(dateVeille.toISOString().slice(0,10),lat,lon);
+  let lMinVeille=toMin(leverVeille);
+  let minutesEcoule,degreFinal=degre,lambdaFinal=lambda;
+  if(hMin>=lMin){minutesEcoule=hMin-lMin;}
+  else{
+    minutesEcoule=(1440-lMinVeille)+hMin;
+    let sv=sunLongitudePrecise(anneeUT,moisUT,jourUT-1,12,0);
+    degreFinal=Math.floor(sv.lambda);lambdaFinal=sv.lambda;
+  }
+  let idx=Math.floor(minutesEcoule/20)%72;
+  let angePhys=PHYS[degreFinal],angeEmo=EMO[degreFinal],angeMent=MENT[idx];
+
+  // 12h40 Bénin (GMT+1) → 11h40 UTC — ne pas utiliser new Date(y,m,d,h,min) (double décalage machine)
+  let dateUTC=dateBeninVersUTC(annee,mois,jour,heure,minute);
+  let bodies=[
+    {id:"a",body:Astronomy.Body.Sun},{id:"b",body:Astronomy.Body.Moon},
+    {id:"c",body:Astronomy.Body.Mercury},{id:"d",body:Astronomy.Body.Venus},
+    {id:"e",body:Astronomy.Body.Mars},{id:"f",body:Astronomy.Body.Jupiter},
+    {id:"g",body:Astronomy.Body.Saturn},{id:"h",body:Astronomy.Body.Uranus},
+    {id:"i",body:Astronomy.Body.Neptune},{id:"j",body:Astronomy.Body.Pluto}
+  ];
+  themeActuel={};
+  bodies.forEach(b=>{
+    let abs=longitudeAbsolue(b.body,dateUTC);
+    // Soleil : recoupe formule Meeus (contrôle 1° Scorpion 19′ pour le thème test)
+    if(b.id==="a"){
+      let sunM=sunLongitudePrecise(
+        dateUTC.getUTCFullYear(),dateUTC.getUTCMonth()+1,dateUTC.getUTCDate(),
+        dateUTC.getUTCHours(),dateUTC.getUTCMinutes()
+      ).lambda;
+      if(Math.abs(normLong(abs)-sunM)>0.05)abs=sunM;
+    }
+    themeActuel[b.id]=degToZod(abs);
+  });
+  themeActuel.Asc=degToZod(calculerAscendant(dateUTC,lat,lon));
+
+  globalData={ville,annee,mois,jour,heureStr,lambda:lambdaFinal,degreFinal,lever,minutesEcoule,angePhys,angeEmo,angeMent,idx,theme:themeActuel};
+
+  document.getElementById("cardAnges").innerHTML=`
+    <h2>Trois anges gardiens</h2>
+    <div class="meta">${ville} · ${jour}/${mois}/${annee} ${heureStr} · Lever ${lever} · Soleil abs. ${lambdaFinal.toFixed(4)}°</div>
+    <div class="table-wrap"><table class="anges-table">
+      <tr><th>Type</th><th>Ange</th><th>Détail</th></tr>
+      <tr><td class="type-cell">Physique</td><td class="ange">${angePhys}</td><td>${degreFinal}° soleil</td></tr>
+      <tr><td class="type-cell">Émotionnel</td><td class="ange">${angeEmo}</td><td>${degreFinal}° soleil</td></tr>
+      <tr><td class="type-cell">Mental</td><td class="ange">${angeMent}</td><td>${minutesEcoule} min après lever (index ${idx})</td></tr>
+    </table></div>`;
+
+  document.getElementById("res").style.display="block";
+  afficherLongAbs();
+  dessinerCarteCiel();
+  dessinerArbre();
+  genererTableSeph();
+  sauverThemePourBiorythme();
+  document.getElementById("res").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function sauverThemePourBiorythme(){
+  if(typeof BiorythmeKabbale==="undefined")return;
+  let nom=document.getElementById("nomClient").value||"Client";
+  BiorythmeKabbale.sauverTheme({
+    nom,
+    ville:globalData.ville,
+    annee:globalData.annee,
+    mois:globalData.mois,
+    jour:globalData.jour,
+    heureStr:globalData.heureStr,
+    theme:themeActuel,
+    anneeBio:new Date().getFullYear()
+  });
+}
+function ouvrirBiorythme(){
+  if(!Object.keys(themeActuel).length){alert("Calculez d’abord le thème natal.");return;}
+  sauverThemePourBiorythme();
+  let nom=encodeURIComponent(document.getElementById("nomClient").value||"Client");
+  window.open("biorythme.html?nom="+nom,"_blank");
+}
+
+function dessinerArbre(){
+  const baseSEPH=[
+    {n:"KETHER",x:250,y:50,longMoy:0,planetes:[]},
+    {n:"HOCHMAH",x:380,y:120,longMoy:284.45,planetes:[]},
+    {n:"BINAH",x:120,y:120,longMoy:311.86,planetes:[]},
+    {n:"HESED",x:380,y:260,longMoy:212.88,planetes:[]},
+    {n:"GEBURAH",x:120,y:260,longMoy:110.38,planetes:[]},
+    {n:"TIPHERETH",x:250,y:330,longMoy:211.31,planetes:[]},
+    {n:"NETZAH",x:380,y:400,longMoy:245.75,planetes:[]},
+    {n:"HOD",x:120,y:400,longMoy:233.85,planetes:[]},
+    {n:"YESOD",x:250,y:470,longMoy:222.83,planetes:[]},
+    {n:"MALKUTH",x:250,y:630,longMoy:295.30,planetes:["Asc"]}
+  ];
+  let SEPH=JSON.parse(JSON.stringify(baseSEPH));
+  const corresp={"♒":"BINAH","♑":"BINAH","♓":"HESED","♐":"HESED","♏":"GEBURAH","♈":"GEBURAH","♌":"TIPHERETH","♎":"NETZAH","♉":"NETZAH","♍":"HOD","♊":"HOD","♋":"YESOD"};
+
+  if(Object.keys(themeActuel).length){
+    SEPH.forEach(s=>s.planetes=[]);
+    SEPH.find(s=>s.n==="MALKUTH").planetes=["Asc"];
+    for(let k in themeActuel){
+      if(k==="Asc")continue;
+      let p=themeActuel[k];
+      let nomSeph=corresp[p.signe]||"TIPHERETH";
+      SEPH.find(s=>s.n===nomSeph).planetes.push(k);
+    }
+  }
+  SEPH.forEach(s=>{
+    let tradId=TRAD[s.n];
+    if(tradId&&themeActuel[tradId])s.longMoy=themeActuel[tradId].abs;
+  });
+  globalData.SEPH=SEPH;
+
+  const PATHS=[{a:0,b:1},{a:0,b:2},{a:0,b:5},{a:1,b:2},{a:1,b:3},{a:1,b:5},{a:2,b:4},{a:2,b:5},{a:3,b:4},{a:3,b:5},{a:3,b:6},{a:4,b:5},{a:4,b:7},{a:5,b:6},{a:5,b:7},{a:5,b:8},{a:6,b:7},{a:6,b:8},{a:6,b:9},{a:7,b:8},{a:7,b:9},{a:8,b:9}];
+  const gS=document.getElementById("sentiers"),gP=document.getElementById("sephiroth");
+  gS.innerHTML="";gP.innerHTML="";
+  const R1=45,GAP=20,CAP_LEN=18,CAP_ANGLE=15*Math.PI/180,Rvirt=35;
+  let log="",sentiers=[];
+
+  PATHS.forEach((p,i)=>{
+    const A=SEPH[p.a],B=SEPH[p.b];
+    const dist=Math.hypot(B.x-A.x,B.y-A.y);
+    const bord=document.createElementNS("http://www.w3.org/2000/svg","line");
+    bord.setAttribute("x1",A.x);bord.setAttribute("y1",A.y);bord.setAttribute("x2",B.x);bord.setAttribute("y2",B.y);
+    bord.setAttribute("class","barre-bordure");gS.appendChild(bord);
+    const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",A.x);line.setAttribute("y1",A.y);line.setAttribute("x2",B.x);line.setAttribute("y2",B.y);
+    line.setAttribute("class","barre");gS.appendChild(line);
+
+    let r=getArcVocal(A.longMoy,B.longMoy);
+    let INF=r.from==="A"?A:B,SUP=r.from==="A"?B:A;
+    let estMontee=getIndex(SUP.n)>getIndex(INF.n);
+    if(INF.n==="HOD"&&SUP.n==="NETZAH")estMontee=true;
+    let col=estMontee?"#0066ff":"#e00000";
+    let horsKether=INF.n!=="KETHER"&&SUP.n!=="KETHER";
+    log+=`${i+1}. ${INF.n} → ${SUP.n}  ${r.arc.toFixed(1)}°  ${estMontee?"BLEU":"ROUGE"}${horsKether?"":"  (Kether, non compté)"}\n`;
+    sentiers.push({from:INF.n,to:SUP.n,arc:r.arc,evo:estMontee});
+
+    const ux=(SUP.x-INF.x)/dist,uy=(SUP.y-INF.y)/dist;
+    const startX=INF.x+ux*(R1+GAP/2),startY=INF.y+uy*(R1+GAP/2);
+    const endX=SUP.x-ux*(R1+GAP/2),endY=SUP.y-uy*(R1+GAP/2);
+    const fleche=document.createElementNS("http://www.w3.org/2000/svg","line");
+    fleche.setAttribute("x1",startX);fleche.setAttribute("y1",startY);fleche.setAttribute("x2",endX);fleche.setAttribute("y2",endY);
+    fleche.setAttribute("stroke",col);fleche.setAttribute("stroke-width","4");gS.appendChild(fleche);
+    const ang=Math.atan2(uy,ux);
+    const p1x=endX+Math.cos(ang+Math.PI-CAP_ANGLE)*CAP_LEN,p1y=endY+Math.sin(ang+Math.PI-CAP_ANGLE)*CAP_LEN;
+    const p2x=endX+Math.cos(ang+Math.PI+CAP_ANGLE)*CAP_LEN,p2y=endY+Math.sin(ang+Math.PI+CAP_ANGLE)*CAP_LEN;
+    const tri=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    tri.setAttribute("points",`${endX},${endY} ${p1x},${p1y} ${p2x},${p2y}`);
+    tri.setAttribute("fill",col);gS.appendChild(tri);
+  });
+
+  globalData.logSentiers=log;
+  globalData.sentiers=sentiers;
+  document.getElementById("logSentiers").innerText=log;
+  analyserFlux(sentiers);
+  genererInterpretations(sentiers);
+
+  SEPH.forEach(s=>{
+    const isMalkuth=s.n==="MALKUTH";
+    const col=COULEURS[s.n];
+    const c1=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c1.setAttribute("cx",s.x);c1.setAttribute("cy",s.y);c1.setAttribute("r",45);
+    c1.setAttribute("fill","#FFFFFF");c1.setAttribute("stroke",isMalkuth?"#000":col);c1.setAttribute("stroke-width","4");gP.appendChild(c1);
+    const c2=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c2.setAttribute("cx",s.x);c2.setAttribute("cy",s.y);c2.setAttribute("r",18);
+    c2.setAttribute("fill",isMalkuth?"#FFF":col);c2.setAttribute("stroke","#000");c2.setAttribute("stroke-width","2");gP.appendChild(c2);
+    const isDark=["BINAH","GEBURAH","HOD","YESOD"].includes(s.n);
+    const txt=document.createElementNS("http://www.w3.org/2000/svg","text");
+    txt.setAttribute("x",s.x);txt.setAttribute("y",s.y+1);
+    txt.setAttribute("class",isDark?"label-centre-blanc":"label-centre");
+    txt.textContent=s.n.substring(0,6);gP.appendChild(txt);
+    if(s.planetes){
+      s.planetes.forEach((pl,idx)=>{
+        const angle=(idx/s.planetes.length)*2*Math.PI-Math.PI/2;
+        const px=s.x+Math.cos(angle)*Rvirt,py=s.y+Math.sin(angle)*Rvirt;
+        const t=document.createElementNS("http://www.w3.org/2000/svg","text");
+        t.setAttribute("x",px);t.setAttribute("y",py+4);t.setAttribute("class","symbole-sf");
+        if(s.n==="MALKUTH"&&pl==="Asc"&&themeActuel.Asc){t.textContent=signeSF(themeActuel.Asc.signe);}
+        else{t.textContent=glyphSF(pl);}
+        gP.appendChild(t);
+      });
+    }
+  });
+}
+
+const PLAN_COLS={a:"#c62828",b:"#1565c0",c:"#7b1fa2",d:"#c2185b",e:"#d32f2f",f:"#5d4037",g:"#558b2f",h:"#6a1b9a",i:"#0277bd",j:"#1a237e",Asc:"#111111"};
+const SIGN_COLS_EL=[
+  "#d32f2f","#2e7d32","#f9a825","#1565c0",
+  "#d32f2f","#2e7d32","#f9a825","#1565c0",
+  "#d32f2f","#2e7d32","#f9a825","#1565c0"
+];
+const ASPECTS_DEF=[
+  {ang:0,orb:8,col:"#333333",w:1.2,name:"conjonction"},
+  {ang:60,orb:5,col:"#1565c0",w:1,name:"sextile"},
+  {ang:90,orb:7,col:"#c62828",w:1.2,name:"carré"},
+  {ang:120,orb:7,col:"#1565c0",w:1.2,name:"trigone"},
+  {ang:150,orb:3,col:"#2e7d32",w:1,name:"quinconce"},
+  {ang:180,orb:8,col:"#c62828",w:1.4,name:"opposition"}
+];
+
+function deltaAngle(a,b){
+  let d=Math.abs(normLong(a)-normLong(b));
+  return d>180?360-d:d;
+}
+
+function listerAspects(){
+  const ids=["a","b","c","d","e","f","g","h","i","j","Asc"];
+  let pts=ids.map(id=>{let p=themeActuel[id];return p?{id,long:p.abs}:null}).filter(Boolean);
+  let out=[];
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      let d=deltaAngle(pts[i].long,pts[j].long);
+      for(let a of ASPECTS_DEF){
+        if(Math.abs(d-a.ang)<=a.orb){
+          out.push({a:pts[i],b:pts[j],asp:a,orb:Math.abs(d-a.ang)});
+          break;
+        }
+      }
+    }
+  }
+  return out;
+}
+
+function dessinerCarteCiel(){
+  const svg=document.getElementById("svgCarte");
+  const listEl=document.getElementById("carteListe");
+  const meta=document.getElementById("carteMeta");
+  if(!svg||!themeActuel.Asc)return;
+  svg.innerHTML="";
+  const NS="http://www.w3.org/2000/svg";
+  const cx=260,cy=260,VB=520;
+  svg.setAttribute("viewBox","0 0 "+VB+" "+VB);
+  const R_out=252, R_zod=222, R_tick=222, R_house=200, R_asp=112;
+  const asc=themeActuel.Asc.abs;
+  const el=(tag,attrs,txt)=>{
+    let n=document.createElementNS(NS,tag);
+    for(let k in attrs)n.setAttribute(k,attrs[k]);
+    if(txt!=null)n.textContent=txt;
+    return n;
+  };
+  const xy=(long,r)=>{
+    let a=((asc-long)%360+360)%360*Math.PI/180;
+    return[cx-r*Math.cos(a),cy+r*Math.sin(a)];
+  };
+
+  // Fond blanc type Radix
+  svg.appendChild(el("rect",{x:0,y:0,width:VB,height:VB,fill:"#ffffff"}));
+  svg.appendChild(el("circle",{cx,cy,r:R_out,fill:"#ffffff",stroke:"#111","stroke-width":"1.4"}));
+
+  // Anneau zodiaque (blanc) + séparateurs + glyphes colorés
+  svg.appendChild(el("circle",{cx,cy,r:R_zod,fill:"#ffffff",stroke:"#111","stroke-width":"1"}));
+  for(let i=0;i<12;i++){
+    let a0=i*30;
+    let p0=xy(a0,R_out),p1=xy(a0,R_zod);
+    svg.appendChild(el("line",{x1:p0[0],y1:p0[1],x2:p1[0],y2:p1[1],stroke:"#111","stroke-width":"1"}));
+    let mid=xy(a0+15,(R_out+R_zod)/2);
+    svg.appendChild(el("text",{
+      x:mid[0],y:mid[1]+6,"text-anchor":"middle",
+      "font-family":"StarFisher,serif","font-size":"20",fill:SIGN_COLS_EL[i]
+    },SIGNE_SF[SIGNES[i]]));
+  }
+
+  // Graduations 1° / 5° / 10°
+  for(let d=0;d<360;d++){
+    let len=(d%10===0)?10:(d%5===0)?7:4;
+    let pA=xy(d,R_zod),pB=xy(d,R_zod-len);
+    svg.appendChild(el("line",{x1:pA[0],y1:pA[1],x2:pB[0],y2:pB[1],stroke:"#333","stroke-width":d%10===0?"1":"0.6"}));
+  }
+
+  // Cercle aspects + maisons
+  svg.appendChild(el("circle",{cx,cy,r:R_house,fill:"#ffffff",stroke:"#111","stroke-width":"1"}));
+  svg.appendChild(el("circle",{cx,cy,r:R_asp,fill:"#ffffff",stroke:"#111","stroke-width":"1"}));
+
+  // Maisons égales + axes Asc/Mc
+  for(let h=0;h<12;h++){
+    let cusp=normLong(asc+h*30);
+    let thick=(h===0||h===6||h===3||h===9);
+    let p1=xy(cusp,R_house),p2=xy(cusp,R_asp);
+    svg.appendChild(el("line",{
+      x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1],
+      stroke:"#111","stroke-width":thick?"2":"1"
+    }));
+    // prolonger Asc/Dsc et Mc/Ic hors du cercle maison
+    if(thick){
+      let pOut=xy(cusp,R_out+6),pIn=xy(cusp,R_asp);
+      svg.appendChild(el("line",{x1:pOut[0],y1:pOut[1],x2:pIn[0],y2:pIn[1],stroke:"#111","stroke-width":"2"}));
+    }
+    let mid=xy(cusp+15,(R_house+R_asp)/2);
+    svg.appendChild(el("text",{
+      x:mid[0],y:mid[1]+4,"text-anchor":"middle",
+      "font-family":"Arial,Helvetica,sans-serif","font-size":"12",fill:"#111"
+    },String(h+1)));
+  }
+
+  // Labels Asc / Mc (comme StarFisher)
+  let asLab=xy(asc,R_out+16);
+  svg.appendChild(el("text",{
+    x:asLab[0],y:asLab[1]+4,"text-anchor":"middle",
+    "font-family":"Arial,Helvetica,sans-serif","font-size":"12","font-weight":"700",fill:"#111"
+  },"Asc"));
+  let mc=normLong(asc+90);
+  let mcLab=xy(mc,R_out+16);
+  svg.appendChild(el("text",{
+    x:mcLab[0],y:mcLab[1]+4,"text-anchor":"middle",
+    "font-family":"Arial,Helvetica,sans-serif","font-size":"12","font-weight":"700",fill:"#111"
+  },"Mc"));
+
+  // Aspects au centre
+  let aspects=listerAspects();
+  aspects.forEach(as=>{
+    let pA=xy(as.a.long,R_asp-2),pB=xy(as.b.long,R_asp-2);
+    svg.appendChild(el("line",{
+      x1:pA[0],y1:pA[1],x2:pB[0],y2:pB[1],
+      stroke:as.asp.col,"stroke-width":String(as.asp.w),opacity:"0.9"
+    }));
+  });
+
+  // Planètes (glyphes colorés + trait vers le bord)
+  let slots=[];
+  ["a","b","c","d","e","f","g","h","i","j"].forEach(id=>{
+    let p=themeActuel[id];if(!p)return;
+    let long=p.abs,bump=0;
+    slots.forEach(prev=>{
+      let dd=deltaAngle(prev,long);
+      if(dd<7)bump+=11;
+    });
+    slots.push(long);
+    let rGlyph=R_asp+28+bump;
+    let pg=xy(long,rGlyph),pedge=xy(long,R_house);
+    svg.appendChild(el("line",{x1:pedge[0],y1:pedge[1],x2:pg[0],y2:pg[1],stroke:"#666","stroke-width":"0.7"}));
+    svg.appendChild(el("text",{
+      x:pg[0],y:pg[1]+6,"text-anchor":"middle",
+      "font-family":"StarFisher,serif","font-size":"18",fill:PLAN_COLS[id]||"#111"
+    },glyphSF(id)));
+  });
+
+  // En-tête méta (sans nom logiciel tiers)
+  let nom=document.getElementById("nomClient").value||"Thème";
+  let ville=globalData.ville||"";
+  let coords=VILLES[ville]||[0,0];
+  let lat=coords[0],lon=coords[1];
+  let latTxt=(lat>=0?lat.toFixed(2)+"N":(-lat).toFixed(2)+"S");
+  let lonTxt=(lon>=0?lon.toFixed(2)+"E":(-lon).toFixed(2)+"W");
+  if(meta){
+    meta.innerHTML=
+      `<strong>${nom}</strong> (${globalData.jour}.${globalData.mois}.${globalData.annee} ${globalData.heureStr} GMT+1) ${ville} (${latTxt} ${lonTxt})`+
+      `<br>Tropical, Géocentrique / Maisons égales`;
+  }
+
+  // Liste positions (colonne droite style Radix)
+  if(listEl){
+    let html="";
+    ["a","b","c","d","e","f","g","h","i","j","Asc"].forEach(id=>{
+      let p=themeActuel[id];if(!p)return;
+      html+=`<div class="carte-row">`+
+        `<span class="sym-sf" style="color:${PLAN_COLS[id]||"#111"}">${glyphSF(id)}</span>`+
+        `<span class="carte-deg">${String(p.deg).padStart(2,"0")}°</span>`+
+        `<span class="sym-sf" style="color:${SIGN_COLS_EL[Math.floor(p.abs/30)]}">${signeSF(p.signe)}</span>`+
+        `<span class="carte-min">${String(p.min).padStart(2,"0")}′</span>`+
+        `<span class="carte-name">${PLAN_NOM[id]}</span>`+
+      `</div>`;
+    });
+    html+=`<div class="carte-sep">Maisons</div>`;
+    for(let h=0;h<12;h++){
+      let cusp=degToZod(normLong(asc+h*30));
+      html+=`<div class="carte-row carte-house">`+
+        `<span class="carte-hnum">${h+1}</span>`+
+        `<span class="carte-deg">${String(cusp.deg).padStart(2,"0")}°</span>`+
+        `<span class="sym-sf" style="color:${SIGN_COLS_EL[Math.floor(cusp.abs/30)]}">${signeSF(cusp.signe)}</span>`+
+        `<span class="carte-min">${String(cusp.min).padStart(2,"0")}′</span>`+
+      `</div>`;
+    }
+    listEl.innerHTML=html;
+  }
+}
+
+function svgCarteToPngDataUrl(){
+  return new Promise((resolve,reject)=>{
+    const svg=document.getElementById("svgCarte");
+    if(!svg){reject(new Error("no svg"));return;}
+    const clone=svg.cloneNode(true);
+    // police embarquée pour le rendu canvas
+    if(typeof STARFISHER_FONT_B64==="string"&&STARFISHER_FONT_B64.length>40){
+      const style=document.createElementNS("http://www.w3.org/2000/svg","style");
+      style.textContent="@font-face{font-family:'StarFisher';src:url('data:font/truetype;base64,"+STARFISHER_FONT_B64+"') format('truetype');}";
+      clone.insertBefore(style,clone.firstChild);
+    }
+    const xml=new XMLSerializer().serializeToString(clone);
+    const blob=new Blob([xml],{type:"image/svg+xml;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement("canvas");
+      c.width=1040;c.height=1040;
+      const ctx=c.getContext("2d");
+      ctx.fillStyle="#ffffff";ctx.fillRect(0,0,c.width,c.height);
+      ctx.drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("svg render"));};
+    img.src=url;
+  });
+}
+
+
+function genererTableSeph(){
+  if(!globalData.SEPH)return;
+  let html='<table class="seph-table"><tr><th>Séphira</th><th>Planète TRAD</th><th>Long. abs.</th><th>Position</th><th>Ange 5°</th><th>Ange biorythme</th></tr>';
+  globalData.SEPH.forEach(s=>{
+    let long=normLong(s.longMoy);
+    let z=degToZod(long);
+    let deg=Math.floor(long);
+    let a5=PHYS[deg%360]||"",aSym=EMO[deg%360]||"";
+    let tradId=TRAD[s.n]||"-";
+    let planNom=PLAN_NOM[tradId]||tradId;
+    let col=COULEURS[s.n]||"#888";
+    let txt=contrastText(col);
+    let dark=txt==="#ffffff"?" seph-dark":"";
+    let glyph=tradId==="Asc"&&themeActuel.Asc?signeSF(themeActuel.Asc.signe):glyphSF(tradId);
+    html+=`<tr class="${dark.trim()}"><td class="rowhead" style="background:${col};color:${txt};border-left-color:${col}"><span class="swatch" style="background:${col}"></span>${s.n}</td>`+
+      `<td><span class="sym-sf">${glyph}</span> ${planNom}</td>`+
+      `<td>${long.toFixed(4)}° (${deg}°)</td>`+
+      `<td>${z.deg}° <span class="sym-sf">${signeSF(z.signe)}</span> ${z.signeNom} ${String(z.min).padStart(2,"0")}′</td>`+
+      `<td>${a5}</td><td>${aSym}</td></tr>`;
+  });
+  html+="</table>";
+  document.getElementById("tableSeph").innerHTML=html;
+}
+
+async function genererPDF(){
+  if(!globalData||!globalData.ville){alert("Calculez d’abord le thème.");return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const pageW=210,pageH=297,m=14,contentW=pageW-2*m;
+  let y=0;
+  let page=1;
+  const nom=document.getElementById("nomClient").value||"Client";
+  let hasSF=typeof STARFISHER_FONT_B64==="string"&&STARFISHER_FONT_B64.length>100;
+  if(hasSF){
+    try{doc.addFileToVFS("StarFisher.ttf",STARFISHER_FONT_B64);doc.addFont("StarFisher.ttf","StarFisher","normal");}
+    catch(e){hasSF=false;}
+  }
+
+  function footer(){
+    doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(120);
+    doc.text("OREAC Astro Kabbale — dossier confidentiel — "+nom,m,pageH-8);
+    doc.text(String(page),pageW-m,pageH-8,{align:"right"});
+  }
+  function newPage(){
+    footer();doc.addPage();page++;y=m;
+  }
+  function ensure(h){if(y+h>pageH-14)newPage();}
+  function h1(t){
+    ensure(14);
+    doc.setFillColor(31,42,34);doc.rect(m,y,contentW,9,"F");
+    doc.setTextColor(250,247,240);doc.setFont("helvetica","bold");doc.setFontSize(12);
+    doc.text(t,m+3,y+6);y+=13;
+  }
+  function h2(t){
+    ensure(10);
+    doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(58,90,64);
+    doc.text(t,m,y);y+=2;
+    doc.setDrawColor(58,90,64);doc.setLineWidth(0.35);doc.line(m,y,pageW-m,y);y+=5;
+  }
+  function p(t,size,lead){
+    doc.setFont("helvetica","normal");doc.setFontSize(size||10);doc.setTextColor(36,48,40);
+    let lines=doc.splitTextToSize(String(t),contentW);
+    let lh=lead||(size||10)*0.45;
+    ensure(lines.length*lh+2);
+    doc.text(lines,m,y);y+=lines.length*lh+2;
+  }
+  function kv(label,val){
+    ensure(7);
+    doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(90);
+    doc.text(label,m,y);
+    doc.setFont("helvetica","normal");doc.setFontSize(10);doc.setTextColor(36,48,40);
+    doc.text(String(val),m+42,y);y+=6;
+  }
+  function tableHeader(cols,widths){
+    ensure(8);
+    doc.setFillColor(58,90,64);doc.rect(m,y-4,contentW,7,"F");
+    doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(8);
+    let x=m+2;
+    cols.forEach((c,i)=>{doc.text(c,x,y);x+=widths[i];});
+    y+=6;
+  }
+  function tableRow(cells,widths,alt){
+    ensure(7);
+    if(alt){doc.setFillColor(243,239,230);doc.rect(m,y-4,contentW,6.5,"F");}
+    doc.setTextColor(36,48,40);doc.setFont("helvetica","normal");doc.setFontSize(8.5);
+    let x=m+2;
+    cells.forEach((c,i)=>{
+      let t=doc.splitTextToSize(String(c),widths[i]-2);
+      doc.text(t[0]||"",x,y);
+      x+=widths[i];
+    });
+    y+=6.2;
+  }
+
+  // —— Page de garde ——
+  y=m;
+  doc.setFillColor(31,42,34);doc.rect(0,0,pageW,42,"F");
+  doc.setTextColor(250,247,240);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("OREAC Astro Kabbale",m,16);
+  doc.setFont("helvetica","normal");doc.setFontSize(11);
+  doc.text("Dossier d’astrologie kabbalistique",m,26);
+  doc.setFontSize(10);doc.text(nom,m,34);
+  y=50;
+
+  h2("Identité du thème");
+  kv("Consultant",nom);
+  kv("Lieu",globalData.ville);
+  kv("Date",globalData.jour+" / "+globalData.mois+" / "+globalData.annee);
+  kv("Heure",globalData.heureStr+" (GMT+1)");
+  kv("Lever du Soleil",globalData.lever);
+  kv("Soleil (abs.)",globalData.lambda.toFixed(4)+"°");
+
+  h2("Trois anges gardiens");
+  tableHeader(["Type","Ange","Base de calcul"],[40,70,contentW-110]);
+  tableRow(["Physique",globalData.angePhys,globalData.degreFinal+"° soleil"],[40,70,contentW-110],false);
+  tableRow(["Émotionnel",globalData.angeEmo,globalData.degreFinal+"° soleil"],[40,70,contentW-110],true);
+  tableRow(["Mental",globalData.angeMent,globalData.minutesEcoule+" min après lever (idx "+globalData.idx+")"],[40,70,contentW-110],false);
+  y+=4;
+
+  h2("Bilan des sentiers (hors Kether)");
+  // boîtes stats
+  ensure(22);
+  doc.setFillColor(232,242,248);doc.roundedRect(m,y,88,18,2,2,"F");
+  doc.setFillColor(252,235,233);doc.roundedRect(m+94,y,88,18,2,2,"F");
+  doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(42,111,151);
+  doc.text(String(globalData.nbEvo),m+8,y+8);
+  doc.setFontSize(8);doc.setTextColor(60);doc.text("Évolution (bleu)",m+8,y+14);
+  doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(198,40,40);
+  doc.text(String(globalData.nbInv),m+102,y+8);
+  doc.setFontSize(8);doc.setTextColor(60);doc.text("Involution (rouge)",m+102,y+14);
+  y+=24;
+  if(globalData.bloques&&globalData.bloques.length){
+    p("Séphiroth bloqués : "+globalData.bloques.map(b=>b.n).join(", "),10);
+  }else{
+    p("Aucun séphira bloqué (hors Kether).",10);
+  }
+
+  // —— Carte du ciel ——
+  newPage();
+  h1("Carte du ciel");
+  p("Tropical · Géocentrique · Maisons égales depuis l’Ascendant",9);
+  try{
+    let png=await svgCarteToPngDataUrl();
+    ensure(120);
+    let imgW=120,imgH=120;
+    doc.addImage(png,"PNG",m+(contentW-imgW)/2,y,imgW,imgH);
+    y+=imgH+6;
+  }catch(e){
+    p("(Carte non exportable sur cet appareil — voir l’écran.)",9);
+  }
+
+  h2("Positions");
+  tableHeader(["Astre","Long. abs.","Position"],[50,45,contentW-95]);
+  let alt=false;
+  ["a","b","c","d","e","f","g","h","i","j","Asc"].forEach(id=>{
+    let ppos=themeActuel[id];if(!ppos)return;
+    tableRow([
+      PLAN_NOM[id],
+      ppos.absTxt,
+      ppos.deg+"° "+ppos.signeNom+" "+String(ppos.min).padStart(2,"0")+"′"
+    ],[50,45,contentW-95],alt);
+    alt=!alt;
+  });
+
+  // —— Séphiroth ——
+  newPage();
+  h1("Tableau des séphiroth");
+  tableHeader(["Séphira","TRAD","Long.","Position","Ange 5°","Biorythme"],[32,28,28,40,32,contentW-160]);
+  alt=false;
+  globalData.SEPH.forEach(s=>{
+    let long=normLong(s.longMoy),deg=Math.floor(long),z=degToZod(long);
+    tableRow([
+      s.n,
+      PLAN_NOM[TRAD[s.n]]||TRAD[s.n]||"",
+      long.toFixed(2)+"°",
+      z.deg+"° "+z.signeNom,
+      PHYS[deg]||"",
+      EMO[deg]||""
+    ],[32,28,28,40,32,contentW-160],alt);
+    alt=!alt;
+  });
+
+  // —— Sentiers ——
+  newPage();
+  h1("22 sentiers — règle vocale");
+  p("Bleu = évolution · Rouge = involution · Les liens à Kether ne sont pas comptés dans le bilan.",9);
+  tableHeader(["#","De","Vers","Arc","Sens"],[12,40,40,25,contentW-117]);
+  alt=false;
+  (globalData.sentiers||[]).forEach((s,i)=>{
+    tableRow([
+      String(i+1),
+      s.from,
+      s.to,
+      s.arc.toFixed(1)+"°",
+      s.evo?"Évolution":"Involution"
+    ],[12,40,40,25,contentW-117],alt);
+    alt=!alt;
+  });
+
+  if(calSelected){
+    newPage();
+    h1("Degré symbolique du jour");
+    let info=degreSymboliqueJour(calSelected.y,calSelected.m,calSelected.d);
+    kv("Date",calSelected.d+" "+MOIS_NOM[calSelected.m]+" "+calSelected.y);
+    kv("Degré",info.label+" (n° "+info.degAbs+"/360)");
+    kv("Ange 5°",info.ange5);
+    kv("Biorythme",info.angeSym);
+    y+=2;h2("Texte symbolique");
+    if(InterpStore.hasText(info.sabian))p(info.sabian,10,5);
+    else p("Interprétation non renseignée.",10);
+  }
+
+  footer();
+  doc.save("OREAC_Astro_Kabbale_"+nom.replace(/\s+/g,"_")+"_"+globalData.jour+"-"+globalData.mois+"-"+globalData.annee+".pdf");
+}
+</script>
+</body>
+</html>

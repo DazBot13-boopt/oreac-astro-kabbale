@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biorythme kabbalistique — OREAC Astro Kabbale</title>
+<meta name="theme-color" content="#3a5a40">
+<script src="js/biorythme-data.js"></script>
+<script src="js/biorythme.js"></script>
+<style>
+@font-face{
+  font-family:"StarFisher";
+  src:url("fonts/StarFisher.ttf") format("truetype");
+  font-weight:normal;font-style:normal;font-display:swap;
+}
+:root{
+  --bark:#1f2a22;--moss:#3a5a40;--leaf:#52796f;--sand:#f3efe6;--paper:#faf7f0;
+  --clay:#a63d2f;--river:#2a6f97;--gold:#b08968;--ink:#243028;--muted:#6b756e;
+  --line:rgba(36,48,40,.12);--radius:14px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(1000px 500px at 8% -8%,rgba(82,121,111,.16),transparent 55%),
+    linear-gradient(165deg,#dfe8df 0%,var(--sand) 45%,#e8e0d2 100%);
+  padding:clamp(12px,3vw,28px);
+}
+.wrap{max-width:980px;margin:0 auto}
+.brand{text-align:center;margin-bottom:18px}
+.brand-mark{
+  font-size:clamp(1.4rem,4vw,2rem);font-weight:800;letter-spacing:.04em;
+  color:var(--bark);margin-bottom:4px;
+}
+.brand p{margin:0;color:var(--muted);font-size:.92rem}
+.panel{
+  background:rgba(250,247,240,.92);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;
+  box-shadow:0 8px 24px rgba(31,42,34,.08);
+}
+.panel h2{margin:0 0 10px;font-size:1.15rem;color:var(--bark)}
+.hero-name{
+  text-align:center;padding:18px 14px;margin-bottom:16px;
+  background:linear-gradient(135deg,#1f2a22,#3a5a40);color:#faf7f0;
+  border-radius:var(--radius);box-shadow:0 10px 28px rgba(31,42,34,.2);
+}
+.hero-name .eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.hero-name h1{
+  margin:6px 0 4px;font-size:clamp(1.5rem,4.5vw,2.2rem);font-weight:800;
+  letter-spacing:.02em;
+}
+.hero-name .sub{font-size:.9rem;opacity:.88}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:4px}
+select,input{
+  font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+  background:#fff;min-width:120px;color:var(--ink);
+}
+.btn{
+  appearance:none;border:none;cursor:pointer;font:inherit;font-weight:700;
+  padding:10px 16px;border-radius:10px;background:var(--moss);color:#fff;
+}
+.btn-alt{background:#fff;color:var(--bark);border:1px solid var(--line)}
+.btn a{color:inherit;text-decoration:none}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.tab{
+  border:1px solid var(--line);background:#fff;border-radius:999px;
+  padding:6px 12px;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--bark);
+}
+.tab.active{background:var(--moss);color:#fff;border-color:var(--moss)}
+.natal-chip{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;
+  background:rgba(58,90,64,.08);border-radius:10px;font-size:.9rem;margin-bottom:12px;
+}
+.sym-sf{font-family:"StarFisher",serif;font-size:1.2rem}
+.table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.86rem;min-width:560px;background:#fff}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid rgba(0,0,0,.07)}
+th{background:#3a5a40;color:#fff;font-size:.78rem;letter-spacing:.03em}
+tr:nth-child(even) td{background:#f7f4ec}
+tr.seph-kether td{background:#f3e5f5}
+tr.seph-malkuth td{background:#eceff1;font-weight:700}
+.hint{font-size:.84rem;color:var(--muted);line-height:1.45}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+.timeline{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:12px;
+}
+.tl-card{
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;
+  font-size:.78rem;
+}
+.tl-card strong{display:block;font-size:.84rem;color:var(--bark);margin-bottom:2px}
+.tl-card .d{color:var(--river);font-weight:700}
+@media print{
+  body{background:#fff;padding:0}
+  .toolbar .btn,.tabs,.no-print{display:none!important}
+  .panel{box-shadow:none;break-inside:avoid}
+  .hero-name{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <div class="brand-mark">OREAC Astro Kabbale</div>
+    <p>Biorythme kabbalistique · Arbre de Vie personnalisé</p>
+  </header>
+
+  <div class="hero-name" id="heroName">
+    <div class="eyebrow">Dossier personnalisé</div>
+    <h1 id="nomAffiche">Client</h1>
+    <div class="sub" id="heroSub">Calculez d’abord le thème natal dans l’application principale.</div>
+  </div>
+
+  <section class="panel">
+    <h2>Paramètres</h2>
+    <div class="toolbar">
+      <div>
+        <label for="bioAnnee">Année du biorythme</label>
+        <select id="bioAnnee"></select>
+      </div>
+      <div>
+        <label for="nomEdit">Nom du client</label>
+        <input id="nomEdit" placeholder="Nom du consultant">
+      </div>
+      <button class="btn" type="button" onclick="rafraichirBiorythme()">Actualiser</button>
+      <button class="btn btn-alt no-print" type="button" onclick="window.print()">Imprimer</button>
+      <a class="btn btn-alt no-print" href="index.html">← Thème natal</a>
+    </div>
+    <p class="hint">
+      Pour chaque planète natale : les 19 activations annuelles (conjonction → séphiroth → opposition → retour)
+      lorsque le Soleil en transit atteint le degré-aspect. Personnalisé au nom du client.
+    </p>
+  </section>
+
+  <section class="panel" id="panelBio">
+    <h2>Transit du Soleil sur le thème natal</h2>
+    <div class="tabs" id="bioTabs"></div>
+    <div id="bioContent" class="empty">Aucune donnée de thème. Ouvrez cette page depuis le calcul du thème natal.</div>
+  </section>
+</div>
+
+<script>
+let themePayload = null;
+let bioData = [];
+let planeteActive = "a";
+
+(function initAnnees(){
+  let s = document.getElementById("bioAnnee");
+  let y0 = new Date().getFullYear();
+  for (let y = y0 + 2; y >= y0 - 5; y--) {
+    let o = document.createElement("option");
+    o.value = y; o.textContent = y;
+    if (y === y0) o.selected = true;
+    s.appendChild(o);
+  }
+})();
+
+function charger(){
+  themePayload = BiorythmeKabbale.chargerTheme();
+  // URL ?nom=
+  let q = new URLSearchParams(location.search);
+  if (q.get("nom") && themePayload) themePayload.nom = q.get("nom");
+  if (themePayload && themePayload.nom) {
+    document.getElementById("nomEdit").value = themePayload.nom;
+  }
+  if (themePayload && themePayload.anneeBio) {
+    document.getElementById("bioAnnee").value = String(themePayload.anneeBio);
+  }
+  rafraichirBiorythme();
+}
+
+function rafraichirBiorythme(){
+  let nom = (document.getElementById("nomEdit").value || "").trim() || (themePayload && themePayload.nom) || "Client";
+  document.getElementById("nomAffiche").textContent = nom;
+  document.title = "Biorythme de " + nom + " — OREAC Astro Kabbale";
+
+  if (!themePayload || !themePayload.theme) {
+    document.getElementById("heroSub").textContent = "Aucun thème enregistré. Calculez le thème dans OREAC Astro Kabbale puis cliquez « Biorythme personnalisé ».";
+    document.getElementById("bioContent").innerHTML = '<div class="empty">Pas de thème natal. <a href="index.html">Retour à l’application</a></div>';
+    document.getElementById("bioTabs").innerHTML = "";
+    return;
+  }
+
+  let annee = +document.getElementById("bioAnnee").value;
+  themePayload.nom = nom;
+  themePayload.anneeBio = annee;
+  BiorythmeKabbale.sauverTheme(themePayload);
+
+  let meta = [];
+  if (themePayload.ville) meta.push(themePayload.ville);
+  if (themePayload.jour) meta.push(themePayload.jour + "/" + themePayload.mois + "/" + themePayload.annee + (themePayload.heureStr ? " · " + themePayload.heureStr : ""));
+  meta.push("Année biorythme " + annee);
+  document.getElementById("heroSub").textContent = meta.join(" · ");
+
+  bioData = BiorythmeKabbale.biorythmeComplet(themePayload.theme, annee);
+  peindreTabs();
+  peindrePlanete(planeteActive);
+}
+
+function peindreTabs(){
+  let html = "";
+  bioData.forEach(p => {
+    html += `<button type="button" class="tab${p.id === planeteActive ? " active" : ""}" onclick="peindrePlanete('${p.id}')">${p.nom}</button>`;
+  });
+  document.getElementById("bioTabs").innerHTML = html;
+}
+
+function peindrePlanete(id){
+  planeteActive = id;
+  peindreTabs();
+  let p = bioData.find(x => x.id === id);
+  if (!p) return;
+  let html = `<div class="natal-chip"><span class="sym-sf">${id === "Asc" ? "0" : id}</span> <strong>${p.nom} natal</strong> — ${p.natalTxt} (abs. ${p.abs.toFixed(2)}°)</div>`;
+  html += `<div class="table-wrap"><table><thead><tr>
+    <th>#</th><th>Séphira</th><th>Arc</th><th>Degré symbolique</th><th>Ange solaire (2<sup>e</sup>)</th><th>1<sup>re</sup> régence</th><th>Date (Soleil)</th>
+  </tr></thead><tbody>`;
+  p.rows.forEach(r => {
+    let cls = "";
+    if (r.sephira === "KETHER") cls = "seph-kether";
+    if (r.sephira === "MALKUTH") cls = "seph-malkuth";
+    html += `<tr class="${cls}">
+      <td>${r.n}</td>
+      <td><strong>${r.sephira}</strong></td>
+      <td>${r.offset}°</td>
+      <td>${r.degLabel}</td>
+      <td>${r.ange}</td>
+      <td>${r.ange1}</td>
+      <td>${r.date}</td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // mini timeline sorted by date
+  let sorted = p.rows.slice().filter(r => r.dateObj).sort((a, b) => {
+    let da = a.dateObj.y * 400 + a.dateObj.m * 32 + a.dateObj.d;
+    let db = b.dateObj.y * 400 + b.dateObj.m * 32 + b.dateObj.d;
+    return da - db;
+  });
+  html += `<h2 style="margin:18px 0 8px;font-size:1rem">Frise ${document.getElementById("bioAnnee").value} — ${p.nom}</h2><div class="timeline">`;
+  sorted.forEach(r => {
+    html += `<div class="tl-card"><strong>${r.sephira}</strong><span class="d">${r.date}</span><div>${r.degLabel}</div><div>${r.ange}</div></div>`;
+  });
+  html += `</div>`;
+
+  document.getElementById("bioContent").innerHTML = html;
+}
+
+document.getElementById("nomEdit").addEventListener("change", rafraichirBiorythme);
+document.getElementById("bioAnnee").addEventListener("change", rafraichirBiorythme);
+charger();
+</script>
+</body>
+</html>

@@ -1,0 +1,1429 @@
+# SABIAN (degré absolu 1..360)
+
+<<<KEY sabian.1>>>
+Une femme tout juste sortie de la mer. Un phoque l'étreint.
+<<<END>>>
+
+<<<KEY sabian.2>>>
+Un comédien révèle la nature humaine.
+<<<END>>>
+
+<<<KEY sabian.3>>>
+Le profil en camée d'un homme, évoquant la forme de son pays.
+<<<END>>>
+
+<<<KEY sabian.4>>>
+Deux amoureux se promènent sur un chemin isolé.
+<<<END>>>
+
+<<<KEY sabian.5>>>
+Un triangle avec des ailes.
+<<<END>>>
+
+<<<KEY sabian.6>>>
+Un carré dont l'un des côtés est vivement éclairé.
+<<<END>>>
+
+<<<KEY sabian.7>>>
+Un homme réussit à s'exprimer simultanément dans deux royaumes.
+<<<END>>>
+
+<<<KEY sabian.8>>>
+Un grand chapeau de femme aux rubans soufflés par un vent d'est.
+<<<END>>>
+
+<<<KEY sabian.9>>>
+Un voyant dans sa boule de cristal.
+<<<END>>>
+
+<<<KEY sabian.10>>>
+Un enseignant donne de nouvelles formes symboliques aux images traditionnelles.
+<<<END>>>
+
+<<<KEY sabian.11>>>
+Le dirigeant d'une nation.
+<<<END>>>
+
+<<<KEY sabian.12>>>
+Un vol d'oies sauvages en forme de triangle.
+<<<END>>>
+
+<<<KEY sabian.13>>>
+Une bombe non explosée révèle une protestation sociale manquée.
+<<<END>>>
+
+<<<KEY sabian.14>>>
+Un serpent enroulé près d'un homme et d'une femme.
+<<<END>>>
+
+<<<KEY sabian.15>>>
+Un Indien tissant une couverture cérémonielle.
+<<<END>>>
+
+<<<KEY sabian.16>>>
+On voit des esprits de la nature au travail à la lumière du couchant.
+<<<END>>>
+
+<<<KEY sabian.17>>>
+Deux vieilles filles dignes, assises en silence.
+<<<END>>>
+
+<<<KEY sabian.18>>>
+Un hamac vide tendu entre deux arbres.
+<<<END>>>
+
+<<<KEY sabian.19>>>
+Le « Tapis magique » de l'imagerie orientale.
+<<<END>>>
+
+<<<KEY sabian.20>>>
+Une jeune fille nourrissant des oiseaux en hiver.
+<<<END>>>
+
+<<<KEY sabian.21>>>
+Un pugiliste entrant sur le ring.
+<<<END>>>
+
+<<<KEY sabian.22>>>
+La porte du jardin de tous les désirs comblés.
+<<<END>>>
+
+<<<KEY sabian.23>>>
+Une femme enceinte en robe d'été légère.
+<<<END>>>
+
+<<<KEY sabian.24>>>
+Soufflés vers l'intérieur par le vent, les rideaux d'une fenêtre ouverte prennent la forme d'une corne d'abondance.
+<<<END>>>
+
+<<<KEY sabian.25>>>
+La possibilité pour l'homme d'acquérir de l'expérience à deux niveaux d'être.
+<<<END>>>
+
+<<<KEY sabian.26>>>
+Un homme possédant plus de dons qu'il ne peut en contenir.
+<<<END>>>
+
+<<<KEY sabian.27>>>
+Grâce à l'imagination, une occasion perdue est retrouvée.
+<<<END>>>
+
+<<<KEY sabian.28>>>
+Un large public fait face à l'artiste qui a déçu ses attentes.
+<<<END>>>
+
+<<<KEY sabian.29>>>
+La musique des sphères.
+<<<END>>>
+
+<<<KEY sabian.30>>>
+Une mare aux canards et sa couvée.
+<<<END>>>
+
+<<<KEY sabian.31>>>
+Un clair ruisseau de montagne.
+<<<END>>>
+
+<<<KEY sabian.32>>>
+Un orage électrique.
+<<<END>>>
+
+<<<KEY sabian.33>>>
+Des marches naturelles mènent à une pelouse de trèfle en fleurs.
+<<<END>>>
+
+<<<KEY sabian.34>>>
+Le pot d'or au bout de l'arc-en-ciel.
+<<<END>>>
+
+<<<KEY sabian.35>>>
+Une veuve devant une tombe ouverte.
+<<<END>>>
+
+<<<KEY sabian.36>>>
+Un pont cantilever franchissant une gorge profonde.
+<<<END>>>
+
+<<<KEY sabian.37>>>
+La femme de Samarie au puits ancestral.
+<<<END>>>
+
+<<<KEY sabian.38>>>
+Un traîneau sur une terre libérée de la neige.
+<<<END>>>
+
+<<<KEY sabian.39>>>
+Un sapin de Noël entièrement décoré.
+<<<END>>>
+
+<<<KEY sabian.40>>>
+Une infirmière de la Croix-Rouge.
+<<<END>>>
+
+<<<KEY sabian.41>>>
+Une femme arrosant les fleurs de son jardin.
+<<<END>>>
+
+<<<KEY sabian.42>>>
+Un jeune couple faisant du lèche-vitrines.
+<<<END>>>
+
+<<<KEY sabian.43>>>
+Un porteur chargé de lourds bagages.
+<<<END>>>
+
+<<<KEY sabian.44>>>
+Sur la plage, des enfants jouent tandis que des coquillages tâtonnent au bord de l'eau.
+<<<END>>>
+
+<<<KEY sabian.45>>>
+La tête coiffée d'un chapeau de soie désinvolte, emmitouflé contre le froid, un homme brave la tempête.
+<<<END>>>
+
+<<<KEY sabian.46>>>
+Un vieux professeur ne parvient pas à intéresser ses élèves au savoir traditionnel.
+<<<END>>>
+
+<<<KEY sabian.47>>>
+Une bataille symbolique entre les « Épées » et les « Torches ».
+<<<END>>>
+
+<<<KEY sabian.48>>>
+Une femme aérant un vieux sac par la fenêtre ouverte de sa chambre.
+<<<END>>>
+
+<<<KEY sabian.49>>>
+Un nouveau continent surgissant de l'océan.
+<<<END>>>
+
+<<<KEY sabian.50>>>
+Des filaments de nuages en forme d'ailes qui filent à travers le ciel.
+<<<END>>>
+
+<<<KEY sabian.51>>>
+Un doigt pointant une ligne dans un livre ouvert.
+<<<END>>>
+
+<<<KEY sabian.52>>>
+Une colombe blanche volant au-dessus d'eaux agitées.
+<<<END>>>
+
+<<<KEY sabian.53>>>
+Une bijouterie remplie de pierres précieuses de grande valeur.
+<<<END>>>
+
+<<<KEY sabian.54>>>
+Un guerrier indien chevauchant avec férocité, des scalps humains pendus à sa ceinture.
+<<<END>>>
+
+<<<KEY sabian.55>>>
+Un vaste parc public.
+<<<END>>>
+
+<<<KEY sabian.56>>>
+Un galant espagnol donne une sérénade à sa bien-aimée.
+<<<END>>>
+
+<<<KEY sabian.57>>>
+Une vieille Indienne vendant les objets artisanaux de sa tribu aux passants.
+<<<END>>>
+
+<<<KEY sabian.58>>>
+Une femme, passée son « âge critique », vit un nouvel amour.
+<<<END>>>
+
+<<<KEY sabian.59>>>
+Deux cordonniers travaillant à une table.
+<<<END>>>
+
+<<<KEY sabian.60>>>
+Un paon faisant la roue sur la terrasse d'un vieux château.
+<<<END>>>
+
+<<<KEY sabian.61>>>
+Un bateau à fond de verre révèle les merveilles sous-marines.
+<<<END>>>
+
+<<<KEY sabian.62>>>
+Le Père Noël remplissant furtivement les chaussettes suspendues devant la cheminée.
+<<<END>>>
+
+<<<KEY sabian.63>>>
+Le jardin des Tuileries à Paris.
+<<<END>>>
+
+<<<KEY sabian.64>>>
+Le houx et le gui réveillent de vieux souvenirs de Noël.
+<<<END>>>
+
+<<<KEY sabian.65>>>
+Une revue révolutionnaire appelant à l'action.
+<<<END>>>
+
+<<<KEY sabian.66>>>
+Des ouvriers forant à la recherche de pétrole.
+<<<END>>>
+
+<<<KEY sabian.67>>>
+Un puits avec seau et corde à l'ombre d'arbres majestueux.
+<<<END>>>
+
+<<<KEY sabian.68>>>
+Des grévistes en colère encerclent une usine.
+<<<END>>>
+
+<<<KEY sabian.69>>>
+Un carquois rempli de flèches.
+<<<END>>>
+
+<<<KEY sabian.70>>>
+Un avion en piqué.
+<<<END>>>
+
+<<<KEY sabian.71>>>
+Des terres nouvellement ouvertes offrent au pionnier de nouvelles possibilités d'expérience.
+<<<END>>>
+
+<<<KEY sabian.72>>>
+Une jeune Noire se bat pour son indépendance dans la ville.
+<<<END>>>
+
+<<<KEY sabian.73>>>
+Un célèbre pianiste donnant un concert.
+<<<END>>>
+
+<<<KEY sabian.74>>>
+Par-delà l'espace physique et les distinctions sociales, deux hommes communiquent par télépathie.
+<<<END>>>
+
+<<<KEY sabian.75>>>
+Deux enfants hollandais se parlant, échangeant leurs connaissances.
+<<<END>>>
+
+<<<KEY sabian.76>>>
+Une militante, dans un discours émouvant, met en scène sa cause de façon dramatique.
+<<<END>>>
+
+<<<KEY sabian.77>>>
+La tête d'un jeune homme robuste se transforme en celle d'un penseur.
+<<<END>>>
+
+<<<KEY sabian.78>>>
+Deux Chinois conversent dans leur langue natale dans une ville américaine.
+<<<END>>>
+
+<<<KEY sabian.79>>>
+Un grand volume archaïque révèle la sagesse traditionnelle.
+<<<END>>>
+
+<<<KEY sabian.80>>>
+Une cafétéria moderne étale une abondance de nourriture, produits de diverses régions.
+<<<END>>>
+
+<<<KEY sabian.81>>>
+Une manifestation ouvrière tumultueuse.
+<<<END>>>
+
+<<<KEY sabian.82>>>
+Des couples dansant lors d'une fête des moissons.
+<<<END>>>
+
+<<<KEY sabian.83>>>
+Trois oisillons dans un nid haut perché dans un arbre.
+<<<END>>>
+
+<<<KEY sabian.84>>>
+Des enfants patinant sur l'étang gelé d'un village.
+<<<END>>>
+
+<<<KEY sabian.85>>>
+Un jardinier taillant de grands palmiers.
+<<<END>>>
+
+<<<KEY sabian.86>>>
+Des arbres couverts de givre contre le ciel d'hiver.
+<<<END>>>
+
+<<<KEY sabian.87>>>
+Une Bohémienne sort de la forêt où campe sa tribu.
+<<<END>>>
+
+<<<KEY sabian.88>>>
+Par la faillite, la société donne à un individu surchargé l'occasion de recommencer.
+<<<END>>>
+
+<<<KEY sabian.89>>>
+Le premier moqueur de printemps.
+<<<END>>>
+
+<<<KEY sabian.90>>>
+Un défilé de beautés en maillot de bain devant de grandes foules sur la plage.
+<<<END>>>
+
+<<<KEY sabian.91>>>
+Sur un navire, les marins amènent un vieux drapeau et en hissent un nouveau.
+<<<END>>>
+
+<<<KEY sabian.92>>>
+Un homme sur un tapis magique survole une vaste étendue de terre.
+<<<END>>>
+
+<<<KEY sabian.93>>>
+Un homme emmitouflé de fourrures mène un cerf hirsute.
+<<<END>>>
+
+<<<KEY sabian.94>>>
+Un chat se disputant avec une souris.
+<<<END>>>
+
+<<<KEY sabian.95>>>
+À un passage à niveau, une automobile est détruite par un train.
+<<<END>>>
+
+<<<KEY sabian.96>>>
+Des oiseaux de gibier garnissent leur nid de plumes.
+<<<END>>>
+
+<<<KEY sabian.97>>>
+Deux esprits de la nature dansant au clair de lune.
+<<<END>>>
+
+<<<KEY sabian.98>>>
+Un groupe de lapins habillés en humains marchent comme en parade.
+<<<END>>>
+
+<<<KEY sabian.99>>>
+Une petite fille nue, penchée sur un étang, essaie d'attraper un poisson.
+<<<END>>>
+
+<<<KEY sabian.100>>>
+Un gros diamant aux premiers stades de la taille.
+<<<END>>>
+
+<<<KEY sabian.101>>>
+Un clown caricaturant des personnalités connues.
+<<<END>>>
+
+<<<KEY sabian.102>>>
+Une Chinoise allaitant un bébé dont l'aura révèle qu'il est la réincarnation d'un grand maître.
+<<<END>>>
+
+<<<KEY sabian.103>>>
+Une main au pouce proéminent est tendue pour être étudiée.
+<<<END>>>
+
+<<<KEY sabian.104>>>
+Un très vieil homme face à un vaste espace sombre au nord-est.
+<<<END>>>
+
+<<<KEY sabian.105>>>
+Dans une somptueuse salle à manger, des convives se détendent après avoir pris part à un énorme banquet.
+<<<END>>>
+
+<<<KEY sabian.106>>>
+Un homme étudiant un mandala posé devant lui, à l'aide d'un très ancien livre.
+<<<END>>>
+
+<<<KEY sabian.107>>>
+Le déploiement de potentialités à plusieurs niveaux issues d'un germe originel.
+<<<END>>>
+
+<<<KEY sabian.108>>>
+Une poule grattant le sol pour trouver de la nourriture pour sa progéniture.
+<<<END>>>
+
+<<<KEY sabian.109>>>
+Un prêtre célébrant un mariage.
+<<<END>>>
+
+<<<KEY sabian.110>>>
+Des gondoliers vénitiens donnant une sérénade.
+<<<END>>>
+
+<<<KEY sabian.111>>>
+Une célèbre cantatrice prouve sa virtuosité lors d'une représentation d'opéra.
+<<<END>>>
+
+<<<KEY sabian.112>>>
+Une jeune femme attendant un voilier.
+<<<END>>>
+
+<<<KEY sabian.113>>>
+La réunion d'une société littéraire.
+<<<END>>>
+
+<<<KEY sabian.114>>>
+Une femme et deux hommes naufragés sur une petite île des mers du Sud.
+<<<END>>>
+
+<<<KEY sabian.115>>>
+Un homme volontaire est éclipsé par la descente d'une puissance supérieure.
+<<<END>>>
+
+<<<KEY sabian.116>>>
+Des invités lisent dans la bibliothèque d'une luxueuse demeure.
+<<<END>>>
+
+<<<KEY sabian.117>>>
+Une violente tempête dans un canyon rempli de maisons coûteuses.
+<<<END>>>
+
+<<<KEY sabian.118>>>
+Une jeune Indienne présente son amoureux blanc à sa tribu assemblée.
+<<<END>>>
+
+<<<KEY sabian.119>>>
+Une Muse grecque pesant des jumeaux nouveau-nés dans des balances d'or.
+<<<END>>>
+
+<<<KEY sabian.120>>>
+Une Fille de la Révolution américaine.
+<<<END>>>
+
+<<<KEY sabian.121>>>
+Le sang afflue à la tête d'un homme alors que ses énergies vitales sont mobilisées par l'aiguillon de l'ambition.
+<<<END>>>
+
+<<<KEY sabian.122>>>
+Une épidémie d'oreillons.
+<<<END>>>
+
+<<<KEY sabian.123>>>
+Une femme d'âge mûr, ses longs cheveux flottant sur les épaules, vêtue d'un habit juvénile sans soutien-gorge.
+<<<END>>>
+
+<<<KEY sabian.125>>>
+Des formations rocheuses dominent un profond canyon.
+<<<END>>>
+
+<<<KEY sabian.126>>>
+Une femme conservatrice et vieux jeu se trouve confrontée à une jeune « hippie ».
+<<<END>>>
+
+<<<KEY sabian.127>>>
+Les constellations d'étoiles brillent avec éclat dans le ciel nocturne.
+<<<END>>>
+
+<<<KEY sabian.128>>>
+Un militant communiste diffusant ses idéaux révolutionnaires.
+<<<END>>>
+
+<<<KEY sabian.129>>>
+Des souffleurs de verre façonnent de belles choses par leur respiration maîtrisée.
+<<<END>>>
+
+<<<KEY sabian.130>>>
+La rosée du petit matin scintille tandis que la lumière du soleil inonde le champ.
+<<<END>>>
+
+<<<KEY sabian.131>>>
+Des enfants jouent sur une balançoire suspendue aux branches d'un immense chêne.
+<<<END>>>
+
+<<<KEY sabian.132>>>
+Une soirée d'adultes sur une pelouse éclairée de lanternes fantaisie.
+<<<END>>>
+
+<<<KEY sabian.133>>>
+Un vieux capitaine de navire se berce sur le porche de sa maisonnette.
+<<<END>>>
+
+<<<KEY sabian.134>>>
+Une âme humaine en quête d'occasions de manifestation extérieure.
+<<<END>>>
+
+<<<KEY sabian.135>>>
+Un cortège, avec ses chars spectaculaires, avance dans une rue noire de monde acclamant.
+<<<END>>>
+
+<<<KEY sabian.136>>>
+La tempête terminée, toute la nature se réjouit dans un soleil radieux.
+<<<END>>>
+
+<<<KEY sabian.137>>>
+Un chœur d'église composé de bénévoles chantant des hymnes religieux.
+<<<END>>>
+
+<<<KEY sabian.138>>>
+Un chimiste mène une expérience pour ses étudiants.
+<<<END>>>
+
+<<<KEY sabian.139>>>
+Une fête sur une péniche.
+<<<END>>>
+
+<<<KEY sabian.140>>>
+Des Indiens Zuñis accomplissent un rituel au soleil.
+<<<END>>>
+
+<<<KEY sabian.141>>>
+Des poulets ivres battent des ailes de façon étourdie en essayant de voler.
+<<<END>>>
+
+<<<KEY sabian.142>>>
+Un pigeon voyageur accomplissant sa mission.
+<<<END>>>
+
+<<<KEY sabian.143>>>
+Dans un cirque, l'écuyère exhibe son dangereux savoir-faire.
+<<<END>>>
+
+<<<KEY sabian.144>>>
+Totalement concentré sur l'accomplissement spirituel intérieur, un homme est assis dans un état d'indifférence complète à son apparence et à sa propreté corporelles.
+<<<END>>>
+
+<<<KEY sabian.145>>>
+On voit un grand chameau traversant un vaste désert hostile.
+<<<END>>>
+
+<<<KEY sabian.146>>>
+Après la forte tempête, un arc-en-ciel.
+<<<END>>>
+
+<<<KEY sabian.147>>>
+La luminescence de l'aube dans le ciel oriental.
+<<<END>>>
+
+<<<KEY sabian.148>>>
+De nombreux petits oiseaux sur une branche d'un grand arbre.
+<<<END>>>
+
+<<<KEY sabian.149>>>
+Une sirène émerge des vagues de l'océan, prête pour la renaissance sous forme humaine.
+<<<END>>>
+
+<<<KEY sabian.150>>>
+Une lettre non cachetée.
+<<<END>>>
+
+<<<KEY sabian.151>>>
+Dans un portrait, les traits significatifs de la tête d'un homme sont artistiquement mis en valeur.
+<<<END>>>
+
+<<<KEY sabian.152>>>
+Une grande croix blanche domine le paysage.
+<<<END>>>
+
+<<<KEY sabian.153>>>
+Deux anges gardiens.
+<<<END>>>
+
+<<<KEY sabian.154>>>
+Des enfants noirs et blancs jouent ensemble joyeusement.
+<<<END>>>
+
+<<<KEY sabian.155>>>
+Un homme prenant conscience des esprits de la nature et des agents spirituels normalement invisibles.
+<<<END>>>
+
+<<<KEY sabian.156>>>
+Un manège de chevaux de bois.
+<<<END>>>
+
+<<<KEY sabian.157>>>
+Un harem.
+<<<END>>>
+
+<<<KEY sabian.158>>>
+Un enfant de cinq ans prend sa première leçon de danse.
+<<<END>>>
+
+<<<KEY sabian.159>>>
+Un peintre expressionniste au travail.
+<<<END>>>
+
+<<<KEY sabian.160>>>
+Deux têtes regardant au-delà des ombres.
+<<<END>>>
+
+<<<KEY sabian.161>>>
+Dans son bébé, une mère voit exaucé son profond désir d'un fils.
+<<<END>>>
+
+<<<KEY sabian.162>>>
+Après le mariage, le marié arrache le voile de sa mariée.
+<<<END>>>
+
+<<<KEY sabian.163>>>
+Un puissant homme d'État surmonte un état d'hystérie politique.
+<<<END>>>
+
+<<<KEY sabian.164>>>
+Un arbre généalogique aristocratique.
+<<<END>>>
+
+<<<KEY sabian.165>>>
+Un fin mouchoir de dentelle, héritage d'ancêtres valeureux.
+<<<END>>>
+
+<<<KEY sabian.166>>>
+Au zoo, des enfants sont mis face à face avec un orang-outan.
+<<<END>>>
+
+<<<KEY sabian.167>>>
+Une éruption volcanique.
+<<<END>>>
+
+<<<KEY sabian.168>>>
+Un ouija.
+<<<END>>>
+
+<<<KEY sabian.169>>>
+Une course de natation.
+<<<END>>>
+
+<<<KEY sabian.170>>>
+Un convoi de voitures en route vers la côte ouest.
+<<<END>>>
+
+<<<KEY sabian.171>>>
+Une équipe féminine de basket-ball.
+<<<END>>>
+
+<<<KEY sabian.172>>>
+Des armoiries royales enrichies de pierres précieuses.
+<<<END>>>
+
+<<<KEY sabian.173>>>
+Un dompteur de lions montre son habileté et son caractère.
+<<<END>>>
+
+<<<KEY sabian.174>>>
+Marie et son petit agneau.
+<<<END>>>
+
+<<<KEY sabian.175>>>
+Un drapeau en berne devant un bâtiment public.
+<<<END>>>
+
+<<<KEY sabian.176>>>
+Un garçon avec un encensoir sert le prêtre près de l'autel.
+<<<END>>>
+
+<<<KEY sabian.177>>>
+Un groupe de dames aristocratiques se réunit cérémonieusement lors d'une réception de cour.
+<<<END>>>
+
+<<<KEY sabian.178>>>
+Un homme chauve qui s'est emparé du pouvoir.
+<<<END>>>
+
+<<<KEY sabian.179>>>
+Un chercheur de connaissance occulte lit un ancien parchemin qui illumine son esprit.
+<<<END>>>
+
+<<<KEY sabian.180>>>
+Totalement absorbé par l'accomplissement d'une tâche immédiate, un homme est sourd à toute tentation.
+<<<END>>>
+
+<<<KEY sabian.181>>>
+Dans une collection de spécimens parfaits de nombreuses formes biologiques, un papillon déploie la beauté de ses ailes, le corps transpercé d'une fine flèche.
+<<<END>>>
+
+<<<KEY sabian.182>>>
+La transformation des fruits de l'expérience passée en réalisations-germes de l'esprit éternellement créateur.
+<<<END>>>
+
+<<<KEY sabian.183>>>
+L'aube d'un jour nouveau révèle que tout est changé.
+<<<END>>>
+
+<<<KEY sabian.184>>>
+Autour d'un feu de camp, un groupe de jeunes est assis en communion spirituelle.
+<<<END>>>
+
+<<<KEY sabian.185>>>
+Un homme révélant à ses élèves le fondement d'une connaissance intérieure sur lequel un « monde nouveau » peut être bâti.
+<<<END>>>
+
+<<<KEY sabian.186>>>
+Un homme voit ses idéaux prendre une forme concrète devant sa vision intérieure.
+<<<END>>>
+
+<<<KEY sabian.187>>>
+Une femme nourrissant des poules et les protégeant des faucons.
+<<<END>>>
+
+<<<KEY sabian.188>>>
+Une cheminée flambante dans une maison déserte.
+<<<END>>>
+
+<<<KEY sabian.189>>>
+Trois « vieux maîtres » accrochés au mur d'une salle spéciale d'un musée d'art.
+<<<END>>>
+
+<<<KEY sabian.190>>>
+Après avoir franchi sans dommage de dangereux rapides, un canoë atteint des eaux calmes.
+<<<END>>>
+
+<<<KEY sabian.191>>>
+Un professeur regardant ses étudiants par-dessus ses lunettes.
+<<<END>>>
+
+<<<KEY sabian.192>>>
+Des mineurs remontent à la surface d'une profonde mine de charbon.
+<<<END>>>
+
+<<<KEY sabian.193>>>
+Des enfants soufflant des bulles de savon.
+<<<END>>>
+
+<<<KEY sabian.194>>>
+Dans la chaleur de midi, un homme fait la sieste.
+<<<END>>>
+
+<<<KEY sabian.195>>>
+Des sentiers circulaires.
+<<<END>>>
+
+<<<KEY sabian.196>>>
+Après une tempête, un débarcadère a besoin d'être reconstruit.
+<<<END>>>
+
+<<<KEY sabian.197>>>
+Un capitaine de navire à la retraite regarde les bateaux entrer dans le port et en sortir.
+<<<END>>>
+
+<<<KEY sabian.198>>>
+Deux hommes placés en état d'arrestation.
+<<<END>>>
+
+<<<KEY sabian.199>>>
+Une bande de voleurs cachés.
+<<<END>>>
+
+<<<KEY sabian.200>>>
+Un rabbin accomplissant ses fonctions.
+<<<END>>>
+
+<<<KEY sabian.201>>>
+Une foule dominicale profitant de la plage.
+<<<END>>>
+
+<<<KEY sabian.202>>>
+Un enfant donnant à boire à des oiseaux à une fontaine.
+<<<END>>>
+
+<<<KEY sabian.203>>>
+Le chant de Chantecler annonce le lever du soleil.
+<<<END>>>
+
+<<<KEY sabian.204>>>
+Un papillon avec une troisième aile sur le côté gauche.
+<<<END>>>
+
+<<<KEY sabian.205>>>
+La vue d'une feuille d'automne apporte à un pèlerin la soudaine révélation du mystère de la vie et de la mort.
+<<<END>>>
+
+<<<KEY sabian.206>>>
+Un aigle et une grande colombe blanche se transforment l'un en l'autre.
+<<<END>>>
+
+<<<KEY sabian.207>>>
+Un avion plane, haut dans le ciel clair.
+<<<END>>>
+
+<<<KEY sabian.208>>>
+Un homme prenant conscience des forces spirituelles qui l'entourent et l'assistent.
+<<<END>>>
+
+<<<KEY sabian.209>>>
+L'immense et durable effort de l'humanité pour atteindre un savoir transmissible de génération en génération.
+<<<END>>>
+
+<<<KEY sabian.210>>>
+Trois « monticules de savoir » sur la tête d'un philosophe.
+<<<END>>>
+
+<<<KEY sabian.211>>>
+Un autobus touristique bondé dans une rue de la ville.
+<<<END>>>
+
+<<<KEY sabian.212>>>
+Un délicat flacon de parfum gît brisé, libérant sa fragrance.
+<<<END>>>
+
+<<<KEY sabian.213>>>
+Une levée de maison dans un petit village mobilise la coopération des voisins.
+<<<END>>>
+
+<<<KEY sabian.214>>>
+Un jeune homme porte une bougie allumée dans un rituel de dévotion.
+<<<END>>>
+
+<<<KEY sabian.215>>>
+Un massif rivage rocheux résiste aux assauts de la mer.
+<<<END>>>
+
+<<<KEY sabian.216>>>
+La ruée vers l'or arrache les hommes à leur sol natal.
+<<<END>>>
+
+<<<KEY sabian.217>>>
+Des plongeurs en eaux profondes.
+<<<END>>>
+
+<<<KEY sabian.218>>>
+Un lac calme baigné de clair de lune.
+<<<END>>>
+
+<<<KEY sabian.219>>>
+Un dentiste au travail.
+<<<END>>>
+
+<<<KEY sabian.220>>>
+Un souper de camaraderie réunit d'anciens compagnons.
+<<<END>>>
+
+<<<KEY sabian.221>>>
+Un homme en train de se noyer est secouru.
+<<<END>>>
+
+<<<KEY sabian.222>>>
+Un bal officiel d'ambassade.
+<<<END>>>
+
+<<<KEY sabian.223>>>
+Un inventeur réalise une expérience en laboratoire.
+<<<END>>>
+
+<<<KEY sabian.224>>>
+Des poseurs de lignes téléphoniques installant de nouvelles connexions.
+<<<END>>>
+
+<<<KEY sabian.225>>>
+Des enfants jouant autour de cinq monticules de sable.
+<<<END>>>
+
+<<<KEY sabian.226>>>
+Le visage d'une jeune fille s'épanouissant en un sourire.
+<<<END>>>
+
+<<<KEY sabian.227>>>
+Une femme, fécondée par son propre esprit, est « grosse d'un enfant ».
+<<<END>>>
+
+<<<KEY sabian.228>>>
+Un chemin à travers des bois resplendissants d'un éclat multicolore.
+<<<END>>>
+
+<<<KEY sabian.229>>>
+Un perroquet répète la conversation qu'il a entendue par hasard.
+<<<END>>>
+
+<<<KEY sabian.230>>>
+Une femme écarte deux sombres rideaux qui ferment l'entrée d'un chemin sacré.
+<<<END>>>
+
+<<<KEY sabian.231>>>
+Obéissant à sa conscience, un soldat résiste aux ordres.
+<<<END>>>
+
+<<<KEY sabian.232>>>
+Des chasseurs tirant sur des canards sauvages.
+<<<END>>>
+
+<<<KEY sabian.233>>>
+Un lapin se métamorphose en esprit de la nature.
+<<<END>>>
+
+<<<KEY sabian.234>>>
+Après avoir entendu une personne inspirée prononcer son « sermon sur la montagne », les foules rentrent chez elles.
+<<<END>>>
+
+<<<KEY sabian.235>>>
+Une radiographie.
+<<<END>>>
+
+<<<KEY sabian.236>>>
+Des Indiens d'Amérique installent un campement après s'être déplacés vers un nouveau territoire.
+<<<END>>>
+
+<<<KEY sabian.237>>>
+Une fanfare militaire défile bruyamment dans les rues de la ville.
+<<<END>>>
+
+<<<KEY sabian.238>>>
+Le roi des fées approche de son domaine.
+<<<END>>>
+
+<<<KEY sabian.239>>>
+Une squaw indienne implore le chef pour la vie de ses enfants.
+<<<END>>>
+
+<<<KEY sabian.240>>>
+Des enfants déguisés pour Halloween se livrent à diverses farces.
+<<<END>>>
+
+<<<KEY sabian.241>>>
+Des vétérans de l'armée à la retraite se réunissent pour raviver de vieux souvenirs.
+<<<END>>>
+
+<<<KEY sabian.242>>>
+Des vagues aux crêtes blanches montrent la puissance du vent sur la mer.
+<<<END>>>
+
+<<<KEY sabian.243>>>
+Deux hommes jouant aux échecs.
+<<<END>>>
+
+<<<KEY sabian.244>>>
+Un petit enfant apprenant à marcher avec l'encouragement de ses parents.
+<<<END>>>
+
+<<<KEY sabian.245>>>
+Un vieux hibou assis seul sur la branche d'un grand arbre.
+<<<END>>>
+
+<<<KEY sabian.246>>>
+Une partie de cricket.
+<<<END>>>
+
+<<<KEY sabian.247>>>
+Cupidon frappe à la porte d'un cœur humain.
+<<<END>>>
+
+<<<KEY sabian.248>>>
+Dans les profondeurs de la terre, de nouveaux éléments sont en formation.
+<<<END>>>
+
+<<<KEY sabian.249>>>
+Une mère conduit son petit enfant pas à pas dans un escalier raide.
+<<<END>>>
+
+<<<KEY sabian.250>>>
+Une représentation théâtrale d'une déesse blonde de l'opportunité aux cheveux d'or.
+<<<END>>>
+
+<<<KEY sabian.251>>>
+Dans la partie gauche d'un temple archaïque, une lampe brûle dans un récipient en forme de corps humain.
+<<<END>>>
+
+<<<KEY sabian.252>>>
+Un drapeau se transforme en aigle ; l'aigle se transforme en coq saluant l'aube.
+<<<END>>>
+
+<<<KEY sabian.253>>>
+Le passé d'une veuve est mis en lumière.
+<<<END>>>
+
+<<<KEY sabian.254>>>
+La Grande Pyramide et le Sphinx.
+<<<END>>>
+
+<<<KEY sabian.255>>>
+La marmotte cherchant son ombre le jour de la Marmotte.
+<<<END>>>
+
+<<<KEY sabian.256>>>
+Des mouettes volent autour d'un navire dans l'espoir de nourriture.
+<<<END>>>
+
+<<<KEY sabian.257>>>
+Un office du lever de soleil de Pâques attire une grande foule.
+<<<END>>>
+
+<<<KEY sabian.258>>>
+Des enfants jouant sur la plage, la tête protégée par des capelines.
+<<<END>>>
+
+<<<KEY sabian.259>>>
+Des pélicans, menacés par le comportement et les déchets des hommes, cherchent des zones plus sûres pour élever leurs petits.
+<<<END>>>
+
+<<<KEY sabian.261>>>
+Un enfant et un chien portant des lunettes empruntées.
+<<<END>>>
+
+<<<KEY sabian.262>>>
+Une blanchisserie chinoise.
+<<<END>>>
+
+<<<KEY sabian.263>>>
+Un groupe d'immigrants remplissant les formalités d'entrée dans le nouveau pays.
+<<<END>>>
+
+<<<KEY sabian.264>>>
+Un oiseau bleu perché sur la barrière d'une chaumière.
+<<<END>>>
+
+<<<KEY sabian.265>>>
+Un garçon potelé sur un cheval à bascule.
+<<<END>>>
+
+<<<KEY sabian.266>>>
+Un porte-drapeau au combat.
+<<<END>>>
+
+<<<KEY sabian.267>>>
+Un sculpteur à l'œuvre.
+<<<END>>>
+
+<<<KEY sabian.268>>>
+Un vieux pont sur un beau cours d'eau est toujours en usage constant.
+<<<END>>>
+
+<<<KEY sabian.269>>>
+Un garçon gros tondant la pelouse de sa maison dans une élégante rue de banlieue.
+<<<END>>>
+
+<<<KEY sabian.270>>>
+Le Pape bénissant les fidèles.
+<<<END>>>
+
+<<<KEY sabian.271>>>
+Un chef indien revendique le pouvoir auprès des tribus assemblées.
+<<<END>>>
+
+<<<KEY sabian.272>>>
+Trois rosaces dans une église gothique, l'une endommagée par la guerre.
+<<<END>>>
+
+<<<KEY sabian.273>>>
+Une âme humaine, dans son empressement à vivre de nouvelles expériences, cherche une incarnation.
+<<<END>>>
+
+<<<KEY sabian.274>>>
+Un groupe de personnes équipant un grand canoë au début d'un voyage par voie d'eau.
+<<<END>>>
+
+<<<KEY sabian.275>>>
+Des Indiens sur le sentier de la guerre. Tandis que certains hommes rament dans un canoë bien rempli, d'autres, à bord, exécutent une danse de guerre.
+<<<END>>>
+
+<<<KEY sabian.277>>>
+Un prophète voilé parle, saisi par la puissance d'un dieu.
+<<<END>>>
+
+<<<KEY sabian.278>>>
+Dans une maison ensoleillée, des oiseaux domestiques chantent joyeusement.
+<<<END>>>
+
+<<<KEY sabian.279>>>
+Un ange portant une harpe.
+<<<END>>>
+
+<<<KEY sabian.280>>>
+Un albatros mangeant dans la main d'un marin.
+<<<END>>>
+
+<<<KEY sabian.281>>>
+Un grand groupe de faisans dans un domaine privé.
+<<<END>>>
+
+<<<KEY sabian.282>>>
+Une conférence illustrée sur les sciences naturelles révèle des aspects méconnus de la vie.
+<<<END>>>
+
+<<<KEY sabian.283>>>
+Un adorateur du feu médite sur les réalités ultimes de l'existence.
+<<<END>>>
+
+<<<KEY sabian.284>>>
+Un ancien bas-relief sculpté dans le granit demeure le témoin d'une culture oubliée depuis longtemps.
+<<<END>>>
+
+<<<KEY sabian.285>>>
+Dans un hôpital, le service pédiatrique est rempli de jouets.
+<<<END>>>
+
+<<<KEY sabian.286>>>
+Une cour d'école remplie de garçons et de filles en tenue de gymnastique.
+<<<END>>>
+
+<<<KEY sabian.287>>>
+Une femme refoulée trouve une libération psychologique dans le nudisme.
+<<<END>>>
+
+<<<KEY sabian.288>>>
+L'Union Jack flotte sur un navire de guerre britannique.
+<<<END>>>
+
+<<<KEY sabian.289>>>
+Un enfant de cinq ans portant un sac rempli de provisions.
+<<<END>>>
+
+<<<KEY sabian.290>>>
+Un chœur caché chantant pendant un office religieux.
+<<<END>>>
+
+<<<KEY sabian.291>>>
+Une course de relais.
+<<<END>>>
+
+<<<KEY sabian.292>>>
+En acceptant la défaite avec grâce, un général révèle la noblesse de son caractère.
+<<<END>>>
+
+<<<KEY sabian.293>>>
+Un soldat recevant deux décorations pour bravoure au combat.
+<<<END>>>
+
+<<<KEY sabian.294>>>
+Une femme entrant au couvent.
+<<<END>>>
+
+<<<KEY sabian.295>>>
+Un magasin rempli de précieux tapis orientaux.
+<<<END>>>
+
+<<<KEY sabian.296>>>
+Un esprit de la nature dansant dans la brume irisée d'une cascade.
+<<<END>>>
+
+<<<KEY sabian.297>>>
+Des pèlerins gravissant les marches abruptes menant à un sanctuaire de montagne.
+<<<END>>>
+
+<<<KEY sabian.298>>>
+Une grande volière.
+<<<END>>>
+
+<<<KEY sabian.299>>>
+Une femme lisant dans les feuilles de thé.
+<<<END>>>
+
+<<<KEY sabian.300>>>
+Une réunion secrète d'hommes responsables des décisions exécutives dans les affaires mondiales.
+<<<END>>>
+
+<<<KEY sabian.301>>>
+Une vieille mission en adobe en Californie.
+<<<END>>>
+
+<<<KEY sabian.302>>>
+Un orage inattendu.
+<<<END>>>
+
+<<<KEY sabian.303>>>
+Un déserteur de la Marine.
+<<<END>>>
+
+<<<KEY sabian.304>>>
+Un yogi hindou démontre ses pouvoirs de guérison.
+<<<END>>>
+
+<<<KEY sabian.305>>>
+On voit un conseil d'ancêtres soutenir les efforts d'un jeune chef.
+<<<END>>>
+
+<<<KEY sabian.306>>>
+Un personnage masqué accomplit des actes rituels dans un mystère théâtral.
+<<<END>>>
+
+<<<KEY sabian.307>>>
+On voit un enfant naître d'un œuf.
+<<<END>>>
+
+<<<KEY sabian.308>>>
+Des figures de cire magnifiquement vêtues exposées.
+<<<END>>>
+
+<<<KEY sabian.309>>>
+On voit un drapeau se transformer en aigle.
+<<<END>>>
+
+<<<KEY sabian.310>>>
+Un homme qui était devenu pour un temps l'incarnation d'un idéal populaire est amené à réaliser qu'en tant que personne il n'est pas cet idéal.
+<<<END>>>
+
+<<<KEY sabian.311>>>
+Pendant une heure de silence, un homme reçoit une nouvelle inspiration qui pourrait changer sa vie.
+<<<END>>>
+
+<<<KEY sabian.312>>>
+Sur un vaste escalier se tiennent des gens de types différents, échelonnés vers le haut.
+<<<END>>>
+
+<<<KEY sabian.313>>>
+Un baromètre.
+<<<END>>>
+
+<<<KEY sabian.314>>>
+Un train entrant dans un tunnel.
+<<<END>>>
+
+<<<KEY sabian.315>>>
+Deux inséparables perchés sur une clôture et chantant joyeusement.
+<<<END>>>
+
+<<<KEY sabian.316>>>
+Un grand homme d'affaires à son bureau.
+<<<END>>>
+
+<<<KEY sabian.317>>>
+Un chien de garde monte la garde, protégeant son maître et ses biens.
+<<<END>>>
+
+<<<KEY sabian.318>>>
+Les motifs secrets d'un homme sont publiquement démasqués.
+<<<END>>>
+
+<<<KEY sabian.319>>>
+Un feu de forêt est maîtrisé grâce à l'eau, aux produits chimiques et à la pure force musculaire.
+<<<END>>>
+
+<<<KEY sabian.320>>>
+Une grande colombe blanche porteuse d'un message.
+<<<END>>>
+
+<<<KEY sabian.321>>>
+Une femme déçue et désabusée fait courageusement face à une vie apparemment vide.
+<<<END>>>
+
+<<<KEY sabian.322>>>
+Un tapis est étendu sur le sol d'une chambre d'enfants pour permettre aux enfants de jouer dans le confort et la chaleur.
+<<<END>>>
+
+<<<KEY sabian.323>>>
+Un gros ours assis agitant toutes ses pattes.
+<<<END>>>
+
+<<<KEY sabian.324>>>
+Un homme, ayant vaincu ses passions, enseigne une sagesse profonde à partir de son expérience.
+<<<END>>>
+
+<<<KEY sabian.325>>>
+Un papillon dont l'aile droite est plus parfaitement formée.
+<<<END>>>
+
+<<<KEY sabian.326>>>
+Un garagiste testant la batterie d'une voiture avec un densimètre.
+<<<END>>>
+
+<<<KEY sabian.327>>>
+Un ancien bol en poterie rempli de violettes fraîches.
+<<<END>>>
+
+<<<KEY sabian.328>>>
+Un arbre abattu et scié pour assurer une réserve de bois pour l'hiver.
+<<<END>>>
+
+<<<KEY sabian.329>>>
+Un papillon sortant d'une chrysalide.
+<<<END>>>
+
+<<<KEY sabian.330>>>
+Profondément enracinée dans le passé d'une très ancienne culture, une fraternité spirituelle où de nombreux esprits individuels fusionnent dans la lumière rayonnante d'une conscience unanime est révélée à celui qui a émergé avec succès de sa métamorphose.
+<<<END>>>
+
+<<<KEY sabian.331>>>
+Sur un marché bondé, des fermiers et des intermédiaires étalent une grande variété de produits.
+<<<END>>>
+
+<<<KEY sabian.332>>>
+Un écureuil se cachant des chasseurs.
+<<<END>>>
+
+<<<KEY sabian.333>>>
+Des troncs d'arbres pétrifiés gisent brisés sur le sable du désert.
+<<<END>>>
+
+<<<KEY sabian.334>>>
+Une forte circulation automobile sur un étroit isthme reliant deux stations balnéaires.
+<<<END>>>
+
+<<<KEY sabian.335>>>
+Un bazar d'église.
+<<<END>>>
+
+<<<KEY sabian.336>>>
+Un défilé d'officiers de l'armée en grande tenue.
+<<<END>>>
+
+<<<KEY sabian.337>>>
+Illuminée par un rayon de lumière, une grande croix repose sur des rochers environnés de brume marine.
+<<<END>>>
+
+<<<KEY sabian.338>>>
+Une jeune fille sonnant du clairon.
+<<<END>>>
+
+<<<KEY sabian.339>>>
+Un jockey éperonne son cheval, résolu à distancer ses rivaux.
+<<<END>>>
+
+<<<KEY sabian.340>>>
+Un aviateur poursuit son voyage, volant à travers des nuages qui masquent le sol.
+<<<END>>>
+
+<<<KEY sabian.341>>>
+Des hommes cheminant sur un sentier étroit, en quête d'illumination.
+<<<END>>>
+
+<<<KEY sabian.342>>>
+Dans le sanctuaire d'une confrérie occulte, de nouveaux initiés sont examinés et leur caractère mis à l'épreuve.
+<<<END>>>
+
+<<<KEY sabian.343>>>
+Une ancienne épée, utilisée dans de nombreuses batailles, est exposée dans un musée.
+<<<END>>>
+
+<<<KEY sabian.344>>>
+Une dame enveloppée dans une grande étole de renard.
+<<<END>>>
+
+<<<KEY sabian.345>>>
+Un officier instruisant ses hommes avant un assaut simulé sous un barrage d'obus réels.
+<<<END>>>
+
+<<<KEY sabian.346>>>
+Dans le calme de son cabinet de travail, un individu créatif éprouve un flot d'inspiration.
+<<<END>>>
+
+<<<KEY sabian.347>>>
+Une parade de Pâques.
+<<<END>>>
+
+<<<KEY sabian.348>>>
+Sous un gigantesque chapiteau, des villageois assistent à un spectacle grandiose.
+<<<END>>>
+
+<<<KEY sabian.349>>>
+Un maître instruisant son disciple.
+<<<END>>>
+
+<<<KEY sabian.350>>>
+Une table dressée pour le repas du soir.
+<<<END>>>
+
+<<<KEY sabian.351>>>
+Sous l'œil attentif et bienveillant d'un serviteur chinois, une petite fille caresse un petit agneau blanc.
+<<<END>>>
+
+<<<KEY sabian.352>>>
+Un prophète portant les tables de la nouvelle loi descend les pentes du mont Sinaï.
+<<<END>>>
+
+<<<KEY sabian.353>>>
+Un médium « à matérialisations » donnant une séance.
+<<<END>>>
+
+<<<KEY sabian.354>>>
+Sur une petite île entourée de la vaste étendue de la mer, on voit des gens vivre en étroite interaction.
+<<<END>>>
+
+<<<KEY sabian.355>>>
+Une organisation religieuse parvient à vaincre l'influence corruptrice de pratiques perverties qui ont matérialisé des idéaux.
+<<<END>>>
+
+<<<KEY sabian.356>>>
+Observant le très fin croissant de lune apparaître au coucher du soleil, différentes personnes comprennent que le moment est venu de lancer leurs différents projets.
+<<<END>>>
+
+<<<KEY sabian.357>>>
+La lune des moissons illumine un ciel d'automne dégagé.
+<<<END>>>
+
+<<<KEY sabian.358>>>
+Un jardin fertile sous la pleine lune révèle une variété de légumes arrivés à maturité.
+<<<END>>>
+
+<<<KEY sabian.359>>>
+La lumière se décomposant en de multiples couleurs en traversant un prisme.
+<<<END>>>
+
+<<<KEY sabian.360>>>
+Une formation rocheuse majestueuse ressemblant à un visage est idéalisée par un garçon qui la prend pour son idéal de grandeur et, en grandissant, finit par lui ressembler.
+<<<END>>>

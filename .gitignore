@@ -1,0 +1,26 @@
+# Dépendances / environnements locaux
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+
+# Extractions lourdes & caches de reprise (pas nécessaires au client)
+_resume/
+starfisher-extract/
+*.exe
+
+# Secrets / locaux
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# OS / éditeur
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
