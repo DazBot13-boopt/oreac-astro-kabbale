@@ -88,21 +88,24 @@
 
   function pad(n) { return String(n).padStart(2, "0"); }
 
+  /** Ange Solaire 2 : ange1 = régence 5°, ange2 = émotionnel / biorythme (degré exact). */
   function angePourDegre(degAbs) {
     let i = Math.floor(norm(degAbs)) % 360;
+    let d0 = Math.floor(i / 5) * 5;
+    let d1 = d0 + 4;
     return {
-      ange2: (ANGE2[i] || "").trim() || "—",
-      ange1: (ANGE1[i] || "").trim() || "—"
+      ange5: (ANGE1[i] || "").trim() || "—",
+      angeBiorythme: (ANGE2[i] || "").trim() || "—",
+      intervalle5: d0 + "°–" + d1 + "°"
     };
   }
 
-  /** Cycle biorythmique d'une planète natale pour une année civile. */
+  /** Cycle type ANGE SOLAIRE 1 : 18 niveaux + retour Kether (19). */
   function cyclePlanete(longAbs, annee) {
     let base = Math.floor(norm(longAbs));
     let rows = [];
     OFFSETS.forEach((off, idx) => {
       let cible = norm(base + off);
-      // dernier point (360°) = retour conjonction = même degré natal
       if (off === 360) cible = base;
       let z = degToZod(cible);
       let ang = angePourDegre(cible);
@@ -116,8 +119,12 @@
         signe: z.signe,
         signeNom: z.signeNom,
         deg: z.deg,
-        ange: ang.ange2,
-        ange1: ang.ange1,
+        angeBiorythme: ang.angeBiorythme,
+        ange5: ang.ange5,
+        intervalle5: ang.intervalle5,
+        // alias rétrocompat
+        ange: ang.angeBiorythme,
+        ange1: ang.ange5,
         date: dt ? dt.label : "—",
         dateObj: dt
       });
@@ -130,12 +137,21 @@
     PLANETES.forEach(p => {
       let pos = theme && theme[p.id];
       if (!pos || pos.abs == null) return;
+      let natalAbs = Math.floor(norm(pos.abs));
+      let natalAng = angePourDegre(natalAbs);
+      let z = degToZod(pos.abs);
       out.push({
         id: p.id,
         nom: p.nom,
-        natal: degToZod(pos.abs),
+        natal: z,
         natalTxt: pos.deg + "° " + pos.signeNom + " " + String(pos.min).padStart(2, "0") + "′",
         abs: pos.abs,
+        natalDegAbs: natalAbs,
+        /** Ange dont l’intervalle de 5° couvre le degré natal */
+        ange5Natal: natalAng.ange5,
+        intervalle5Natal: natalAng.intervalle5,
+        /** Ange émotionnel du degré natal (réf. biorythme) */
+        angeBioNatal: natalAng.angeBiorythme,
         rows: cyclePlanete(pos.abs, annee)
       });
     });
@@ -157,7 +173,7 @@
 
   global.BiorythmeKabbale = {
     OFFSETS, SEPH, PLANETES,
-    cyclePlanete, biorythmeComplet, degToZod, sunLong, dateSoleilAuDegre,
+    angePourDegre, cyclePlanete, biorythmeComplet, degToZod, sunLong, dateSoleilAuDegre,
     sauverTheme, chargerTheme, STORAGE_KEY
   };
 })(window);

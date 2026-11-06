@@ -8,6 +8,7 @@ const assets = [
   "index.html",
   "admin.html",
   "biorythme.html",
+  "favicon.png",
   "js",
   "vendor",
   "fonts"

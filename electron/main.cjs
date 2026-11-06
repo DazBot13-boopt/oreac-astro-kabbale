@@ -5,7 +5,7 @@ const { pathToFileURL } = require("node:url");
 
 const appRoot = path.resolve(__dirname, "..");
 const origin = "app://oreac";
-const allowedPages = new Set(["index.html", "admin.html", "biorythme.html"]);
+const allowedPages = new Set(["index.html", "admin.html", "biorythme.html", "favicon.png"]);
 const allowedAssetDirs = new Set(["js", "vendor", "fonts", "data"]);
 
 protocol.registerSchemesAsPrivileged([
