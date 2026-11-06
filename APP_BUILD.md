@@ -31,6 +31,7 @@ npm install
 npm run build:web
 npx cap add android
 npx cap sync android
+cp native/android/*.java android/app/src/main/java/com/oreac/astrokabbale/
 cd android
 ./gradlew assembleDebug
 ```
@@ -45,3 +46,14 @@ npm run build:windows
 ```
 
 L'installateur se trouve dans `dist/`.
+
+## PDF et impression
+
+Dans l'application Android, « Générer le PDF final » ouvre le dialogue
+d'impression Android. Il permet d'imprimer ou de choisir « Enregistrer au format
+PDF ». Les boutons « Imprimer » du calendrier et du biorythme utilisent aussi
+ce dialogue.
+
+Dans l'application Windows, le PDF final est enregistré dans le dossier choisi
+et ouvert dans le lecteur PDF par défaut. Les boutons « Imprimer » ouvrent le
+dialogue d'impression Windows.

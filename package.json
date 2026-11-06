@@ -16,7 +16,8 @@
     "@capacitor/android": "8.6.0",
     "@capacitor/cli": "8.6.0",
     "electron": "44.10.2",
-    "electron-builder": "26.18.0"
+    "electron-builder": "26.18.0",
+    "esbuild": "0.28.2"
   },
   "build": {
     "appId": "com.oreac.astrokabbale",
@@ -30,6 +31,7 @@
       "index.html",
       "admin.html",
       "biorythme.html",
+      "favicon.png",
       "js/**/*",
       "vendor/**/*",
       "fonts/**/*",

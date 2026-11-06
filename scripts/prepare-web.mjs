@@ -1,5 +1,6 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { build } from "esbuild";
 
 const root = resolve(import.meta.dirname, "..");
 const output = join(root, "www");
@@ -7,6 +8,7 @@ const assets = [
   "index.html",
   "admin.html",
   "biorythme.html",
+  "favicon.png",
   "js",
   "vendor",
   "fonts"
@@ -37,3 +39,12 @@ await writeFile(
     'window.location.href="biorythme.html?nom="+encodeURIComponent(nom);'
   )
 );
+
+await build({
+  entryPoints: [join(root, "native", "android", "print-bridge.mjs")],
+  outfile: join(output, "js", "print-bridge.js"),
+  bundle: true,
+  platform: "browser",
+  format: "iife",
+  minify: true
+});

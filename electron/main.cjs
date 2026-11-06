@@ -1,10 +1,11 @@
-const { app, BrowserWindow, net, protocol, shell } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } = require("electron");
+const { writeFile } = require("node:fs/promises");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
 const appRoot = path.resolve(__dirname, "..");
 const origin = "app://oreac";
-const allowedPages = new Set(["index.html", "admin.html", "biorythme.html"]);
+const allowedPages = new Set(["index.html", "admin.html", "biorythme.html", "favicon.png"]);
 const allowedAssetDirs = new Set(["js", "vendor", "fonts", "data"]);
 
 protocol.registerSchemesAsPrivileged([
@@ -45,7 +46,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: true
+      sandbox: true,
+      preload: path.join(__dirname, "preload.cjs")
     }
   });
 
@@ -59,7 +61,8 @@ function createWindow() {
           webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            sandbox: true
+            sandbox: true,
+            preload: path.join(__dirname, "preload.cjs")
           }
         }
       };
@@ -77,6 +80,42 @@ function createWindow() {
 
   void window.loadURL(`${origin}/index.html`);
 }
+
+function isTrustedSender(sender) {
+  return isAppUrl(sender.getURL());
+}
+
+ipcMain.handle("oreac:save-pdf", async (event, { data, name }) => {
+  if (!isTrustedSender(event.sender) || typeof data !== "string") {
+    throw new Error("Requête PDF refusée");
+  }
+  const pdf = Buffer.from(data, "base64");
+  if (pdf.length < 8 || pdf.subarray(0, 5).toString() !== "%PDF-") {
+    throw new Error("Le PDF généré est invalide");
+  }
+  const safeName = typeof name === "string"
+    ? name.replace(/[<>:"/\\|?*]/g, "_").slice(0, 160)
+    : "OREAC_Astro_Kabbale.pdf";
+  const parent = BrowserWindow.fromWebContents(event.sender);
+  const { canceled, filePath } = await dialog.showSaveDialog(parent, {
+    defaultPath: safeName.endsWith(".pdf") ? safeName : safeName + ".pdf",
+    filters: [{ name: "PDF", extensions: ["pdf"] }]
+  });
+  if (canceled || !filePath) return { canceled: true };
+  await writeFile(filePath, pdf);
+  await shell.openPath(filePath);
+  return { canceled: false };
+});
+
+ipcMain.handle("oreac:print-page", (event) => {
+  if (!isTrustedSender(event.sender)) throw new Error("Impression refusée");
+  return new Promise((resolve, reject) => {
+    event.sender.print({ silent: false, printBackground: true }, (success, reason) => {
+      if (success || reason === "Print job canceled") resolve();
+      else reject(new Error(reason || "Impression impossible"));
+    });
+  });
+});
 
 app.whenReady().then(() => {
   protocol.handle("app", (request) => {

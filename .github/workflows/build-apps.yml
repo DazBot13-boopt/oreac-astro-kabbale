@@ -33,6 +33,7 @@ jobs:
           npm run build:web
           npx cap add android
           npx cap sync android
+          cp native/android/*.java android/app/src/main/java/com/oreac/astrokabbale/
       - name: Compiler l'APK installable
         working-directory: android
         run: |
