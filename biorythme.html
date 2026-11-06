@@ -71,9 +71,18 @@ select,input{
 }
 .tab.active{background:var(--moss);color:#fff;border-color:var(--moss)}
 .natal-chip{
-  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;
+  display:block;padding:12px 14px;
   background:rgba(58,90,64,.08);border-radius:10px;font-size:.9rem;margin-bottom:12px;
 }
+.natal-chip .row-main{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-bottom:8px}
+.natal-meta{display:flex;flex-wrap:wrap;gap:8px}
+.ange-pill{
+  display:inline-flex;flex-direction:column;gap:2px;padding:6px 10px;border-radius:8px;
+  background:#f0ebe0;border:1px solid var(--line);font-size:.78rem;min-width:140px;
+}
+.ange-pill .lbl{color:var(--muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase}
+.ange-pill .val{font-weight:700;color:var(--bark);font-size:.92rem}
+.ange-pill.bio{background:#e8f0ea}
 .sym-sf{font-family:"StarFisher",serif;font-size:1.2rem}
 .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--line)}
 table{width:100%;border-collapse:collapse;font-size:.86rem;min-width:560px;background:#fff}
@@ -130,8 +139,9 @@ tr.seph-malkuth td{background:#eceff1;font-weight:700}
       <a class="btn btn-alt no-print" href="index.html">← Thème natal</a>
     </div>
     <p class="hint">
-      Pour chaque planète natale : les 19 activations annuelles (conjonction → séphiroth → opposition → retour)
-      lorsque le Soleil en transit atteint le degré-aspect. Personnalisé au nom du client.
+      Cycle type <em>ANGE SOLAIRE 1</em> : 18 niveaux + retour Kether. Pour chaque planète —
+      <strong>ange de 5°</strong> (régence des 72 anges gardiens couvrant le degré natal) et
+      <strong>ange du biorythme</strong> (ange émotionnel du degré symbolique, feuille ANGE SOLAIRE 2 col.&nbsp;D).
     </p>
   </section>
 
@@ -213,9 +223,24 @@ function peindrePlanete(id){
   peindreTabs();
   let p = bioData.find(x => x.id === id);
   if (!p) return;
-  let html = `<div class="natal-chip"><span class="sym-sf">${id === "Asc" ? "0" : id}</span> <strong>${p.nom} natal</strong> — ${p.natalTxt} (abs. ${p.abs.toFixed(2)}°)</div>`;
+  let html = `<div class="natal-chip">
+    <div class="row-main"><span class="sym-sf">${id === "Asc" ? "0" : id}</span>
+      <strong>${p.nom} natal</strong> — ${p.natalTxt} (abs. ${p.abs.toFixed(2)}°)
+    </div>
+    <div class="natal-meta">
+      <div class="ange-pill">
+        <span class="lbl">Ange de 5° (natal)</span>
+        <span class="val">${p.ange5Natal || "—"}</span>
+        <span class="lbl">${p.intervalle5Natal || ""}</span>
+      </div>
+      <div class="ange-pill bio">
+        <span class="lbl">Ange émotionnel natal</span>
+        <span class="val">${p.angeBioNatal || "—"}</span>
+      </div>
+    </div>
+  </div>`;
   html += `<div class="table-wrap"><table><thead><tr>
-    <th>#</th><th>Séphira</th><th>Arc</th><th>Degré symbolique</th><th>Ange solaire (2<sup>e</sup>)</th><th>1<sup>re</sup> régence</th><th>Date (Soleil)</th>
+    <th>#</th><th>Séphira</th><th>Arc</th><th>Degré symbolique</th><th>Ange de 5°</th><th>Ange du biorythme</th><th>Date (Soleil)</th>
   </tr></thead><tbody>`;
   p.rows.forEach(r => {
     let cls = "";
@@ -226,14 +251,13 @@ function peindrePlanete(id){
       <td><strong>${r.sephira}</strong></td>
       <td>${r.offset}°</td>
       <td>${r.degLabel}</td>
-      <td>${r.ange}</td>
-      <td>${r.ange1}</td>
+      <td title="${r.intervalle5 || ""}">${r.ange5 || "—"}</td>
+      <td>${r.angeBiorythme || r.ange}</td>
       <td>${r.date}</td>
     </tr>`;
   });
   html += `</tbody></table></div>`;
 
-  // mini timeline sorted by date
   let sorted = p.rows.slice().filter(r => r.dateObj).sort((a, b) => {
     let da = a.dateObj.y * 400 + a.dateObj.m * 32 + a.dateObj.d;
     let db = b.dateObj.y * 400 + b.dateObj.m * 32 + b.dateObj.d;
@@ -241,7 +265,7 @@ function peindrePlanete(id){
   });
   html += `<h2 style="margin:18px 0 8px;font-size:1rem">Frise ${document.getElementById("bioAnnee").value} — ${p.nom}</h2><div class="timeline">`;
   sorted.forEach(r => {
-    html += `<div class="tl-card"><strong>${r.sephira}</strong><span class="d">${r.date}</span><div>${r.degLabel}</div><div>${r.ange}</div></div>`;
+    html += `<div class="tl-card"><strong>${r.sephira}</strong><span class="d">${r.date}</span><div>${r.degLabel}</div><div>${r.angeBiorythme || r.ange}</div></div>`;
   });
   html += `</div>`;
 
