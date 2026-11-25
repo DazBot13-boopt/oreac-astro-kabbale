@@ -1,6 +1,6 @@
 {
   "name": "oreac-astro-kabbale",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Application hors ligne OREAC Astro Kabbale",
   "main": "electron/main.cjs",
@@ -39,6 +39,7 @@
       "data/interpretations.json",
       "data/classique-horoscope.json",
       "data/classique-portrait.json",
+      "data/classique-textes.json",
       "legacy/README.md"
     ],
     "extraResources": [

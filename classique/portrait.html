@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Portrait astral classique — OREAC</title>
+<title>Portrait astral — OREAC classique</title>
 <link rel="icon" type="image/png" href="../favicon.png">
 <meta name="theme-color" content="#3a5a40">
+<script src="../js/theme-store.js"></script>
 <style>
 :root{
   --bark:#1f2a22;--moss:#3a5a40;--sand:#f3efe6;--paper:#faf7f0;
@@ -17,26 +18,20 @@ html{scroll-behavior:smooth}
 body{
   margin:0;min-height:100vh;color:var(--ink);
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(1000px 500px at 8% -8%,rgba(82,121,111,.16),transparent 55%),
-    linear-gradient(165deg,#dfe8df 0%,var(--sand) 45%,#e8e0d2 100%);
+  background:linear-gradient(165deg,#dfe8df 0%,var(--sand) 45%,#e8e0d2 100%);
   padding:clamp(12px,3vw,28px);
 }
-.wrap{max-width:900px;margin:0 auto}
+.wrap{max-width:920px;margin:0 auto}
 .back{display:inline-block;margin-bottom:10px;color:var(--river);font-weight:600;text-decoration:none;font-size:.9rem}
-h1{font-family:Georgia,serif;font-size:clamp(1.35rem,4vw,1.85rem);margin:0 0 4px;color:var(--bark)}
-.sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
-.layout{
-  display:grid;grid-template-columns:minmax(160px,220px) 1fr;gap:14px;align-items:start;
-}
-@media (max-width:720px){
-  .layout{grid-template-columns:1fr}
-}
+h1{font-family:Georgia,serif;font-size:clamp(1.35rem,4vw,1.8rem);margin:0 0 4px;color:var(--bark)}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 14px;line-height:1.45}
+.layout{display:grid;grid-template-columns:minmax(150px,210px) 1fr;gap:14px;align-items:start}
+@media (max-width:720px){.layout{grid-template-columns:1fr}}
 .sommaire{
   background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
   padding:12px;box-shadow:var(--shadow);position:sticky;top:12px;
 }
-.sommaire h2{font-family:Georgia,serif;font-size:1rem;margin:0 0 8px;color:var(--bark)}
+.sommaire h2{font-family:Georgia,serif;font-size:.95rem;margin:0 0 8px;color:var(--bark)}
 .sommaire button{
   display:block;width:100%;text-align:left;font:inherit;cursor:pointer;
   padding:8px 10px;margin:0 0 4px;border:none;border-radius:8px;
@@ -45,69 +40,137 @@ h1{font-family:Georgia,serif;font-size:clamp(1.35rem,4vw,1.85rem);margin:0 0 4px
 .sommaire button:hover,.sommaire button.active{background:rgba(58,90,64,.12);color:var(--moss);font-weight:600}
 .reader{
   background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
-  padding:clamp(14px,3vw,22px);box-shadow:var(--shadow);min-height:280px;
+  padding:clamp(14px,3vw,22px);box-shadow:var(--shadow);min-height:260px;
 }
-.legacy-html{
-  font-family:Georgia,"Times New Roman",serif;line-height:1.5;font-size:.95rem;
-}
-.legacy-html h2,.legacy-html h3{color:var(--bark);font-size:1.1rem}
-.legacy-html u{text-decoration-color:var(--moss)}
-.err{color:#a63d2f}
+.reader h2{font-family:Georgia,serif;margin:0 0 12px;font-size:1.15rem;color:var(--bark)}
+.reader pre,.article{white-space:pre-wrap;line-height:1.55;font-size:.94rem;margin:0;font-family:inherit}
+.pos-table{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0 14px}
+.pos-table th,.pos-table td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+.pos-table th{color:var(--moss);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.warn{color:#a63d2f}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html">← Module classique</a>
+  <a class="back" href="index.html">← Menus classiques</a>
   <h1 id="title">Portrait astral</h1>
-  <p class="sub">Sommaire → saute à la section. Exemple exporté de l’ancien logiciel.</p>
+  <p class="sub" id="sub">Chargement…</p>
   <div class="layout">
     <nav class="sommaire" id="sommaire" aria-label="Sommaire"><h2>Sommaire</h2></nav>
-    <article class="reader" id="reader"><p class="sub">Chargement…</p></article>
+    <article class="reader" id="reader"></article>
   </div>
 </div>
 <script>
-let sections = [];
-
-async function load() {
+(async function () {
   const reader = document.getElementById("reader");
-  try {
-    const res = await fetch("../data/classique-portrait.json");
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    document.getElementById("title").textContent = data.title || "Portrait astral";
-    sections = data.sections || [];
-  } catch (e) {
-    reader.innerHTML = '<p class="err">Impossible de charger le portrait.</p>';
+  const d = window.OreacTheme && OreacTheme.requireOrAlert();
+  if (!d) {
+    reader.innerHTML = '<p class="warn">Calculez d’abord le thème sur l’écran principal.</p>';
     return;
   }
+
+  document.getElementById("title").textContent = "Portrait astral — " + (d.nom || "Client");
+  document.getElementById("sub").textContent =
+    (d.villeLabel || d.ville || "") + " · " +
+    d.jour + "/" + d.mois + "/" + d.annee + " " + (d.heureStr || "") +
+    (d.signeNom ? " · Soleil en " + d.signeNom : "");
+
+  let textes = { planetes: {}, signes: {}, extra: {} };
+  let horo = {};
+  try {
+    const [tRes, hRes] = await Promise.all([
+      fetch("../data/classique-textes.json"),
+      fetch("../data/classique-horoscope.json")
+    ]);
+    if (tRes.ok) textes = await tRes.json();
+    if (hRes.ok) horo = await hRes.json();
+  } catch (e) { /* continue with positions only */ }
+
+  const labels = window.OreacTheme.PLANETE_LABELS;
+  const order = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "Asc"];
+  const rows = order.map(function (id) {
+    const p = d.theme[id];
+    if (!p) return null;
+    return {
+      id: id,
+      name: labels[id] || id,
+      place: p.deg + "° " + p.signeNom + " " + String(p.min).padStart(2, "0") + "′",
+      signe: p.signeNom,
+      abs: p.abs
+    };
+  }).filter(Boolean);
+
+  function posTableHtml() {
+    let html = '<table class="pos-table"><thead><tr><th>Astre</th><th>Position</th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += "<tr><td>" + r.name + "</td><td>" + r.place + "</td></tr>";
+    });
+    html += "</tbody></table>";
+    return html;
+  }
+
+  const signText = (horo.signs && d.signeFolder && horo.signs[d.signeFolder] && horo.signs[d.signeFolder].texts && horo.signs[d.signeFolder].texts.Signe) ||
+    (textes.signes && textes.signes[d.signeNom]) || "";
+
+  const sections = [
+    {
+      label: "Identité",
+      html: "<h2>Portrait astral</h2><div class='article'></div>",
+      text:
+        (d.nom || "Client") + "\n" +
+        (d.villeLabel || d.ville || "") + "\n" +
+        d.jour + "/" + d.mois + "/" + d.annee + " à " + (d.heureStr || "") + "\n" +
+        (d.signeNom ? "Soleil en " + d.signeNom : "")
+    },
+    {
+      label: "Calcul du ciel",
+      html: "<h2>Calcul du ciel</h2>" + posTableHtml() + "<p class='sub'>Positions tropicales géocentriques (même instant que la Kabbale).</p>"
+    },
+    {
+      label: "Signe solaire",
+      html: "<h2>Signe solaire — " + (d.signeNom || "") + "</h2><div class='article'></div>",
+      text: signText || "Texte du signe non disponible."
+    }
+  ];
+
+  rows.filter(function (r) { return r.id !== "Asc"; }).forEach(function (r) {
+    const corpus = (textes.planetes && textes.planetes[r.name]) || "";
+    sections.push({
+      label: r.name + " en " + r.signe,
+      html: "<h2>" + r.name + " en " + r.signe + "</h2><p><strong>" + r.place + "</strong></p><div class='article'></div>",
+      text: corpus || "Texte planète non disponible dans le corpus classique."
+    });
+  });
+
+  if (textes.extra && textes.extra.Maisons) {
+    sections.push({
+      label: "Maisons",
+      html: "<h2>Maisons</h2><div class='article'></div>",
+      text: textes.extra.Maisons
+    });
+  }
+
   const nav = document.getElementById("sommaire");
-  sections.forEach((s, i) => {
+  sections.forEach(function (s, i) {
     const b = document.createElement("button");
     b.type = "button";
-    b.textContent = (i + 1) + ". " + (s.label || "Section " + i);
-    b.addEventListener("click", () => show(i));
+    b.textContent = (i + 1) + ". " + s.label;
+    b.addEventListener("click", function () { show(i); });
     nav.appendChild(b);
   });
-  if (sections.length) show(0);
-}
 
-function show(i) {
-  const s = sections[i];
-  document.querySelectorAll(".sommaire button").forEach((b, j) => {
-    b.classList.toggle("active", j === i);
-  });
-  const reader = document.getElementById("reader");
-  reader.innerHTML = '<div class="legacy-html"></div>';
-  const box = reader.querySelector(".legacy-html");
-  if (s.html) {
-    box.innerHTML = s.html;
-  } else {
-    box.textContent = s.text || "";
+  function show(i) {
+    const s = sections[i];
+    nav.querySelectorAll("button").forEach(function (b, j) {
+      b.classList.toggle("active", j === i);
+    });
+    reader.innerHTML = s.html || "";
+    const art = reader.querySelector(".article");
+    if (art && s.text != null) art.textContent = s.text;
+    reader.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  reader.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-load();
+  show(0);
+})();
 </script>
 </body>
 </html>

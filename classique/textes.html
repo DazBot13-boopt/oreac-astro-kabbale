@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Textes classiques — OREAC</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<meta name="theme-color" content="#3a5a40">
+<script src="../js/theme-store.js"></script>
+<style>
+:root{
+  --bark:#1f2a22;--moss:#3a5a40;--sand:#f3efe6;--paper:#faf7f0;
+  --river:#2a6f97;--ink:#243028;--muted:#6b756e;
+  --line:rgba(36,48,40,.12);--radius:14px;--shadow:0 10px 30px rgba(31,42,34,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:linear-gradient(165deg,#dfe8df 0%,var(--sand) 45%,#e8e0d2 100%);
+  padding:clamp(12px,3vw,28px);
+}
+.wrap{max-width:820px;margin:0 auto}
+.back{display:inline-block;margin-bottom:10px;color:var(--river);font-weight:600;text-decoration:none;font-size:.9rem}
+h1{font-family:Georgia,serif;font-size:clamp(1.35rem,4vw,1.8rem);margin:0 0 6px;color:var(--bark)}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media (max-width:560px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:.78rem;font-weight:600;color:var(--moss);margin-bottom:4px}
+select{
+  width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(58,90,64,.22);
+  background:#fff;font:inherit;color:var(--ink);
+}
+.panel{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(14px,3vw,22px);box-shadow:var(--shadow);min-height:200px;
+}
+.panel h2{font-family:Georgia,serif;margin:0 0 12px;font-size:1.1rem;color:var(--bark)}
+.article{white-space:pre-wrap;line-height:1.55;font-size:.94rem}
+.warn{color:#a63d2f}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Menus classiques</a>
+  <h1>Textes planètes &amp; maisons</h1>
+  <p class="sub" id="sub">Corpus de l’ancien logiciel</p>
+  <div class="row">
+    <div>
+      <label for="cat">Catégorie</label>
+      <select id="cat">
+        <option value="planetes">Planètes</option>
+        <option value="signes">Signes</option>
+        <option value="extra">Extra</option>
+      </select>
+    </div>
+    <div>
+      <label for="item">Texte</label>
+      <select id="item"></select>
+    </div>
+  </div>
+  <article class="panel" id="view"><p class="sub">Chargement…</p></article>
+</div>
+<script>
+(async function () {
+  const d = window.OreacTheme && OreacTheme.load();
+  if (d) {
+    document.getElementById("sub").textContent =
+      "Dossier : " + (d.nom || "Client") +
+      (d.signeNom ? " · Soleil en " + d.signeNom : "") +
+      " — lecture libre du corpus";
+  }
+  let data;
+  try {
+    const res = await fetch("../data/classique-textes.json");
+    data = await res.json();
+  } catch (e) {
+    document.getElementById("view").innerHTML = '<p class="warn">Corpus introuvable.</p>';
+    return;
+  }
+  const cat = document.getElementById("cat");
+  const item = document.getElementById("item");
+  const view = document.getElementById("view");
+
+  function fillItems() {
+    const bag = data[cat.value] || {};
+    const keys = Object.keys(bag);
+    item.innerHTML = "";
+    keys.forEach(function (k) {
+      const o = document.createElement("option");
+      o.value = k;
+      o.textContent = k;
+      item.appendChild(o);
+    });
+    // Prefer sun sign when viewing signes
+    if (cat.value === "signes" && d && d.signeNom && bag[d.signeNom]) {
+      item.value = d.signeNom;
+    }
+    show();
+  }
+  function show() {
+    const bag = data[cat.value] || {};
+    const key = item.value;
+    view.innerHTML = "<h2>" + key + '</h2><div class="article"></div>';
+    view.querySelector(".article").textContent = bag[key] || "";
+  }
+  cat.addEventListener("change", fillItems);
+  item.addEventListener("change", show);
+  fillItems();
+})();
+</script>
+</body>
+</html>

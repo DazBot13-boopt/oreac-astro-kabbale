@@ -24,7 +24,8 @@ await mkdir(join(output, "data"), { recursive: true });
 for (const dataFile of [
   "interpretations.json",
   "classique-horoscope.json",
-  "classique-portrait.json"
+  "classique-portrait.json",
+  "classique-textes.json"
 ]) {
   await cp(join(root, "data", dataFile), join(output, "data", dataFile));
 }

@@ -16,6 +16,7 @@
 <script src="js/print-bridge.js"></script>
 <script src="js/atlas-world.js"></script>
 <script src="js/atlas-ui.js"></script>
+<script src="js/theme-store.js"></script>
 <style>
 @font-face{
   font-family:"StarFisher";
@@ -408,6 +409,34 @@ body.cal-modal-open{overflow:hidden}
 .btn-mail{background:var(--moss)!important}
 .offer-contacts{font-size:.84rem;color:var(--muted);margin-top:10px}
 .offer-contacts a{color:var(--river);font-weight:600}
+
+.dossier-banner{
+  display:none;margin:14px 0;padding:16px 18px;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.dossier-banner.is-open{display:block}
+.dossier-banner h2{margin:0 0 6px;font-size:1.15rem}
+.dossier-meta{margin:0 0 14px;font-size:.88rem;color:var(--muted);line-height:1.45}
+.dossier-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+@media (max-width:640px){.dossier-grid{grid-template-columns:1fr}}
+.dossier-col{
+  border:1px solid var(--line);border-radius:12px;padding:14px;background:rgba(58,90,64,.04);
+}
+.dossier-col h3{margin:0 0 10px;font-size:1rem;font-family:Georgia,serif;color:var(--bark)}
+.dossier-col a,.dossier-col button{
+  display:block;width:100%;text-align:center;text-decoration:none;
+  font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;
+  padding:11px 12px;margin:0 0 8px;border-radius:999px;border:none;
+  background:linear-gradient(180deg,#4a6b52,#365a42);color:#f7f4ec;
+}
+.dossier-col a.secondary,.dossier-col button.secondary{
+  background:transparent;color:var(--moss);border:1px solid rgba(58,90,64,.28);
+}
+.dossier-col a:last-child,.dossier-col button:last-child{margin-bottom:0}
+
 @media (prefers-reduced-motion:reduce){
   .btn{transition:none}
 }
@@ -418,14 +447,12 @@ body.cal-modal-open{overflow:hidden}
   <header class="brand">
     <div class="brand-mark"><img src="favicon.png" alt="" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:7px;position:relative;top:-1px">OREAC Astro Kabbale</div>
     <h1>Arbre de Vie kabbalistique</h1>
-    <p>Anges · Séphiroth · Sentiers d’évolution</p>
-    <p style="margin-top:12px">
-      <a class="btn" href="classique/index.html" style="display:inline-flex;width:auto;padding:10px 20px;text-decoration:none;font-size:.9rem">Astrologie classique</a>
-    </p>
+    <p>Anges · Séphiroth · Astrologie classique — une seule saisie</p>
   </header>
 
 <section class="panel">
     <h2>Thème natal</h2>
+    <p class="hint">Remplissez une fois. Le dossier alimente la Kabbale et l’astrologie classique.</p>
     <label for="villeSearch">Ville (origine Bénin · atlas mondial)</label>
     <div class="ville-wrap">
       <input id="villeSearch" type="search" autocomplete="off" placeholder="Tapez une ville… ex. Lokossa, Cotonou, Parakou…">
@@ -473,6 +500,25 @@ body.cal-modal-open{overflow:hidden}
   </div>
 
   <div id="res">
+    <section class="dossier-banner is-open" id="dossierBanner" aria-label="Menus du dossier">
+      <h2>Votre dossier</h2>
+      <p class="dossier-meta" id="dossierMeta"></p>
+      <div class="dossier-grid">
+        <div class="dossier-col">
+          <h3>Kabbalistique</h3>
+          <a href="#cardAnges" class="secondary">Anges &amp; arbre</a>
+          <button type="button" class="secondary" onclick="ouvrirBiorythme()">Biorythme</button>
+          <button type="button" onclick="genererPDF()">PDF final</button>
+        </div>
+        <div class="dossier-col">
+          <h3>Astrologie classique</h3>
+          <a href="classique/portrait.html">Portrait astral</a>
+          <a href="classique/horoscope.html">Horoscope du signe</a>
+          <a href="classique/index.html" class="secondary">Tous les menus classiques</a>
+        </div>
+      </div>
+    </section>
+
     <section class="panel" id="cardAnges"></section>
 
     <section class="panel">
@@ -844,6 +890,21 @@ window.onload=async function(){
   sMin.value="40";
   document.getElementById("info").textContent="OREAC Astro Kabbale · origine Bénin · atlas mondial · hors ligne";
   genererCalendrierAnnuel();
+  if(typeof OreacTheme!=="undefined"){
+    let saved=OreacTheme.load();
+    if(saved){
+      if(saved.nom) document.getElementById("nomClient").value=saved.nom;
+      if(saved.annee) sA.value=String(saved.annee);
+      if(saved.mois) sM.value=String(saved.mois);
+      if(saved.jour) sJ.value=String(saved.jour);
+      if(saved.heureStr){
+        let [hh,mm]=saved.heureStr.split(":").map(Number);
+        if(!isNaN(hh)) sH.value=String(hh);
+        if(!isNaN(mm)) sMin.value=String(mm);
+      }
+      afficherDossierBanner(saved);
+    }
+  }
 };
 
 function afficherLongAbs(){
@@ -1033,22 +1094,41 @@ function calculerTout(){
 }
 
 function sauverThemePourBiorythme(){
-  if(typeof BiorythmeKabbale==="undefined")return;
+  if(!globalData)return;
   let nom=document.getElementById("nomClient").value||"Client";
-  BiorythmeKabbale.sauverTheme({
+  let payload={
     nom,
     ville:globalData.ville,
     villeLabel:globalData.villeLabel,
     lat:globalData.lat,
     lon:globalData.lon,
     tzId:globalData.tzId,
+    tzOffset:globalData.tzOffset,
+    country:globalData.country,
     annee:globalData.annee,
     mois:globalData.mois,
     jour:globalData.jour,
     heureStr:globalData.heureStr,
     theme:themeActuel,
+    anges:{phys:globalData.angePhys,emo:globalData.angeEmo,ment:globalData.angeMent},
     anneeBio:new Date().getFullYear()
-  });
+  };
+  if(typeof OreacTheme!=="undefined") OreacTheme.save(payload);
+  else if(typeof BiorythmeKabbale!=="undefined") BiorythmeKabbale.sauverTheme(payload);
+  afficherDossierBanner(payload);
+}
+function afficherDossierBanner(d){
+  let el=document.getElementById("dossierBanner");
+  let meta=document.getElementById("dossierMeta");
+  if(!el||!meta||!d)return;
+  let sun=d.theme&&d.theme.a;
+  let signe=d.signeNom||(sun&&sun.signeNom)||"";
+  meta.textContent=
+    (d.nom||"Client")+" · "+
+    (d.villeLabel||d.ville||"")+" · "+
+    d.jour+"/"+d.mois+"/"+d.annee+" "+(d.heureStr||"")+
+    (signe?" · Soleil en "+signe:"");
+  el.classList.add("is-open");
 }
 function ouvrirBiorythme(){
   if(!Object.keys(themeActuel).length){alert("Calculez d’abord le thème natal.");return;}
