@@ -11,7 +11,8 @@ const assets = [
   "icon.png",
   "css",
   "js",
-  "data"
+  "data",
+  "res"
 ];
 
 await rm(output, { recursive: true, force: true });
@@ -19,4 +20,4 @@ await mkdir(output, { recursive: true });
 for (const asset of assets) {
   await cp(join(root, asset), join(output, asset), { recursive: true });
 }
-console.log("www prêt (interface desktop remaster)");
+console.log("www prêt (UI desktop Delphi exacte)");
