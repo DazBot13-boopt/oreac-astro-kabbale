@@ -1,0 +1,218 @@
+/* Clone 1:1 de la fenêtre Wine 640×480, adaptée téléphone/desktop */
+:root {
+  --sw: 640;
+  --sh: 480;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #050814;
+  overflow: hidden;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  color: #222;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#fit {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#stage {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  transform-origin: center center;
+  box-shadow: 0 10px 40px rgba(0,0,0,.55);
+  background: #000;
+}
+
+#stage .bg {
+  position: absolute;
+  inset: 0;
+  width: 640px;
+  height: 480px;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hot {
+  position: absolute;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.hot:focus-visible {
+  outline: 2px solid #ffd36a;
+  outline-offset: 2px;
+}
+
+/* Hotspots calés sur wine_choix.png (640×480) */
+.spot-list {
+  left: 92px;
+  top: 168px;
+  width: 210px;
+  height: 150px;
+  border: 0 !important;
+  outline: none;
+  /* invisible : le bitmap Wine affiche déjà la liste */
+  opacity: 0;
+  color: transparent;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.spot-list:focus {
+  opacity: 0.92;
+  color: #8b0000;
+  background: rgba(240, 224, 192, 0.96);
+}
+.spot-list option {
+  background: #f0e0c0;
+  color: #8b0000;
+  padding: 2px 4px;
+}
+
+.spot-add  { left: 332px; top: 158px; width: 52px; height: 52px; border-radius: 50%; }
+.spot-edit { left: 332px; top: 228px; width: 52px; height: 52px; border-radius: 50%; }
+.spot-del  { left: 332px; top: 298px; width: 52px; height: 52px; border-radius: 50%; }
+
+.spot-horo { left: 468px; top: 150px; width: 130px; height: 140px; border-radius: 50%; }
+.spot-astro{ left: 478px; top: 310px; width: 110px; height: 120px; border-radius: 50%; }
+.spot-quit { left: 520px; top: 440px; width: 100px; height: 32px; }
+
+#module {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #0c1214;
+  display: flex;
+  flex-direction: column;
+  color: #f2e8d4;
+}
+#module.hidden { display: none; }
+.mod-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  padding-top: calc(10px + env(safe-area-inset-top));
+  background: #1a1410;
+  border-bottom: 1px solid #3a2a18;
+}
+.mod-bar button {
+  font: 600 13px system-ui, Tahoma, sans-serif;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #6a5428;
+  background: #2a2218;
+  color: #f2e8d4;
+  cursor: pointer;
+}
+.mod-bar strong { flex: 1; text-align: center; font-size: 15px; }
+#modBody {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px;
+  background:
+    linear-gradient(180deg, rgba(12,18,20,.35), rgba(12,18,20,.72)),
+    url("../res/fond_gp.jpg") center top / cover no-repeat;
+}
+#modBody .paper {
+  max-width: 720px;
+  margin: 0 auto;
+  background: rgba(243, 230, 204, 0.95);
+  color: #2a1810;
+  border: 1px solid #8a6a3a;
+  border-radius: 10px;
+  padding: 14px;
+}
+.panel-title { margin: 0 0 10px; text-align: center; color: #7a1f1f; }
+.win-form { display: grid; gap: 10px; }
+.win-form label { display: grid; gap: 4px; font: 13px system-ui, Tahoma, sans-serif; }
+.win-form input, .win-form select {
+  font: 16px system-ui, Tahoma, sans-serif;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #808080;
+}
+.win-form .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.win-form .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.win-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.win-actions button {
+  font: 600 14px system-ui, Tahoma, sans-serif;
+  padding: 12px 10px;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: #e8e0d0;
+  cursor: pointer;
+}
+.win-actions button.primary {
+  background: linear-gradient(#ffe08a, #d4a017);
+  border-color: #8a6a10;
+}
+.calc-out {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fffaf0;
+  border: 1px solid #cbb48a;
+  border-radius: 8px;
+  font: 12px/1.4 ui-monospace, "Courier New", monospace;
+  white-space: pre-wrap;
+}
+.section-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.section-nav button {
+  flex: 0 0 auto;
+  font: 12px system-ui, Tahoma, sans-serif;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid #8a6a3a;
+  background: #efe0c0;
+  cursor: pointer;
+}
+.section-nav button.active { background: #8a5a12; color: #fff; }
+.legacy-html { font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+#skyCanvas { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
+
+.mod-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 560px;
+  margin: 12px auto;
+}
+.mod-tiles button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 1px solid #6a5428;
+  background: rgba(20,16,12,.72);
+  color: #f2e8d4;
+  cursor: pointer;
+}
+.mod-tiles img { height: 42px; width: auto; object-fit: contain; }
+.mod-tiles span { font: 600 13px system-ui, Tahoma, sans-serif; }
+
+@media print {
+  #fit, .mod-bar { display: none !important; }
+  #module { display: block !important; position: static; background: #fff; color: #000; }
+  #modBody { background: #fff; }
+}

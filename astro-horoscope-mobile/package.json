@@ -1,8 +1,8 @@
 {
   "name": "astro-horoscope-mobile",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
-  "description": "Astrologie & Horoscope \u2014 clone UI/calculs Delphi desktop (mobile + Windows)",
+  "description": "Clone Wine Astrologie & Horoscope (\u00e9cran Choix + modules)",
   "main": "electron/main.cjs",
   "scripts": {
     "build:web": "node scripts/prepare-web.mjs",

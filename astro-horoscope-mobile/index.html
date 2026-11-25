@@ -3,82 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Astrologie</title>
+  <title>Astrologie &amp; Horoscope</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <meta name="theme-color" content="#0a0a0a">
-  <link rel="stylesheet" href="css/desktop.css?v=121">
+  <meta name="theme-color" content="#0a1630">
+  <link rel="stylesheet" href="css/wine-clone.css?v=132">
 </head>
 <body>
-  <div class="app">
-    <header class="hero" aria-label="Astrologie">
-      <div class="hero-bg" aria-hidden="true"></div>
-      <div class="hero-inner">
-        <img class="app-icon" src="icon.png" alt="">
-        <h1>Astrologie</h1>
-        <p id="hint">Même logiciel Windows — version téléphone</p>
-      </div>
-    </header>
+  <!-- Clone exact de l'écran Wine « Choisir Astrologie ou Horoscope » -->
+  <div id="fit">
+    <div id="stage" class="screen-choix">
+      <img class="bg" src="res/wine_choix.png" alt="Astrologie &amp; Horoscope">
 
-    <nav class="menu" id="menu" aria-label="Modules">
-      <button class="btn" data-view="accueil" type="button">
-        <img src="res/accueil_off.png" data-off="res/accueil_off.png" data-over="res/accueil_over.png" alt="">
-        <span>Accueil</span>
-      </button>
-      <button class="btn" data-view="theme" type="button">
-        <img src="res/theme_off.png" data-off="res/theme_off.png" data-over="res/theme_over.png" alt="">
-        <span>Thème</span>
-      </button>
-      <button class="btn" data-view="portrait" type="button">
-        <img src="res/portrait_off.png" data-off="res/portrait_off.png" data-over="res/portrait_over.png" alt="">
-        <span>Portrait</span>
-      </button>
-      <button class="btn" data-view="calculs" type="button">
-        <img src="res/calculs_off.png" data-off="res/calculs_off.png" data-over="res/calculs_over.png" alt="">
-        <span>Calculs</span>
-      </button>
-      <button class="btn" data-view="cartes" type="button">
-        <img src="res/cartes_off.png" data-off="res/cartes_off.png" data-over="res/cartes_over.png" alt="">
-        <span>Cartes</span>
-      </button>
-      <button class="btn" data-view="previsions" type="button">
-        <img src="res/previsions_off.png" data-off="res/previsions_off.png" data-over="res/previsions_over.png" alt="">
-        <span>Prévisions</span>
-      </button>
-      <button class="btn" data-view="graphiques" type="button">
-        <img src="res/graphiques_off.png" data-off="res/graphiques_off.png" data-over="res/graphiques_over.png" alt="">
-        <span>Horoscope</span>
-      </button>
-      <button class="btn" data-view="cours" type="button">
-        <img src="res/cours_off.png" data-off="res/cours_off.png" data-over="res/cours_over.png" alt="">
-        <span>Cours</span>
-      </button>
-      <button class="btn" data-view="couples" type="button">
-        <img src="res/astro_couples_off.png" data-off="res/astro_couples_off.png" data-over="res/astro_couples_over.png" alt="">
-        <span>Couples</span>
-      </button>
-      <button class="btn" data-view="reglages" type="button">
-        <img src="res/reglages_off.png" data-off="res/reglages_off.png" data-over="res/reglages_over.png" alt="">
-        <span>Réglages</span>
-      </button>
-      <button class="btn" data-view="sommaire" type="button">
-        <img src="res/sommaire_off.png" data-off="res/sommaire_off.png" data-over="res/sommaire_over.png" alt="">
-        <span>Sommaire</span>
-      </button>
-      <button class="btn" data-view="aide" type="button">
-        <img src="res/aide_off.png" data-off="res/aide_off.png" data-over="res/aide_over.png" alt="">
-        <span>Aide</span>
-      </button>
-    </nav>
+      <!-- Liste profils : hotspot transparent (le bitmap Wine affiche déjà la boîte) -->
+      <select id="profileList" class="hot spot-list" size="8" aria-label="Choix d'un profil"></select>
 
-    <main id="viewport" class="viewport blank" aria-live="polite"></main>
+      <button type="button" class="hot spot-add" id="btnAdd" title="Ajouter" aria-label="Ajouter"></button>
+      <button type="button" class="hot spot-edit" id="btnEdit" title="Modifier" aria-label="Modifier"></button>
+      <button type="button" class="hot spot-del" id="btnDel" title="Supprimer" aria-label="Supprimer"></button>
 
-    <footer class="bar">
-      <button type="button" class="bar-btn" data-view="imprimer">Imprimer</button>
-      <button type="button" class="bar-btn" data-view="enregistrer">PDF</button>
-      <button type="button" class="bar-btn" data-view="accueil">Menu</button>
-    </footer>
+      <button type="button" class="hot spot-horo" id="btnHoro" title="HOROSCOPE" aria-label="Horoscope"></button>
+      <button type="button" class="hot spot-astro" id="btnAstro" title="ASTROLOGIE" aria-label="Astrologie"></button>
+      <button type="button" class="hot spot-quit" id="btnQuit" title="Quitter" aria-label="Quitter"></button>
+    </div>
   </div>
-  <script src="js/delphi-calc.js?v=121"></script>
-  <script src="js/desktop.js?v=121"></script>
+
+  <!-- Panneau module (remplace temporairement le stage) -->
+  <div id="module" class="hidden" aria-live="polite">
+    <header class="mod-bar">
+      <button type="button" id="btnBack">◀ Menu Wine</button>
+      <strong id="modTitle">Module</strong>
+      <button type="button" id="btnPrint">Imprimer</button>
+    </header>
+    <div id="modBody"></div>
+  </div>
+
+  <script src="js/delphi-calc.js?v=132"></script>
+  <script src="js/wine-app.js?v=132"></script>
 </body>
 </html>
