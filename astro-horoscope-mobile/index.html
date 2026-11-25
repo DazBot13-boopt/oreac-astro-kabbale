@@ -2,74 +2,83 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Astrologie</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <meta name="theme-color" content="#1a1a1a">
-  <link rel="stylesheet" href="css/desktop.css">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="stylesheet" href="css/desktop.css?v=121">
 </head>
 <body>
-  <div id="stage-wrap">
-    <div id="stage">
-      <div id="fond" aria-hidden="true"></div>
-      <div id="viewport" class="blank" aria-live="polite"></div>
+  <div class="app">
+    <header class="hero" aria-label="Astrologie">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <img class="app-icon" src="icon.png" alt="">
+        <h1>Astrologie</h1>
+        <p id="hint">Même logiciel Windows — version téléphone</p>
+      </div>
+    </header>
 
-      <button class="btn" id="btn-cours" data-view="cours" title="Cours">
-        <img src="res/cours_off.png" data-off="res/cours_off.png" data-over="res/cours_over.png" alt="Cours">
+    <nav class="menu" id="menu" aria-label="Modules">
+      <button class="btn" data-view="accueil" type="button">
+        <img src="res/accueil_off.png" data-off="res/accueil_off.png" data-over="res/accueil_over.png" alt="">
+        <span>Accueil</span>
       </button>
-      <button class="btn" id="btn-fermer" data-view="fermer" title="Fermer">
-        <img src="res/fermer_off.png" data-off="res/fermer_off.png" data-over="res/fermer_over.png" alt="Fermer">
+      <button class="btn" data-view="theme" type="button">
+        <img src="res/theme_off.png" data-off="res/theme_off.png" data-over="res/theme_over.png" alt="">
+        <span>Thème</span>
       </button>
-      <button class="btn" id="btn-accueil" data-view="accueil" title="Accueil">
-        <img src="res/accueil_off.png" data-off="res/accueil_off.png" data-over="res/accueil_over.png" alt="Accueil">
+      <button class="btn" data-view="portrait" type="button">
+        <img src="res/portrait_off.png" data-off="res/portrait_off.png" data-over="res/portrait_over.png" alt="">
+        <span>Portrait</span>
       </button>
-      <button class="btn" id="btn-cartes" data-view="cartes" title="Cartes">
-        <img src="res/cartes_off.png" data-off="res/cartes_off.png" data-over="res/cartes_over.png" alt="Cartes">
+      <button class="btn" data-view="calculs" type="button">
+        <img src="res/calculs_off.png" data-off="res/calculs_off.png" data-over="res/calculs_over.png" alt="">
+        <span>Calculs</span>
       </button>
-      <button class="btn" id="btn-theme" data-view="theme" title="Thème">
-        <img src="res/theme_off.png" data-off="res/theme_off.png" data-over="res/theme_over.png" alt="Thème">
+      <button class="btn" data-view="cartes" type="button">
+        <img src="res/cartes_off.png" data-off="res/cartes_off.png" data-over="res/cartes_over.png" alt="">
+        <span>Cartes</span>
       </button>
-      <button class="btn" id="btn-portrait" data-view="portrait" title="Portrait">
-        <img src="res/portrait_off.png" data-off="res/portrait_off.png" data-over="res/portrait_over.png" alt="Portrait">
+      <button class="btn" data-view="previsions" type="button">
+        <img src="res/previsions_off.png" data-off="res/previsions_off.png" data-over="res/previsions_over.png" alt="">
+        <span>Prévisions</span>
       </button>
-      <button class="btn" id="btn-previsions" data-view="previsions" title="Prévisions">
-        <img src="res/previsions_off.png" data-off="res/previsions_off.png" data-over="res/previsions_over.png" alt="Prévisions">
+      <button class="btn" data-view="graphiques" type="button">
+        <img src="res/graphiques_off.png" data-off="res/graphiques_off.png" data-over="res/graphiques_over.png" alt="">
+        <span>Horoscope</span>
       </button>
-      <button class="btn" id="btn-calculs" data-view="calculs" title="Calculs">
-        <img src="res/calculs_off.png" data-off="res/calculs_off.png" data-over="res/calculs_over.png" alt="Calculs">
+      <button class="btn" data-view="cours" type="button">
+        <img src="res/cours_off.png" data-off="res/cours_off.png" data-over="res/cours_over.png" alt="">
+        <span>Cours</span>
       </button>
-      <button class="btn" id="btn-astro-couples" data-view="couples" title="Astro couples">
-        <img src="res/astro_couples_off.png" data-off="res/astro_couples_off.png" data-over="res/astro_couples_over.png" alt="Astro couples">
+      <button class="btn" data-view="couples" type="button">
+        <img src="res/astro_couples_off.png" data-off="res/astro_couples_off.png" data-over="res/astro_couples_over.png" alt="">
+        <span>Couples</span>
       </button>
-      <button class="btn" id="btn-graphiques" data-view="graphiques" title="Graphiques">
-        <img src="res/graphiques_off.png" data-off="res/graphiques_off.png" data-over="res/graphiques_over.png" alt="Graphiques">
+      <button class="btn" data-view="reglages" type="button">
+        <img src="res/reglages_off.png" data-off="res/reglages_off.png" data-over="res/reglages_over.png" alt="">
+        <span>Réglages</span>
       </button>
-      <button class="btn" id="btn-reglages" data-view="reglages" title="Réglages">
-        <img src="res/reglages_off.png" data-off="res/reglages_off.png" data-over="res/reglages_over.png" alt="Réglages">
+      <button class="btn" data-view="sommaire" type="button">
+        <img src="res/sommaire_off.png" data-off="res/sommaire_off.png" data-over="res/sommaire_over.png" alt="">
+        <span>Sommaire</span>
       </button>
-      <button class="btn" id="btn-aide" data-view="aide" title="Aide">
-        <img src="res/aide_off.png" data-off="res/aide_off.png" data-over="res/aide_over.png" alt="Aide">
+      <button class="btn" data-view="aide" type="button">
+        <img src="res/aide_off.png" data-off="res/aide_off.png" data-over="res/aide_over.png" alt="">
+        <span>Aide</span>
       </button>
-      <button class="btn" id="btn-sommaire" data-view="sommaire" title="Sommaire">
-        <img src="res/sommaire_off.png" data-off="res/sommaire_off.png" data-over="res/sommaire_over.png" alt="Sommaire">
-      </button>
-      <button class="btn" id="btn-quitter" data-view="quitter" title="Quitter">
-        <img src="res/quitter_off.png" data-off="res/quitter_off.png" data-over="res/quitter_over.png" alt="Quitter">
-      </button>
-      <button class="btn" id="btn-imprimer" data-view="imprimer" title="Imprimer">
-        <img src="res/imprimer_off.png" data-off="res/imprimer_off.png" data-over="res/imprimer_over.png" alt="Imprimer">
-      </button>
-      <button class="btn" id="btn-enregistrer" data-view="enregistrer" title="Enregistrer">
-        <img src="res/enregistrer_off.png" data-off="res/enregistrer_off.png" data-over="res/enregistrer_over.png" alt="Enregistrer">
-      </button>
-      <button class="btn" id="btn-envoyer" data-view="envoyer" title="Envoyer">
-        <img src="res/envoyer_off.png" data-off="res/envoyer_off.png" data-over="res/envoyer_over.png" alt="Envoyer">
-      </button>
+    </nav>
 
-      <div class="hint-bar" id="hint">Astrologie — interface desktop (Bernard Villemin)</div>
-    </div>
+    <main id="viewport" class="viewport blank" aria-live="polite"></main>
+
+    <footer class="bar">
+      <button type="button" class="bar-btn" data-view="imprimer">Imprimer</button>
+      <button type="button" class="bar-btn" data-view="enregistrer">PDF</button>
+      <button type="button" class="bar-btn" data-view="accueil">Menu</button>
+    </footer>
   </div>
-  <script src="js/delphi-calc.js"></script>
-  <script src="js/desktop.js"></script>
+  <script src="js/delphi-calc.js?v=121"></script>
+  <script src="js/desktop.js?v=121"></script>
 </body>
 </html>

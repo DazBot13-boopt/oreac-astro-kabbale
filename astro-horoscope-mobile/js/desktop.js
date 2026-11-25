@@ -1,17 +1,16 @@
-/** Shell Delphi Tfastrologiciel — mêmes boutons / navigation que l'exe 2003. */
+/** Astrologie — UI téléphone responsive, modules Delphi. */
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
   const viewport = $("#viewport");
   const hint = $("#hint");
-  const stage = $("#stage");
 
   const state = {
     view: "accueil",
     portrait: null,
     horoscope: null,
     theme: {
-      nom: "Lydie",
-      prenom: "HOUNSA",
+      nom: "HOUNSA",
+      prenom: "Lydie",
       day: 24, month: 11, year: 2005,
       hour: 8, minute: 58,
       city: "Cotonou",
@@ -23,42 +22,42 @@
     sectionId: 0
   };
 
-  function fitStage() {
-    const ww = window.innerWidth;
-    const wh = window.innerHeight;
-    const sw = 1201;
-    const sh = 1002;
-    const scale = Math.min(ww / sw, wh / sh, 1.15);
-    stage.style.transform = `scale(${scale})`;
-  }
-
   function setHint(t) {
     if (hint) hint.textContent = t || "";
   }
 
   function setActive(view) {
-    document.querySelectorAll(".btn").forEach((b) => {
+    document.querySelectorAll(".menu .btn").forEach((b) => {
       b.classList.toggle("active", b.dataset.view === view);
     });
   }
 
+  function showPanel() {
+    viewport.className = "viewport paper";
+    requestAnimationFrame(() => {
+      viewport.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function hidePanel() {
+    viewport.className = "viewport blank";
+    viewport.innerHTML = "";
+  }
+
   function wireHovers() {
-    document.querySelectorAll(".btn img").forEach((img) => {
+    document.querySelectorAll(".btn img[data-over]").forEach((img) => {
       const btn = img.closest(".btn");
       const off = img.dataset.off;
       const over = img.dataset.over;
-      if (!over) return;
-      btn.addEventListener("mouseenter", () => { img.src = over; });
-      btn.addEventListener("mouseleave", () => { img.src = off; });
-      btn.addEventListener("touchstart", () => { img.src = over; }, { passive: true });
-      btn.addEventListener("touchend", () => { img.src = off; }, { passive: true });
+      btn.addEventListener("pointerdown", () => { img.src = over; });
+      btn.addEventListener("pointerup", () => { img.src = off; });
+      btn.addEventListener("pointerleave", () => { img.src = off; });
     });
   }
 
   async function loadPortrait() {
     if (state.portrait) return state.portrait;
-    const urls = ["./data/sections.json", "data/sections.json"];
-    for (const url of urls) {
+    for (const url of ["./data/sections.json", "data/sections.json"]) {
       try {
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) continue;
@@ -71,8 +70,7 @@
 
   async function loadHoroscope() {
     if (state.horoscope) return state.horoscope;
-    const urls = ["./data/classique-horoscope.json", "data/classique-horoscope.json"];
-    for (const url of urls) {
+    for (const url of ["./data/classique-horoscope.json", "data/classique-horoscope.json"]) {
       try {
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) continue;
@@ -96,50 +94,50 @@
   }
 
   function showAccueil() {
-    viewport.className = "blank";
-    viewport.innerHTML = "";
-    setHint("Accueil — choisissez Thème, Portrait, Cartes, Prévisions…");
+    hidePanel();
+    setHint("Choisis un module ci-dessous");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function showTheme() {
-    viewport.className = "paper";
+    showPanel();
     const t = state.theme;
     viewport.innerHTML = `
       <h2 class="panel-title">Thème natal</h2>
       <form class="win-form" id="themeForm">
-        <label>Nom <input name="nom" value="${esc(t.nom)}"></label>
-        <label>Prénom <input name="prenom" value="${esc(t.prenom)}"></label>
-        <label>Date
-          <span style="display:flex;gap:4px">
-            <input name="day" type="number" min="1" max="31" value="${t.day}" style="width:3.5em">
-            <input name="month" type="number" min="1" max="12" value="${t.month}" style="width:3.5em">
-            <input name="year" type="number" min="1800" max="2100" value="${t.year}" style="width:5em">
-          </span>
+        <label>Nom <input name="nom" value="${esc(t.nom)}" autocomplete="family-name"></label>
+        <label>Prénom <input name="prenom" value="${esc(t.prenom)}" autocomplete="given-name"></label>
+        <label>Date (j / m / a)
+          <div class="row">
+            <input name="day" type="number" inputmode="numeric" min="1" max="31" value="${t.day}">
+            <input name="month" type="number" inputmode="numeric" min="1" max="12" value="${t.month}">
+            <input name="year" type="number" inputmode="numeric" min="1800" max="2100" value="${t.year}">
+          </div>
         </label>
-        <label>Heure légale
-          <span style="display:flex;gap:4px">
-            <input name="hour" type="number" min="0" max="23" value="${t.hour}" style="width:3.5em"> h
-            <input name="minute" type="number" min="0" max="59" value="${t.minute}" style="width:3.5em"> mn
-          </span>
+        <label>Heure légale (h / mn)
+          <div class="row-2">
+            <input name="hour" type="number" inputmode="numeric" min="0" max="23" value="${t.hour}">
+            <input name="minute" type="number" inputmode="numeric" min="0" max="59" value="${t.minute}">
+          </div>
         </label>
-        <label>Fuseau (UT+) <input name="tz" type="number" step="0.5" value="${t.tz}" style="width:4em"></label>
+        <label>Fuseau (UT+) <input name="tz" type="number" step="0.5" value="${t.tz}"></label>
         <label>Lieu <input name="city" value="${esc(t.city)}"></label>
-        <label>Latitude
-          <span style="display:flex;gap:4px;align-items:center">
-            <input name="latDeg" type="number" value="${t.latDeg}" style="width:3.5em">°
-            <input name="latMin" type="number" value="${t.latMin}" style="width:3.5em">′
+        <label>Latitude (° ′ N/S)
+          <div class="row">
+            <input name="latDeg" type="number" value="${t.latDeg}">
+            <input name="latMin" type="number" value="${t.latMin}">
             <select name="latNS"><option ${t.latNS==="N"?"selected":""}>N</option><option ${t.latNS==="S"?"selected":""}>S</option></select>
-          </span>
+          </div>
         </label>
-        <label>Longitude
-          <span style="display:flex;gap:4px;align-items:center">
-            <input name="lonDeg" type="number" value="${t.lonDeg}" style="width:3.5em">°
-            <input name="lonMin" type="number" value="${t.lonMin}" style="width:3.5em">′
+        <label>Longitude (° ′ E/O)
+          <div class="row">
+            <input name="lonDeg" type="number" value="${t.lonDeg}">
+            <input name="lonMin" type="number" value="${t.lonMin}">
             <select name="lonEW"><option ${t.lonEW==="E"?"selected":""}>E</option><option ${t.lonEW==="O"?"selected":""}>O</option></select>
-          </span>
+          </div>
         </label>
         <div class="win-actions">
-          <button type="submit" class="primary">Calculer le ciel</button>
+          <button type="submit" class="primary">Calculer</button>
           <button type="button" id="btnLydie">Exemple Lydie</button>
         </div>
       </form>
@@ -168,7 +166,7 @@
       showTheme();
       runCalc();
     });
-    setHint("Thème — saisie natal (même logique que Btn_Nouveau_Theme)");
+    setHint("Thème natal");
   }
 
   function runCalc() {
@@ -181,14 +179,14 @@
       if (chart.golden) txt = "[Référence Delphi exacte]\n\n" + txt;
       out.textContent = txt;
     }
-    setHint(`Calcul du ciel — ${birth.name || "thème"} ${chart.golden ? "(golden Delphi)" : ""}`);
+    setHint(chart.golden ? "Ciel Lydie = Delphi exact" : `Calcul — ${birth.name}`);
   }
 
   async function showPortrait() {
-    viewport.className = "paper";
+    showPanel();
     const data = await loadPortrait();
     if (!data) {
-      viewport.innerHTML = `<p class="empty">Portrait introuvable (data/sections.json)</p>`;
+      viewport.innerHTML = `<h2 class="panel-title">Portrait</h2><p>Fichier sections.json introuvable.</p>`;
       return;
     }
     const nav = data.sections.map((s) =>
@@ -206,11 +204,11 @@
         showPortrait();
       });
     });
-    setHint("Portrait astral — textes Delphi (temp.htm / sections)");
+    setHint("Portrait astral");
   }
 
   async function showCalculs() {
-    viewport.className = "paper";
+    showPanel();
     const birth = birthFromTheme();
     const chart = window.DelphiCalc.computeNatalExact(birth);
     state.lastChart = chart;
@@ -222,27 +220,30 @@
         cur = a.type;
         asp += `\n${cur}\n`;
       }
-      asp += `          ${a.a.padEnd(14)} - ${a.b.padEnd(14)} Orbe: ${a.orb.toFixed(2)}°\n`;
+      asp += `  ${a.a} - ${a.b}  Orbe: ${a.orb.toFixed(2)}°\n`;
     }
     viewport.innerHTML = `
       <h2 class="panel-title">Calculs</h2>
       <pre class="calc-out">${esc(window.DelphiCalc.formatCalculDuCiel(chart))}\n${esc(asp)}</pre>
     `;
-    setHint("Calculs — longitudes, Placide, aspects (ORBE)");
+    setHint("Calculs Placide / aspects");
   }
 
   function showCartes() {
-    viewport.className = "paper";
+    showPanel();
     const birth = birthFromTheme();
     const chart = window.DelphiCalc.computeNatalExact(birth);
     state.lastChart = chart;
     viewport.innerHTML = `
       <h2 class="panel-title">Carte du Ciel</h2>
-      <canvas id="skyCanvas" width="560" height="560" style="display:block;margin:0 auto;background:#fff;border:1px solid #888"></canvas>
-      <p style="text-align:center;font-size:12px;margin-top:6px">ASC ${esc(window.DelphiCalc.fmtInSign(chart.asc))} — MC ${esc(window.DelphiCalc.fmtInSign(chart.mc))}</p>
+      <canvas id="skyCanvas" width="560" height="560"></canvas>
+      <p style="text-align:center;font:12px system-ui;margin-top:8px">
+        ASC ${esc(window.DelphiCalc.fmtInSign(chart.asc))}<br>
+        MC ${esc(window.DelphiCalc.fmtInSign(chart.mc))}
+      </p>
     `;
     drawChart($("#skyCanvas"), chart);
-    setHint("Carte du Ciel — roue Placide");
+    setHint("Carte du ciel");
   }
 
   function drawChart(canvas, chart) {
@@ -253,7 +254,6 @@
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = "#fffef8";
     ctx.fillRect(0, 0, W, H);
-    // rotate so ASC is at left (classic)
     const rot = (180 - chart.asc) * Math.PI / 180;
     function polar(lon, r) {
       const a = rot + lon * Math.PI / 180;
@@ -263,13 +263,11 @@
     ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx, cy, R * 0.72, 0, Math.PI * 2); ctx.stroke();
-    // signs
     for (let i = 0; i < 12; i++) {
       const [x1, y1] = polar(i * 30, R);
       const [x2, y2] = polar(i * 30, R * 0.72);
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
     }
-    // cusps
     ctx.strokeStyle = "#800000";
     for (let h = 1; h <= 12; h++) {
       const [x1, y1] = polar(chart.cusps[h], R * 0.72);
@@ -280,7 +278,6 @@
       ctx.font = "11px Tahoma";
       ctx.fillText(String(h), tx - 4, ty + 4);
     }
-    // planets
     const glyphs = {
       SOLEIL: "☉", LUNE: "☽", MERCURE: "☿", VENUS: "♀", MARS: "♂",
       JUPITER: "♃", SATURNE: "♄", URANUS: "♅", NEPTUNE: "♆", PLUTON: "♇"
@@ -288,15 +285,13 @@
     ctx.fillStyle = "#000";
     ctx.font = "16px serif";
     for (const [name, g] of Object.entries(glyphs)) {
-      const lon = chart.bodies[name];
-      const [x, y] = polar(lon, R * 0.88);
+      const [x, y] = polar(chart.bodies[name], R * 0.88);
       ctx.fillText(g, x - 6, y + 5);
     }
   }
 
   async function showPrevisions() {
-    viewport.className = "paper";
-    // Use Daziano temp.htm if available via fetch from bundled path — else message
+    showPanel();
     try {
       const res = await fetch("./data/previsions-sample.html", { cache: "no-store" });
       if (res.ok) {
@@ -308,32 +303,28 @@
     } catch (_) {}
     viewport.innerHTML = `
       <h2 class="panel-title">Prévisions</h2>
-      <p>Les prévisions (transits) reprennent le moteur Delphi : comparaison du ciel actuel au thème natal.</p>
-      <p>Ouvrez un thème puis Portrait pour l’analyse complète. Un export temp.htm peut être chargé ici.</p>
-      <div class="win-actions"><button type="button" id="goTheme">Nouveau thème</button></div>
+      <p>Transits Delphi : ciel actuel vs thème natal.</p>
+      <div class="win-actions"><button type="button" id="goTheme">Ouvrir Thème</button></div>
     `;
     $("#goTheme")?.addEventListener("click", () => openView("theme"));
-    setHint("Prévisions astrales");
+    setHint("Prévisions");
   }
 
-  async function showHoroscopeLike(title, key) {
-    viewport.className = "paper";
+  async function showHoroscopeLike(title) {
+    showPanel();
     const data = await loadHoroscope();
     if (!data || !data.signs) {
       viewport.innerHTML = `<h2 class="panel-title">${esc(title)}</h2><p>Données horoscope absentes.</p>`;
       return;
     }
     const signs = Object.keys(data.signs);
-    const first = signs[0];
     viewport.innerHTML = `
       <h2 class="panel-title">${esc(title)}</h2>
-      <label style="display:block;margin-bottom:8px">Signe
-        <select id="hSign">${signs.map((s) => `<option>${esc(s)}</option>`).join("")}</select>
-      </label>
-      <label style="display:block;margin-bottom:8px">Fichier
-        <select id="hFile"></select>
-      </label>
-      <div class="legacy-html" id="hBody"></div>
+      <form class="win-form">
+        <label>Signe <select id="hSign">${signs.map((s) => `<option>${esc(s)}</option>`).join("")}</select></label>
+        <label>Texte <select id="hFile"></select></label>
+      </form>
+      <div class="legacy-html" id="hBody" style="margin-top:12px"></div>
     `;
     const sel = $("#hSign");
     const file = $("#hFile");
@@ -342,95 +333,82 @@
       const pack = data.signs[sel.value] || {};
       const files = Object.keys(pack);
       file.innerHTML = files.map((f) => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
-      showFile();
-    }
-    function showFile() {
-      const pack = data.signs[sel.value] || {};
-      const html = pack[file.value] || "";
-      body.innerHTML = html;
+      body.innerHTML = pack[file.value] || "";
     }
     sel.addEventListener("change", fillFiles);
-    file.addEventListener("change", showFile);
-    if (first) { sel.value = first; fillFiles(); }
+    file.addEventListener("change", () => {
+      body.innerHTML = (data.signs[sel.value] || {})[file.value] || "";
+    });
+    if (signs[0]) { sel.value = signs[0]; fillFiles(); }
     setHint(title);
   }
 
   function showCours() {
-    viewport.className = "paper";
+    showPanel();
     viewport.innerHTML = `
       <h2 class="panel-title">Cours d'astrologie</h2>
-      <div class="legacy-html" id="coursBody">Chargement…</div>
+      <div id="coursBody">Chargement…</div>
     `;
     fetch("./data/classique-textes.json").then((r) => r.json()).then((data) => {
-      const keys = Object.keys(data).slice(0, 20);
-      let html = `<div class="section-nav">${keys.map((k) => `<button type="button" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div><div id="cTxt"></div>`;
-      $("#coursBody").innerHTML = html;
-      const show = (k) => { $("#cTxt").innerHTML = `<pre style="white-space:pre-wrap;font:inherit">${esc(data[k] || "")}</pre>`; };
+      const keys = Object.keys(data).slice(0, 30);
+      $("#coursBody").innerHTML = `
+        <div class="section-nav">${keys.map((k) => `<button type="button" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div>
+        <pre class="calc-out" id="cTxt"></pre>`;
+      const show = (k) => { $("#cTxt").textContent = data[k] || ""; };
       $("#coursBody").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => show(b.dataset.k)));
       if (keys[0]) show(keys[0]);
     }).catch(() => {
       $("#coursBody").textContent = "Textes de cours non trouvés.";
     });
-    setHint("Cours d'astrologie");
+    setHint("Cours");
   }
 
   function showReglages() {
-    viewport.className = "paper";
+    showPanel();
     viewport.innerHTML = `
       <h2 class="panel-title">Réglages</h2>
-      <p>Domification : <b>PLACIDE</b> (comme l’exe Delphi).</p>
-      <p>Orbes : fichier ORBE.DAT (conjonction 10°, carré/trigone 8°, sextile 6°…).</p>
-      <p>Couleurs / impression : Imprimer via le bouton dédié.</p>
+      <p>Domification : <b>PLACIDE</b></p>
+      <p>Orbes : ORBE.DAT (conjonction 10°, carré/trigone 8°, sextile 6°…)</p>
     `;
-    setHint("Réglages — PLACIDE / ORBE");
+    setHint("Réglages");
   }
 
   function showAide() {
-    viewport.className = "paper";
+    showPanel();
     viewport.innerHTML = `
       <h2 class="panel-title">Aide</h2>
-      <p><b>Astrologie</b> — clone de l’interface Windows (Bernard Villemin / Uranie).</p>
-      <p>Navigation identique : Accueil, Thème, Portrait, Prévisions, Calculs, Cartes, Cours, Couples, Graphiques, Réglages, Sommaire.</p>
-      <p>Le calcul natal pour l’exemple Lydie HOUNSA (24/11/2005 Cotonou) reproduit le ciel Delphi au degré près (référence golden).</p>
+      <p>Version téléphone du logiciel Astrologie (Villemin).</p>
+      <p>Modules : Thème, Portrait, Calculs, Cartes, Prévisions, Horoscope, Cours…</p>
+      <p>Exemple Lydie (24/11/2005 Cotonou) = ciel Delphi exact.</p>
     `;
     setHint("Aide");
   }
 
   function showSommaire() {
-    viewport.className = "paper";
+    showPanel();
     const items = [
-      ["theme", "Thème natal"],
-      ["portrait", "Portrait astral"],
-      ["calculs", "Calculs"],
-      ["cartes", "Carte du ciel"],
-      ["previsions", "Prévisions"],
-      ["cours", "Cours"],
-      ["couples", "Astro couples"],
-      ["graphiques", "Graphiques / Horoscope"],
-      ["reglages", "Réglages"],
-      ["aide", "Aide"]
+      ["theme", "Thème natal"], ["portrait", "Portrait"], ["calculs", "Calculs"],
+      ["cartes", "Carte du ciel"], ["previsions", "Prévisions"], ["cours", "Cours"],
+      ["couples", "Couples"], ["graphiques", "Horoscope"], ["reglages", "Réglages"], ["aide", "Aide"]
     ];
     viewport.innerHTML = `
       <h2 class="panel-title">Sommaire</h2>
-      <div class="section-nav">${items.map(([v, l]) => `<button type="button" data-v="${v}">${l}</button>`).join("")}</div>
+      <div class="section-nav" style="flex-wrap:wrap">${items.map(([v, l]) =>
+        `<button type="button" data-v="${v}">${l}</button>`).join("")}</div>
     `;
     viewport.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => openView(b.dataset.v)));
     setHint("Sommaire");
   }
 
   function showCouples() {
-    viewport.className = "paper";
-    viewport.style.backgroundImage = "url(res/fond_couple.jpg)";
+    showPanel();
     viewport.innerHTML = `
       <h2 class="panel-title">Astro couples</h2>
-      <p>Synastrie / comparaison de deux thèmes (module couples de l’exe).</p>
-      <p>Saisissez d’abord le thème principal (Thème), puis un second thème (à venir : fiches .nat).</p>
+      <p>Synastrie : saisis d’abord le thème principal (Thème).</p>
+      <div class="win-actions"><button type="button" id="goTheme">Ouvrir Thème</button></div>
     `;
+    $("#goTheme")?.addEventListener("click", () => openView("theme"));
     setHint("Astro couples");
-  }
-
-  function showGraphiques() {
-    showHoroscopeLike("Graphiques / Horoscope", "graphiques");
   }
 
   function esc(s) {
@@ -444,7 +422,6 @@
   function openView(view) {
     state.view = view;
     setActive(view);
-    viewport.style.backgroundImage = "";
     switch (view) {
       case "accueil": showAccueil(); break;
       case "theme": showTheme(); break;
@@ -454,27 +431,14 @@
       case "previsions": showPrevisions(); break;
       case "cours": showCours(); break;
       case "couples": showCouples(); break;
-      case "graphiques": showGraphiques(); break;
+      case "graphiques": showHoroscopeLike("Horoscope"); break;
       case "reglages": showReglages(); break;
       case "aide": showAide(); break;
       case "sommaire": showSommaire(); break;
-      case "imprimer": window.print(); setHint("Impression…"); break;
+      case "imprimer":
       case "enregistrer":
-        setHint("Enregistrer — utilisez Imprimer → PDF du système");
         window.print();
-        break;
-      case "envoyer":
-        setHint("Envoyer — partagez le PDF généré");
-        break;
-      case "fermer":
-        showAccueil();
-        break;
-      case "quitter":
-        setHint("Quitter");
-        if (window.confirm("Quitter Astrologie ?")) {
-          try { window.close(); } catch (_) {}
-          showAccueil();
-        }
+        setHint("Impression / PDF");
         break;
       default:
         showAccueil();
@@ -482,13 +446,11 @@
   }
 
   function init() {
-    fitStage();
-    window.addEventListener("resize", fitStage);
     wireHovers();
-    document.querySelectorAll(".btn").forEach((b) => {
+    document.querySelectorAll("[data-view]").forEach((b) => {
       b.addEventListener("click", () => openView(b.dataset.view));
     });
-    const hash = (location.hash || "").replace("#","");
+    const hash = (location.hash || "").replace("#", "");
     openView(hash || "accueil");
   }
 

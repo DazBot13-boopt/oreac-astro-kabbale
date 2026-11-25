@@ -1,6 +1,6 @@
 {
   "name": "astro-horoscope-mobile",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "Astrologie & Horoscope \u2014 clone UI/calculs Delphi desktop (mobile + Windows)",
   "main": "electron/main.cjs",
