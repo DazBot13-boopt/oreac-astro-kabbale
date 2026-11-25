@@ -1,14 +1,17 @@
-/** Clone de Astrologie & Horoscope.exe (écran Wine Choix + modules). */
+/** Clone Wine : Choix 640×480 → ASTROLOGIE 800×600 → modules. */
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
-  const stage = $("#stage");
-  const fit = $("#fit");
+  const fitChoix = $("#fitChoix");
+  const fitAstro = $("#fitAstro");
+  const stageChoix = $("#stageChoix");
+  const stageAstro = $("#stageAstro");
   const moduleEl = $("#module");
   const modBody = $("#modBody");
   const modTitle = $("#modTitle");
 
   const KEY = "ah-profiles-v1";
   const state = {
+    screen: "choix", // choix | astro | module
     profiles: [],
     current: 0,
     theme: {
@@ -24,10 +27,31 @@
 
   function fitStage() {
     const pad = 8;
-    const ww = fit.clientWidth - pad;
-    const wh = fit.clientHeight - pad;
-    const scale = Math.min(ww / 640, wh / 480);
-    stage.style.transform = `scale(${scale})`;
+    const apply = (fit, stage, bw, bh) => {
+      if (!fit || fit.classList.contains("hidden")) return;
+      const ww = fit.clientWidth - pad;
+      const wh = fit.clientHeight - pad;
+      const scale = Math.min(ww / bw, wh / bh);
+      stage.style.transform = `scale(${scale})`;
+    };
+    apply(fitChoix, stageChoix, 640, 480);
+    apply(fitAstro, stageAstro, 800, 600);
+  }
+
+  function showChoix() {
+    state.screen = "choix";
+    moduleEl.classList.add("hidden");
+    fitAstro.classList.add("hidden");
+    fitChoix.classList.remove("hidden");
+    fitStage();
+  }
+
+  function showAstroScreen() {
+    state.screen = "astro";
+    moduleEl.classList.add("hidden");
+    fitChoix.classList.add("hidden");
+    fitAstro.classList.remove("hidden");
+    fitStage();
   }
 
   function loadProfiles() {
@@ -65,16 +89,15 @@
   }
 
   function openModule(title) {
-    fit.classList.add("hidden");
-    fit.style.display = "none";
+    state.screen = "module";
+    fitChoix.classList.add("hidden");
+    fitAstro.classList.add("hidden");
     moduleEl.classList.remove("hidden");
     modTitle.textContent = title;
   }
 
   function closeModule() {
-    moduleEl.classList.add("hidden");
-    fit.style.display = "grid";
-    fitStage();
+    showAstroScreen();
   }
 
   function esc(s) {
@@ -121,47 +144,8 @@
     return null;
   }
 
-  function showAstroHub() {
-    openModule("Astrologie");
-    modBody.innerHTML = `
-      <div class="mod-tiles">
-        <button type="button" data-m="theme"><img src="res/theme_off.png" alt=""><span>Thème natal</span></button>
-        <button type="button" data-m="portrait"><img src="res/portrait_off.png" alt=""><span>Portrait</span></button>
-        <button type="button" data-m="calculs"><img src="res/calculs_off.png" alt=""><span>Calculs</span></button>
-        <button type="button" data-m="cartes"><img src="res/cartes_off.png" alt=""><span>Carte du ciel</span></button>
-        <button type="button" data-m="previsions"><img src="res/previsions_off.png" alt=""><span>Prévisions</span></button>
-        <button type="button" data-m="cours"><img src="res/cours_off.png" alt=""><span>Cours</span></button>
-        <button type="button" data-m="couples"><img src="res/astro_couples_off.png" alt=""><span>Couples</span></button>
-        <button type="button" data-m="reglages"><img src="res/reglages_off.png" alt=""><span>Réglages</span></button>
-      </div>
-      <p style="text-align:center;color:#ddd;font:13px system-ui">Modules du logiciel Astrologie (comme sous Wine).</p>
-    `;
-    modBody.querySelectorAll("[data-m]").forEach((b) => {
-      b.addEventListener("click", () => openAstroView(b.dataset.m));
-    });
-  }
-
-  function openAstroView(view) {
-    if (view === "theme") return showTheme();
-    if (view === "portrait") return showPortrait();
-    if (view === "calculs") return showCalculs();
-    if (view === "cartes") return showCartes();
-    if (view === "previsions") return showPrevisions();
-    if (view === "cours") return showCours();
-    if (view === "couples") {
-      openModule("Astro couples");
-      modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Astro couples</h2><p>Synastrie — saisis d’abord un thème.</p><div class="win-actions"><button type="button" id="goT">Thème</button></div></div>`;
-      $("#goT")?.addEventListener("click", showTheme);
-      return;
-    }
-    if (view === "reglages") {
-      openModule("Réglages");
-      modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Réglages</h2><p>Domification <b>PLACIDE</b> — orbes ORBE.DAT.</p></div>`;
-    }
-  }
-
   function showTheme() {
-    openModule("Thème natal");
+    openModule("Thème natal / Accueil");
     const t = state.theme;
     const p = selectedProfile();
     if (p.nom) t.nom = p.nom;
@@ -272,6 +256,28 @@
     for (const [n,g] of Object.entries(glyphs)){ const [x,y]=polar(chart.bodies[n],R*0.88); ctx.fillText(g,x-6,y+5); }
   }
 
+  function showGraphiques() {
+    openModule("Graphiques");
+    const chart = window.DelphiCalc.computeNatalExact(birthFromTheme());
+    modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Graphiques / Transits</h2><canvas id="skyCanvas" width="560" height="360"></canvas><pre class="calc-out" id="gOut"></pre></div>`;
+    const canvas = $("#skyCanvas");
+    const ctx = canvas.getContext("2d");
+    const names = ["SOLEIL","LUNE","MERCURE","VENUS","MARS","JUPITER","SATURNE"];
+    const W = canvas.width, H = canvas.height, pad = 40;
+    ctx.fillStyle = "#fffef8"; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = "#333"; ctx.beginPath(); ctx.moveTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
+    names.forEach((n, i) => {
+      const lon = chart.bodies[n] || 0;
+      const x = pad + (i + 0.5) * ((W - 2*pad) / names.length);
+      const y = H - pad - (lon / 360) * (H - 2*pad);
+      ctx.fillStyle = "#7a1f1f";
+      ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#222"; ctx.font = "11px system-ui";
+      ctx.fillText(n.slice(0,3), x-10, H-pad+14);
+    });
+    $("#gOut").textContent = window.DelphiCalc.formatCalculDuCiel(chart);
+  }
+
   async function showPrevisions() {
     openModule("Prévisions");
     try {
@@ -294,6 +300,39 @@
       $("#c").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.k)));
       if(keys[0]) show(keys[0]);
     }).catch(()=>{$("#c").textContent="Textes absents.";});
+  }
+
+  function showAide() {
+    openModule("Aide");
+    modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Aide</h2>
+      <p>Logiciel Astrologie — clone de l’interface Wine.</p>
+      <ul>
+        <li><b>ACCUEIL</b> : coordonnées natales / thème</li>
+        <li><b>PORTRAIT</b> : portrait astral</li>
+        <li><b>CARTES</b> : carte du ciel</li>
+        <li><b>CALCULS</b> : positions et aspects</li>
+        <li><b>COURS</b> : textes d’apprentissage</li>
+      </ul>
+      <p>Domification <b>PLACIDE</b> — orbes ORBE.DAT.</p>
+    </div>`;
+  }
+
+  function showReglages() {
+    openModule("Réglages");
+    modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Réglages</h2>
+      <p>Domification <b>PLACIDE</b></p>
+      <p>Orbes : fichier ORBE.DAT (référence Delphi).</p>
+      <p>Fuseau du thème courant : UT+${esc(state.theme.tz)}</p>
+    </div>`;
+  }
+
+  function showCouples() {
+    openModule("Astro couples");
+    modBody.innerHTML = `<div class="paper"><h2 class="panel-title">Astro couples</h2>
+      <p>Synastrie — saisis d’abord un thème (ACCUEIL).</p>
+      <div class="win-actions"><button type="button" id="goT">Thème</button></div>
+    </div>`;
+    $("#goT")?.addEventListener("click", showTheme);
   }
 
   async function showHoroscope() {
@@ -346,14 +385,30 @@
       state.current = 0;
       saveProfiles(); renderProfiles();
     });
-    $("#btnAstro").addEventListener("click", showAstroHub);
+    $("#btnAstro").addEventListener("click", showAstroScreen);
     $("#btnHoro").addEventListener("click", showHoroscope);
     $("#btnQuit").addEventListener("click", () => {
       if (confirm("Quitter Astrologie & Horoscope ?")) {
         try { window.close(); } catch (_) {}
       }
     });
-    $("#btnBack").addEventListener("click", closeModule);
+
+    $("#aCours").addEventListener("click", showCours);
+    $("#aAide").addEventListener("click", showAide);
+    $("#aAccueil").addEventListener("click", showTheme);
+    $("#aPortrait").addEventListener("click", showPortrait);
+    $("#aPrevisions").addEventListener("click", showPrevisions);
+    $("#aCartes").addEventListener("click", showCartes);
+    $("#aGraphiques").addEventListener("click", showGraphiques);
+    $("#aCalculs").addEventListener("click", showCalculs);
+    $("#aReglages").addEventListener("click", showReglages);
+    $("#aCouples").addEventListener("click", showCouples);
+    $("#aQuitter").addEventListener("click", showChoix);
+
+    $("#btnBack").addEventListener("click", () => {
+      if (state.screen === "module") closeModule();
+      else showChoix();
+    });
     $("#btnPrint").addEventListener("click", () => window.print());
   }
 
@@ -361,11 +416,10 @@
     loadProfiles();
     renderProfiles();
     wire();
-    fitStage();
+    showChoix();
     window.addEventListener("resize", fitStage);
-    // hash deep-links
     const hash = (location.hash || "").replace("#", "");
-    if (hash === "astro") showAstroHub();
+    if (hash === "astro") showAstroScreen();
     if (hash === "horoscope") showHoroscope();
   }
 

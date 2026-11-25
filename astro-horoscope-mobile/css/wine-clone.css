@@ -1,8 +1,4 @@
-/* Clone 1:1 de la fenêtre Wine 640×480, adaptée téléphone/desktop */
-:root {
-  --sw: 640;
-  --sh: 480;
-}
+/* Clone 1:1 des fenêtres Wine (Choix 640×480 + Astrologie 800×600) */
 * { box-sizing: border-box; }
 html, body {
   margin: 0;
@@ -14,28 +10,29 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-#fit {
+.fit {
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
+.fit.hidden { display: none !important; }
 
-#stage {
+.stage {
   position: relative;
-  width: 640px;
-  height: 480px;
   transform-origin: center center;
   box-shadow: 0 10px 40px rgba(0,0,0,.55);
   background: #000;
 }
+.screen-choix { width: 640px; height: 480px; }
+.screen-astro { width: 800px; height: 600px; }
 
-#stage .bg {
+.stage .bg {
   position: absolute;
   inset: 0;
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  height: 100%;
   display: block;
   pointer-events: none;
   user-select: none;
@@ -62,7 +59,6 @@ html, body {
   height: 150px;
   border: 0 !important;
   outline: none;
-  /* invisible : le bitmap Wine affiche déjà la liste */
   opacity: 0;
   color: transparent;
   background: transparent;
@@ -88,6 +84,19 @@ html, body {
 .spot-horo { left: 468px; top: 150px; width: 130px; height: 140px; border-radius: 50%; }
 .spot-astro{ left: 478px; top: 310px; width: 110px; height: 120px; border-radius: 50%; }
 .spot-quit { left: 520px; top: 440px; width: 100px; height: 32px; }
+
+/* Hotspots calés sur wine_astro_main.png (800×600) — labels + sphères DFM */
+.a-cours      { left: 8px;   top: 8px;   width: 120px; height: 110px; }
+.a-aide       { left: 700px; top: 8px;   width: 92px;  height: 92px; }
+.a-accueil    { left: 120px; top: 85px;  width: 200px; height: 70px; }
+.a-portrait   { left: 95px;  top: 185px; width: 200px; height: 70px; }
+.a-previsions { left: 130px; top: 275px; width: 220px; height: 70px; }
+.a-cartes     { left: 500px; top: 85px;  width: 200px; height: 70px; }
+.a-graphiques { left: 520px; top: 175px; width: 220px; height: 70px; }
+.a-calculs    { left: 470px; top: 275px; width: 220px; height: 70px; }
+.a-reglages   { left: 4px;   top: 495px; width: 140px; height: 95px; }
+.a-couples    { left: 310px; top: 505px; width: 180px; height: 85px; }
+.a-quitter    { left: 720px; top: 500px; width: 70px;  height: 70px; }
 
 #module {
   position: fixed;
@@ -189,30 +198,8 @@ html, body {
 .legacy-html { font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
 #skyCanvas { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
 
-.mod-tiles {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  max-width: 560px;
-  margin: 12px auto;
-}
-.mod-tiles button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 8px;
-  border-radius: 12px;
-  border: 1px solid #6a5428;
-  background: rgba(20,16,12,.72);
-  color: #f2e8d4;
-  cursor: pointer;
-}
-.mod-tiles img { height: 42px; width: auto; object-fit: contain; }
-.mod-tiles span { font: 600 13px system-ui, Tahoma, sans-serif; }
-
 @media print {
-  #fit, .mod-bar { display: none !important; }
+  .fit, .mod-bar { display: none !important; }
   #module { display: block !important; position: static; background: #fff; color: #000; }
   #modBody { background: #fff; }
 }

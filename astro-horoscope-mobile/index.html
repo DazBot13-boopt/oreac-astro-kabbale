@@ -6,15 +6,14 @@
   <title>Astrologie &amp; Horoscope</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="theme-color" content="#0a1630">
-  <link rel="stylesheet" href="css/wine-clone.css?v=132">
+  <link rel="stylesheet" href="css/wine-clone.css?v=133">
 </head>
 <body>
-  <!-- Clone exact de l'écran Wine « Choisir Astrologie ou Horoscope » -->
-  <div id="fit">
-    <div id="stage" class="screen-choix">
+  <!-- Écran Wine 640×480 : Choisir Astrologie ou Horoscope -->
+  <div id="fitChoix" class="fit">
+    <div id="stageChoix" class="stage screen-choix">
       <img class="bg" src="res/wine_choix.png" alt="Astrologie &amp; Horoscope">
 
-      <!-- Liste profils : hotspot transparent (le bitmap Wine affiche déjà la boîte) -->
       <select id="profileList" class="hot spot-list" size="8" aria-label="Choix d'un profil"></select>
 
       <button type="button" class="hot spot-add" id="btnAdd" title="Ajouter" aria-label="Ajouter"></button>
@@ -27,17 +26,36 @@
     </div>
   </div>
 
-  <!-- Panneau module (remplace temporairement le stage) -->
+  <!-- Écran Wine 800×600 : ASTROLOGIE (roue + boutons DFM) -->
+  <div id="fitAstro" class="fit hidden">
+    <div id="stageAstro" class="stage screen-astro">
+      <img class="bg" src="res/wine_astro_main.png" alt="ASTROLOGIE">
+
+      <button type="button" class="hot a-cours" id="aCours" title="COURS" aria-label="Cours"></button>
+      <button type="button" class="hot a-aide" id="aAide" title="AIDE" aria-label="Aide"></button>
+      <button type="button" class="hot a-accueil" id="aAccueil" title="ACCUEIL" aria-label="Accueil"></button>
+      <button type="button" class="hot a-portrait" id="aPortrait" title="PORTRAIT" aria-label="Portrait"></button>
+      <button type="button" class="hot a-previsions" id="aPrevisions" title="PRÉVISIONS" aria-label="Prévisions"></button>
+      <button type="button" class="hot a-cartes" id="aCartes" title="CARTES" aria-label="Cartes"></button>
+      <button type="button" class="hot a-graphiques" id="aGraphiques" title="GRAPHIQUES" aria-label="Graphiques"></button>
+      <button type="button" class="hot a-calculs" id="aCalculs" title="CALCULS" aria-label="Calculs"></button>
+      <button type="button" class="hot a-reglages" id="aReglages" title="RÉGLAGES" aria-label="Réglages"></button>
+      <button type="button" class="hot a-couples" id="aCouples" title="ASTRO-COUPLES" aria-label="Astro couples"></button>
+      <button type="button" class="hot a-quitter" id="aQuitter" title="Quitter" aria-label="Retour choix"></button>
+    </div>
+  </div>
+
+  <!-- Panneau module (sous-écrans : thème, textes, etc.) -->
   <div id="module" class="hidden" aria-live="polite">
     <header class="mod-bar">
-      <button type="button" id="btnBack">◀ Menu Wine</button>
+      <button type="button" id="btnBack">◀ ASTROLOGIE</button>
       <strong id="modTitle">Module</strong>
       <button type="button" id="btnPrint">Imprimer</button>
     </header>
     <div id="modBody"></div>
   </div>
 
-  <script src="js/delphi-calc.js?v=132"></script>
-  <script src="js/wine-app.js?v=132"></script>
+  <script src="js/delphi-calc.js?v=133"></script>
+  <script src="js/wine-app.js?v=133"></script>
 </body>
 </html>
