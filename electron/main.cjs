@@ -2,11 +2,20 @@ const { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } = require("e
 const { writeFile } = require("node:fs/promises");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const { launchLegacy, legacyStatus } = require("./legacy.cjs");
 
 const appRoot = path.resolve(__dirname, "..");
 const origin = "app://oreac";
-const allowedPages = new Set(["index.html", "admin.html", "biorythme.html", "favicon.png"]);
-const allowedAssetDirs = new Set(["js", "vendor", "fonts", "data"]);
+const allowedPages = new Set([
+  "index.html",
+  "admin.html",
+  "biorythme.html",
+  "favicon.png",
+  "classique/index.html",
+  "classique/horoscope.html",
+  "classique/portrait.html"
+]);
+const allowedAssetDirs = new Set(["js", "vendor", "fonts", "data", "classique"]);
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -118,6 +127,9 @@ ipcMain.handle("oreac:print-page", (event) => {
 });
 
 app.whenReady().then(() => {
+  ipcMain.handle("legacy:status", () => legacyStatus());
+  ipcMain.handle("legacy:launch", () => launchLegacy());
+
   protocol.handle("app", (request) => {
     const url = new URL(request.url);
     if (url.host !== "oreac") {
@@ -135,6 +147,9 @@ app.whenReady().then(() => {
       !relative ||
       !(
         (parts.length === 1 && allowedPages.has(parts[0])) ||
+        (parts.length === 2 &&
+          parts[0] === "classique" &&
+          allowedPages.has(relative.replace(/\/g, "/"))) ||
         (parts.length > 1 && allowedAssetDirs.has(parts[0]))
       )
     ) {

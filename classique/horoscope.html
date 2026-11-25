@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Horoscope classique — OREAC</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<meta name="theme-color" content="#3a5a40">
+<style>
+:root{
+  --bark:#1f2a22;--moss:#3a5a40;--leaf:#52796f;--sand:#f3efe6;--paper:#faf7f0;
+  --river:#2a6f97;--ink:#243028;--muted:#6b756e;
+  --line:rgba(36,48,40,.12);--radius:14px;--shadow:0 10px 30px rgba(31,42,34,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1000px 500px at 8% -8%,rgba(82,121,111,.16),transparent 55%),
+    linear-gradient(165deg,#dfe8df 0%,var(--sand) 45%,#e8e0d2 100%);
+  padding:clamp(12px,3vw,28px);
+}
+.wrap{max-width:860px;margin:0 auto}
+.back{display:inline-block;margin-bottom:10px;color:var(--river);font-weight:600;text-decoration:none;font-size:.9rem}
+h1{font-family:Georgia,serif;font-size:clamp(1.4rem,4vw,1.9rem);margin:0 0 6px;color:var(--bark)}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+.signs{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:14px;
+}
+.signs button{
+  font:inherit;cursor:pointer;padding:10px 8px;border-radius:12px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  box-shadow:var(--shadow);font-weight:600;font-size:.88rem;
+}
+.signs button.active{
+  background:linear-gradient(180deg,#4a6b52,#365a42);color:#f7f4ec;border-color:transparent;
+}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tabs button{
+  font:inherit;cursor:pointer;padding:8px 14px;border-radius:999px;
+  border:1px solid rgba(58,90,64,.25);background:rgba(250,247,240,.8);color:var(--moss);font-weight:600;font-size:.85rem;
+}
+.tabs button.active{background:var(--moss);color:#faf7f0;border-color:transparent}
+.panel{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(14px,3vw,22px);box-shadow:var(--shadow);min-height:220px;
+}
+.panel h2{font-family:Georgia,serif;margin:0 0 12px;font-size:1.15rem;color:var(--bark)}
+.article{white-space:pre-wrap;line-height:1.55;font-size:.95rem}
+.err{color:#a63d2f;padding:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Module classique</a>
+  <h1>Horoscope des signes</h1>
+  <p class="sub">Choisissez un signe, puis un onglet (profil · jour · mois).</p>
+  <div class="signs" id="signs"></div>
+  <div class="tabs" id="tabs"></div>
+  <article class="panel" id="view"><p class="sub">Chargement…</p></article>
+</div>
+<script>
+const TAB_LABELS = {
+  Signe: "Profil du signe",
+  HoroscopeJour: "Horoscope du jour",
+  TendanceMois: "Tendance du mois",
+  dernier: "Dernier texte"
+};
+const TAB_ORDER = ["Signe", "HoroscopeJour", "TendanceMois", "dernier"];
+
+let pack = null;
+let signId = null;
+let tabKey = "Signe";
+
+async function load() {
+  const view = document.getElementById("view");
+  try {
+    const res = await fetch("../data/classique-horoscope.json");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    pack = await res.json();
+  } catch (e) {
+    view.innerHTML = '<p class="err">Impossible de charger les textes classiques.</p>';
+    return;
+  }
+  const signsEl = document.getElementById("signs");
+  const entries = Object.values(pack.signs || {});
+  entries.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = s.label;
+    b.dataset.id = s.id;
+    b.addEventListener("click", () => selectSign(s.id));
+    signsEl.appendChild(b);
+    if (i === 0) selectSign(s.id);
+  });
+}
+
+function selectSign(id) {
+  signId = id;
+  document.querySelectorAll(".signs button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.id === id);
+  });
+  const texts = pack.signs[id]?.texts || {};
+  const tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = "";
+  const keys = TAB_ORDER.filter((k) => texts[k]);
+  keys.forEach((k, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = TAB_LABELS[k] || k;
+    b.dataset.key = k;
+    b.addEventListener("click", () => selectTab(k));
+    tabsEl.appendChild(b);
+    if (i === 0) tabKey = k;
+  });
+  selectTab(tabKey in texts ? tabKey : keys[0]);
+}
+
+function selectTab(key) {
+  tabKey = key;
+  document.querySelectorAll(".tabs button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.key === key);
+  });
+  const sign = pack.signs[signId];
+  const text = sign?.texts?.[key] || "";
+  const view = document.getElementById("view");
+  view.innerHTML =
+    "<h2>" +
+    (sign?.label || "") +
+    " — " +
+    (TAB_LABELS[key] || key) +
+    '</h2><div class="article"></div>';
+  view.querySelector(".article").textContent = text;
+}
+
+load();
+</script>
+</body>
+</html>

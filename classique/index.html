@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Astrologie classique — OREAC</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<meta name="theme-color" content="#3a5a40">
+<style>
+:root{
+  --bark:#1f2a22;--moss:#3a5a40;--leaf:#52796f;--sand:#f3efe6;--paper:#faf7f0;
+  --clay:#a63d2f;--river:#2a6f97;--gold:#b08968;--ink:#243028;--muted:#6b756e;
+  --line:rgba(36,48,40,.12);--radius:14px;--shadow:0 10px 30px rgba(31,42,34,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%,rgba(82,121,111,.18),transparent 60%),
+    linear-gradient(165deg,#dfe8df 0%,var(--sand) 42%,#e8e0d2 100%);
+  padding:clamp(12px,3vw,28px);
+}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;margin-bottom:12px;color:var(--river);font-weight:600;text-decoration:none;font-size:.9rem}
+.brand{text-align:center;padding:8px 0 16px}
+.brand-mark{
+  display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--moss);border:1px solid rgba(58,90,64,.25);padding:6px 14px;border-radius:999px;
+  background:rgba(250,247,240,.7);
+}
+.brand h1{
+  font-family:Georgia,"Times New Roman",serif;font-weight:600;
+  font-size:clamp(1.5rem,4vw,2.1rem);margin:12px 0 4px;color:var(--bark);
+}
+.brand p{margin:0;color:var(--muted);font-size:.92rem}
+.panel{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;margin:12px 0;box-shadow:var(--shadow);
+}
+.panel h2{font-family:Georgia,serif;margin:0 0 8px;font-size:1.2rem;color:var(--bark)}
+.panel p{margin:0 0 14px;color:var(--muted);font-size:.92rem;line-height:1.45}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;width:100%;
+  text-decoration:none;border:none;cursor:pointer;font:inherit;font-weight:600;
+  padding:14px 16px;border-radius:999px;margin-top:6px;
+  background:linear-gradient(180deg,#4a6b52,#365a42);color:#f7f4ec;
+  box-shadow:0 6px 16px rgba(54,90,66,.28);
+}
+.btn-alt{background:linear-gradient(180deg,#c4a484,#9a6f4a);color:#fff}
+.btn-ghost{
+  background:transparent;color:var(--moss);border:1px solid rgba(58,90,64,.3);
+  box-shadow:none;
+}
+#legacyBox{display:none}
+#legacyStatus{font-size:.82rem;color:var(--muted);margin-top:8px;min-height:1.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← OREAC Astro Kabbale</a>
+  <header class="brand">
+    <div class="brand-mark">Module classique</div>
+    <h1>Astrologie &amp; Horoscope</h1>
+    <p>Textes et portrait de l’ancien logiciel, intégrés hors ligne</p>
+  </header>
+
+  <section class="panel">
+    <h2>Horoscope des 12 signes</h2>
+    <p>Profil du signe, horoscope du jour et tendance du mois — corpus issu de Res_Txt.</p>
+    <a class="btn" href="horoscope.html">Ouvrir l’horoscope</a>
+  </section>
+
+  <section class="panel">
+    <h2>Portrait astral (exemple)</h2>
+    <p>Sommaire cliquable + lecture section par section (export du lecteur Delphi).</p>
+    <a class="btn btn-alt" href="portrait.html">Lire le portrait</a>
+  </section>
+
+  <section class="panel" id="legacyBox">
+    <h2>Logiciel Windows d’origine</h2>
+    <p>Sur le bureau Windows, lance l’exécutable Delphi s’il est présent à côté de l’installateur (dossier <code>legacy</code>).</p>
+    <button class="btn btn-ghost" type="button" id="btnLegacy">Lancer Astrologie &amp; Horoscope.exe</button>
+    <div id="legacyStatus"></div>
+  </section>
+</div>
+<script>
+(async () => {
+  const api = window.oreacDesktop;
+  if (!api || typeof api.launchLegacy !== "function") return;
+  const box = document.getElementById("legacyBox");
+  box.style.display = "block";
+  const status = document.getElementById("legacyStatus");
+  const info = await api.legacyStatus().catch(() => null);
+  if (info?.found) {
+    status.textContent = "Exécutable trouvé : " + info.path;
+  } else {
+    status.textContent = "Exécutable non trouvé. Placez le pack dans legacy/ à côté de l’app (voir VPS /opt/oreac-legacy).";
+  }
+  document.getElementById("btnLegacy").addEventListener("click", async () => {
+    status.textContent = "Lancement…";
+    try {
+      const r = await api.launchLegacy();
+      status.textContent = r?.ok ? "Lancé." : (r?.error || "Échec");
+    } catch (e) {
+      status.textContent = String(e?.message || e);
+    }
+  });
+})();
+</script>
+</body>
+</html>

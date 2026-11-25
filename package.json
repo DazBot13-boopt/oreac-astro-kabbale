@@ -32,10 +32,21 @@
       "admin.html",
       "biorythme.html",
       "favicon.png",
+      "classique/**/*",
       "js/**/*",
       "vendor/**/*",
       "fonts/**/*",
-      "data/interpretations.json"
+      "data/interpretations.json",
+      "data/classique-horoscope.json",
+      "data/classique-portrait.json",
+      "legacy/README.md"
+    ],
+    "extraResources": [
+      {
+        "from": "legacy",
+        "to": "legacy",
+        "filter": ["**/*", "!**/*.exe", "!**/Horoscope/**", "!**/Astrologie/**"]
+      }
     ],
     "win": {
       "target": "nsis",

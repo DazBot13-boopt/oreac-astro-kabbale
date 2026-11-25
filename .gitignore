@@ -29,3 +29,11 @@ Thumbs.db
 www/
 android/
 dist/
+
+# Packs lourds hors Git (déposés sur VPS /opt/oreac-legacy)
+windows-apps/
+astro-wine-remaster/
+Portrait-Daziano.pdf
+legacy/**/*.exe
+legacy/**/Astrologie/
+legacy/**/Horoscope/

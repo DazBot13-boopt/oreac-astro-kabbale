@@ -11,7 +11,8 @@ const assets = [
   "favicon.png",
   "js",
   "vendor",
-  "fonts"
+  "fonts",
+  "classique"
 ];
 
 await rm(output, { recursive: true, force: true });
@@ -20,10 +21,13 @@ for (const asset of assets) {
   await cp(join(root, asset), join(output, asset), { recursive: true });
 }
 await mkdir(join(output, "data"), { recursive: true });
-await cp(
-  join(root, "data", "interpretations.json"),
-  join(output, "data", "interpretations.json")
-);
+for (const dataFile of [
+  "interpretations.json",
+  "classique-horoscope.json",
+  "classique-portrait.json"
+]) {
+  await cp(join(root, "data", dataFile), join(output, "data", dataFile));
+}
 
 // Android's WebView keeps the biorythm page in the same application window.
 const indexPath = join(output, "index.html");
