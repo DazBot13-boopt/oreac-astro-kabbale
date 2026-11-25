@@ -35,69 +35,20 @@ jobs:
           npx cap sync android
           mkdir -p android/app/src/main/java/com/oreac/astrokabbale
           cp native/android/*.java android/app/src/main/java/com/oreac/astrokabbale/
-          python3 <<'PY'
-          from pathlib import Path
-          candidates = [
-              Path("android/app/build.gradle"),
-              Path("android/app/build.gradle.kts"),
-          ]
-          p = next((c for c in candidates if c.exists()), None)
-          if not p:
-              raise SystemExit("build.gradle introuvable")
-          t = p.read_text()
-          # Signature v1+v2 : certains téléphones affichent « package not found » avec v2 seul
-          if p.suffix == ".kts":
-              if "enableV1Signing" not in t:
-                  needle = "android {"
-                  inject = """android {
-    signingConfigs {
-        getByName("debug") {
-            enableV1Signing = true
-            enableV2Signing = true
-        }
-    }
-"""
-                  if needle not in t:
-                      raise SystemExit("bloc android { introuvable")
-                  t = t.replace(needle, inject, 1)
-              t = t.replace('versionName = "1.0"', 'versionName = "1.1.1"')
-              t = t.replace("versionName = \"1.0\"", "versionName = \"1.1.1\"")
-              t = t.replace("versionCode = 1", "versionCode = 3")
-          else:
-              if "enableV1Signing" not in t:
-                  needle = "android {"
-                  inject = """android {
-    signingConfigs {
-        debug {
-            enableV1Signing true
-            enableV2Signing true
-        }
-    }
-"""
-                  if needle not in t:
-                      raise SystemExit("bloc android { introuvable")
-                  t = t.replace(needle, inject, 1)
-              t = t.replace('versionName "1.0"', 'versionName "1.1.1"')
-              t = t.replace("versionCode 1", "versionCode 3")
-          p.write_text(t)
-          print("patched", p)
-          PY
+          python3 scripts/patch-android-gradle.py
       - name: Compiler l'APK installable
         working-directory: android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk ../OREAC-Astro-Kabbale.apk
-          # Vérifie que le fichier est bien un APK (pas un zip artefact)
           file ../OREAC-Astro-Kabbale.apk | grep -qi apk
-
       - uses: actions/upload-artifact@v4
         with:
           name: OREAC-Astro-Kabbale-Android-APK
           path: OREAC-Astro-Kabbale.apk
           if-no-files-found: error
-      - name: Upload APK release asset
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: OREAC-Astro-Kabbale.apk
@@ -152,11 +103,11 @@ jobs:
           body: |
             Correctif install Android (signature v1+v2) + fusion saisie unique.
 
-            ## Liens directs (fichier .apk / .exe, pas un zip)
+            ## Liens directs
             - Android : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/v1.1.1/OREAC-Astro-Kabbale.apk
             - Windows : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/v1.1.1/OREAC-Astro-Kabbale-Setup.exe
 
-            Installation Android : désinstaller toute ancienne OREAC → autoriser « sources inconnues » → ouvrir le fichier `.apk` (~6–7 Mo).
+            Android : désinstaller l'ancienne OREAC, autoriser les sources inconnues, ouvrir le fichier .apk (~6-7 Mo).
           files: |
             out/OREAC-Astro-Kabbale.apk
             out/OREAC-Astro-Kabbale-Setup.exe
