@@ -143,13 +143,11 @@ app.whenReady().then(() => {
       return new Response("Bad path", { status: 400 });
     }
     const parts = relative.split(/[\\/]/);
+    const normalized = relative.replace(/\\/g, "/");
     if (
       !relative ||
       !(
-        (parts.length === 1 && allowedPages.has(parts[0])) ||
-        (parts.length === 2 &&
-          parts[0] === "classique" &&
-          allowedPages.has(relative.replace(/\/g, "/"))) ||
+        allowedPages.has(normalized) ||
         (parts.length > 1 && allowedAssetDirs.has(parts[0]))
       )
     ) {
