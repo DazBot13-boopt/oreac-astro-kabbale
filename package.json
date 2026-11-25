@@ -1,6 +1,6 @@
 {
   "name": "oreac-astro-kabbale",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Application hors ligne OREAC Astro Kabbale",
   "main": "electron/main.cjs",
