@@ -1,86 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Horoscope</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<meta name="theme-color" content="#1a2230">
-<link rel="stylesheet" href="css/app.css">
-<script src="js/theme-store.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Horoscope</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="theme-color" content="#0c1214">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div class="wrap">
-  <a class="back" href="index.html">← Accueil</a>
-  <header class="brand">
-    <div class="mark">Horoscope</div>
-    <h1>Les 12 signes</h1>
-    <p id="sub">Choisissez un signe</p>
-  </header>
-  <div class="signs" id="signs"></div>
-  <div class="tabs" id="tabs"></div>
-  <article class="panel" id="view"><p class="hint">Chargement…</p></article>
-</div>
-<script>
-const LABELS = { Signe: "Profil", HoroscopeJour: "Jour", TendanceMois: "Mois" };
-const ORDER = ["Signe", "HoroscopeJour", "TendanceMois"];
+  <div class="sky" aria-hidden="true"></div>
+  <div class="app">
+    <header class="brand">
+      <div>
+        <h1>Horoscope</h1>
+        <p>Textes par signe (Res_Txt)</p>
+      </div>
+      <nav class="tabs">
+        <a href="index.html" class="ghost">Accueil</a>
+        <a href="portrait.html" class="ghost">Astrologie</a>
+        <a href="#" id="btnPrint">Imprimer / PDF</a>
+      </nav>
+    </header>
 
-(async function () {
-  const view = document.getElementById("view");
-  let pack;
-  try {
-    pack = await fetch("data/classique-horoscope.json").then(r => r.json());
-  } catch (e) {
-    view.innerHTML = '<p class="warn">Corpus introuvable.</p>';
-    return;
-  }
-  const d = AstroTheme.load();
-  if (d && d.signeNom) {
-    document.getElementById("sub").textContent =
-      "Dossier : " + d.nom + " · Soleil en " + d.signeNom + " (préselectionné)";
-  }
-
-  const signsEl = document.getElementById("signs");
-  const entries = Object.values(pack.signs || {});
-  let signId = (d && d.signeFolder) || (entries[0] && entries[0].id);
-  let tabKey = "Signe";
-
-  entries.forEach(function (s) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.textContent = s.label;
-    b.dataset.id = s.id;
-    b.addEventListener("click", function () { selectSign(s.id); });
-    signsEl.appendChild(b);
-  });
-
-  function selectSign(id) {
-    signId = id;
-    signsEl.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.id === id));
-    const texts = pack.signs[id].texts || {};
-    const tabs = document.getElementById("tabs");
-    tabs.innerHTML = "";
-    const keys = ORDER.filter(k => texts[k]);
-    keys.forEach(function (k, i) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = LABELS[k] || k;
-      b.dataset.key = k;
-      b.addEventListener("click", function () { selectTab(k); });
-      tabs.appendChild(b);
-      if (i === 0) tabKey = k;
-    });
-    selectTab(texts[tabKey] ? tabKey : keys[0]);
-  }
-  function selectTab(k) {
-    tabKey = k;
-    document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("active", b.dataset.key === k));
-    const s = pack.signs[signId];
-    view.innerHTML = "<h2>" + s.label + " — " + (LABELS[k] || k) + '</h2><div class="article"></div>';
-    view.querySelector(".article").textContent = s.texts[k] || "";
-  }
-  if (signId) selectSign(signId);
-})();
-</script>
+    <div class="shell">
+      <aside class="side">
+        <label for="sign">Signe</label>
+        <select id="sign"></select>
+        <label for="file" style="margin-top:12px">Texte</label>
+        <select id="file"></select>
+      </aside>
+      <main class="paper">
+        <div class="paper-head">
+          <h2 id="docTitle">Horoscope</h2>
+          <div class="meta" id="docMeta">Choisis un signe</div>
+        </div>
+        <div class="paper-body" id="docBody">
+          <div class="empty">Chargement…</div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/horoscope.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-name: Astrologie Horoscope Mobile APK
+name: Astrologie Horoscope Mobile + Windows
 
 on:
   push:
@@ -28,16 +28,18 @@ jobs:
           distribution: temurin
           java-version: "21"
       - name: Installer le SDK Android
+        working-directory: .
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"
-        working-directory: .
       - name: Installer et préparer
         run: |
+          pip install --quiet pillow
           npm install --no-audit --no-fund
           npm run build:web
           npx cap add android
           npx cap sync android
           python3 scripts/patch-android-gradle.py
+          python3 scripts/apply-android-icon.py
       - name: Compiler l'APK
         working-directory: astro-horoscope-mobile/android
         run: |
@@ -47,22 +49,67 @@ jobs:
           file ../../Astrologie-Horoscope.apk | grep -qi apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Astrologie-Horoscope-Android-APK
+          name: release-apk-ah
           path: Astrologie-Horoscope.apk
           if-no-files-found: error
-      - name: Publier release
+
+  windows:
+    name: Installateur Windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: astro-horoscope-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Installer et compiler
+        run: |
+          npm install --no-audit --no-fund
+          npm run build:windows
+      - name: Renommer
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem dist\*.exe | Select-Object -First 1
+          Copy-Item $exe.FullName "..\Astrologie-Horoscope-Setup.exe"
+        working-directory: astro-horoscope-mobile
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-exe-ah
+          path: Astrologie-Horoscope-Setup.exe
+          if-no-files-found: error
+
+  release:
+    name: Release publique
+    needs: [android, windows]
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-apk-ah
+          path: out
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-exe-ah
+          path: out
+      - name: Publier
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: astro-horoscope-mobile-v1.0.0
-          name: Astrologie & Horoscope Mobile v1.0.0
+          tag_name: astro-horoscope-v1.1.0
+          name: Astrologie & Horoscope v1.1.0
           body: |
-            Application mobile autonome (comme le menu Windows Astrologie / Horoscope).
+            Même interface que le viewer desktop (Astrologie / Horoscope).
+            Nouvelle icône. Pas de fonctions inventées.
 
-            ## Téléchargement direct
-            https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-mobile-v1.0.0/Astrologie-Horoscope.apk
-
-            Accueil → Astrologie (thème + portrait) ou Horoscope (12 signes).
-          files: Astrologie-Horoscope.apk
+            ## Téléchargements directs
+            - Android : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.1.0/Astrologie-Horoscope.apk
+            - Windows : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.1.0/Astrologie-Horoscope-Setup.exe
+          files: |
+            out/Astrologie-Horoscope.apk
+            out/Astrologie-Horoscope-Setup.exe
           draft: false
           make_latest: false
         env:

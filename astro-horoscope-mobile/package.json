@@ -1,16 +1,43 @@
 {
   "name": "astro-horoscope-mobile",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Astrologie & Horoscope — version mobile autonome",
+  "description": "Astrologie & Horoscope — mobile et Windows (même interface viewer)",
+  "main": "electron/main.cjs",
   "scripts": {
-    "build:web": "node scripts/prepare-web.mjs"
+    "build:web": "node scripts/prepare-web.mjs",
+    "start": "npm run build:web && electron .",
+    "build:windows": "npm run build:web && electron-builder --win nsis --x64 --publish never"
   },
   "dependencies": {
     "@capacitor/core": "8.6.0"
   },
   "devDependencies": {
     "@capacitor/android": "8.6.0",
-    "@capacitor/cli": "8.6.0"
+    "@capacitor/cli": "8.6.0",
+    "electron": "44.10.2",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.oreac.astrohoroscope",
+    "productName": "Astrologie & Horoscope",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "www/**/*",
+      "icon.png"
+    ],
+    "win": {
+      "icon": "icon.png",
+      "target": "nsis",
+      "artifactName": "Astrologie-Horoscope-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

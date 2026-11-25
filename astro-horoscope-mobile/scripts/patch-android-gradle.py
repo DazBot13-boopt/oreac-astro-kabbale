@@ -24,7 +24,7 @@ if p.suffix == ".kts":
 """,
             1,
         )
-    t = t.replace('versionName = "1.0"', 'versionName = "1.0.0"')
+    t = t.replace('versionName = "1.0"', 'versionName = "1.1.0"')
     t = t.replace("versionCode = 1", "versionCode = 1")
 else:
     if "enableV1Signing" not in t:
@@ -40,7 +40,7 @@ else:
 """,
             1,
         )
-    t = t.replace('versionName "1.0"', 'versionName "1.0.0"')
+    t = t.replace('versionName "1.0"', 'versionName "1.1.0"')
 
 p.write_text(t)
 print("patched", p)
