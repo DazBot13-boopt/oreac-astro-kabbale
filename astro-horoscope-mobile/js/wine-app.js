@@ -17,7 +17,8 @@
     theme: {
       nom: "TOGBEDJI", prenom: "Daziano",
       day: 13, month: 6, year: 2007, hour: 8, minute: 58,
-      city: "Cotonou", latDeg: 6, latMin: 21, latNS: "N",
+      city: "Cotonou", country: "BEN", countryName: "Bénin",
+      latDeg: 6, latMin: 21, latNS: "N",
       lonDeg: 2, lonMin: 25, lonEW: "E", tz: 1
     },
     portrait: null,
@@ -144,12 +145,153 @@
     return null;
   }
 
+  function applyLieuToTheme(lieu) {
+    if (!lieu) return;
+    const coords = window.AtlasLieu.toThemeCoords(lieu.lat, lieu.lon);
+    Object.assign(state.theme, {
+      city: lieu.name,
+      country: lieu.country,
+      countryName: lieu.countryName || "",
+      ...coords
+    });
+  }
+
+  async function showAtlasLieu(onPick) {
+    openModule("Choix d'un lieu");
+    modBody.innerHTML = `<div class="atlas-dlg"><h2>Choix d'un lieu</h2><p style="text-align:center">Chargement de l’atlas…</p></div>`;
+    let pays;
+    try {
+      pays = await window.AtlasLieu.loadPays();
+    } catch (e) {
+      modBody.innerHTML = `<div class="atlas-dlg"><p>Atlas introuvable (${esc(e.message)}).</p>
+        <div class="atlas-actions"><button type="button" id="atlasCancel">Annuler</button></div></div>`;
+      $("#atlasCancel")?.addEventListener("click", () => showTheme());
+      return;
+    }
+    const prefer = (state.theme.country || "BEN").toUpperCase();
+    const opts = pays.map((p) =>
+      `<option value="${esc(p.code)}" ${p.code === prefer ? "selected" : ""}>${esc(p.name)} (${p.n})</option>`
+    ).join("");
+    modBody.innerHTML = `
+      <div class="atlas-dlg">
+        <h2>Choix d'un lieu</h2>
+        <p style="text-align:center;font:12px system-ui;margin:0 0 10px;color:#5a3018">
+          Atlas mondial Delphi (Astrofic32) — ${pays.length} pays / territoires
+        </p>
+        <div class="atlas-grid">
+          <div class="atlas-col">
+            <label>Pays</label>
+            <input type="search" id="paysFilter" placeholder="Filtrer un pays…" autocomplete="off">
+            <select id="paysList" size="10">${opts}</select>
+          </div>
+          <div class="atlas-col">
+            <label>Ville / localité</label>
+            <input type="search" id="villeFilter" placeholder="Filtrer une ville…" autocomplete="off">
+            <select id="villeList" size="10"></select>
+          </div>
+        </div>
+        <p class="atlas-meta" id="atlasMeta">Sélectionnez un pays puis une ville.</p>
+        <div class="atlas-actions">
+          <button type="button" class="primary" id="atlasOk">OK</button>
+          <button type="button" id="atlasCancel">Annuler</button>
+        </div>
+      </div>`;
+
+    const paysList = $("#paysList");
+    const villeList = $("#villeList");
+    const atlasMeta = $("#atlasMeta");
+    let cities = [];
+    let selected = null;
+
+    function renderVilles(q) {
+      const list = window.AtlasLieu.filterCities(cities, q || "");
+      villeList.innerHTML = list.map((c, i) =>
+        `<option value="${i}" data-name="${esc(c.n)}">${esc(c.n)}</option>`
+      ).join("");
+      villeList._list = list;
+      selected = null;
+      atlasMeta.textContent = list.length
+        ? `${list.length} localité(s) — choisissez puis OK`
+        : "Aucune localité";
+    }
+
+    async function loadSelectedPays() {
+      const code = paysList.value;
+      const info = pays.find((p) => p.code === code);
+      atlasMeta.textContent = `Chargement ${info ? info.name : code}…`;
+      cities = await window.AtlasLieu.loadCountry(code);
+      renderVilles($("#villeFilter").value);
+      // pré-sélection si le thème a déjà cette ville
+      const want = window.AtlasLieu.fold(state.theme.city);
+      if (want) {
+        const list = villeList._list || [];
+        const idx = list.findIndex((c) => window.AtlasLieu.fold(c.n) === want);
+        if (idx >= 0) {
+          villeList.selectedIndex = idx;
+          selected = list[idx];
+          updateMeta();
+        }
+      }
+    }
+
+    function updateMeta() {
+      const info = pays.find((p) => p.code === paysList.value);
+      if (!selected) {
+        atlasMeta.textContent = info ? `${info.name} — ${cities.length} localités` : "";
+        return;
+      }
+      const signLat = selected.lat >= 0 ? "N" : "S";
+      const signLon = selected.lon >= 0 ? "E" : "O";
+      atlasMeta.innerHTML =
+        `<strong>${esc(selected.n)}</strong> (${esc(info ? info.name : paysList.value)}) · ` +
+        `${Math.abs(selected.lat).toFixed(4)}°${signLat} ${Math.abs(selected.lon).toFixed(4)}°${signLon}`;
+    }
+
+    function filterPays() {
+      const f = window.AtlasLieu.fold($("#paysFilter").value);
+      [...paysList.options].forEach((opt) => {
+        opt.hidden = f && !window.AtlasLieu.fold(opt.textContent).includes(f);
+      });
+    }
+
+    paysList.addEventListener("change", loadSelectedPays);
+    $("#paysFilter").addEventListener("input", filterPays);
+    $("#villeFilter").addEventListener("input", () => renderVilles($("#villeFilter").value));
+    villeList.addEventListener("change", () => {
+      const list = villeList._list || [];
+      selected = list[villeList.selectedIndex] || null;
+      updateMeta();
+    });
+    villeList.addEventListener("dblclick", () => $("#atlasOk").click());
+    $("#atlasCancel").addEventListener("click", () => showTheme());
+    $("#atlasOk").addEventListener("click", () => {
+      if (!selected) {
+        alert("Choisissez une ville / localité.");
+        return;
+      }
+      const info = pays.find((p) => p.code === paysList.value);
+      const lieu = {
+        name: selected.n,
+        lat: selected.lat,
+        lon: selected.lon,
+        country: paysList.value,
+        countryName: info ? info.name : paysList.value
+      };
+      applyLieuToTheme(lieu);
+      if (typeof onPick === "function") onPick(lieu);
+      showTheme();
+    });
+
+    await loadSelectedPays();
+  }
+
   function showTheme() {
     openModule("Thème natal / Accueil");
     const t = state.theme;
     const p = selectedProfile();
     if (p.nom) t.nom = p.nom;
     if (p.prenom) t.prenom = p.prenom;
+    const lieuLabel = t.countryName ? `${t.city} (${t.countryName})` : t.city;
     modBody.innerHTML = `
       <div class="paper">
         <h2 class="panel-title">Coordonnées natales</h2>
@@ -163,7 +305,13 @@
             <input name="hour" type="number" value="${t.hour}"><input name="minute" type="number" value="${t.minute}">
           </div></label>
           <label>Fuseau UT+ <input name="tz" type="number" step="0.5" value="${t.tz}"></label>
-          <label>Lieu <input name="city" value="${esc(t.city)}"></label>
+          <label>Lieu / localité
+            <div class="lieu-row">
+              <input name="city" id="cityInput" value="${esc(t.city)}" readonly>
+              <button type="button" id="btnAtlas">Atlas des villes</button>
+            </div>
+          </label>
+          <p class="atlas-meta" id="lieuInfo" style="margin:0">${esc(lieuLabel || "—")}</p>
           <label>Latitude<div class="row">
             <input name="latDeg" type="number" value="${t.latDeg}"><input name="latMin" type="number" value="${t.latMin}">
             <select name="latNS"><option ${t.latNS==="N"?"selected":""}>N</option><option ${t.latNS==="S"?"selected":""}>S</option></select>
@@ -179,6 +327,7 @@
         </form>
         <pre class="calc-out" id="calcOut"></pre>
       </div>`;
+    $("#btnAtlas").addEventListener("click", () => showAtlasLieu());
     $("#themeForm").addEventListener("submit", (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -191,12 +340,18 @@
       if (chart.golden) txt = "[Référence Delphi exacte]\n\n" + txt;
       $("#calcOut").textContent = txt;
     });
-    $("#btnLydie")?.addEventListener("click", () => {
+    $("#btnLydie")?.addEventListener("click", async () => {
       Object.assign(state.theme, {
         nom: "HOUNSA", prenom: "Lydie", day: 24, month: 11, year: 2005,
-        hour: 8, minute: 58, city: "Cotonou", latDeg: 6, latMin: 21, latNS: "N",
-        lonDeg: 2, lonMin: 25, lonEW: "E", tz: 1
+        hour: 8, minute: 58, city: "Cotonou", tz: 1
       });
+      try {
+        const hit = await window.AtlasLieu.findCity("Cotonou", "BEN");
+        if (hit) applyLieuToTheme(hit);
+        else Object.assign(state.theme, { latDeg: 6, latMin: 21, latNS: "N", lonDeg: 2, lonMin: 25, lonEW: "E", country: "BEN", countryName: "Bénin" });
+      } catch (_) {
+        Object.assign(state.theme, { latDeg: 6, latMin: 21, latNS: "N", lonDeg: 2, lonMin: 25, lonEW: "E" });
+      }
       showTheme();
       setTimeout(() => $("#themeForm")?.requestSubmit(), 0);
     });

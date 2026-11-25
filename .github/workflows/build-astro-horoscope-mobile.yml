@@ -98,14 +98,14 @@ jobs:
       - name: Publier
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: astro-horoscope-v1.3.0
-          name: Astrologie & Horoscope v1.3.0
+          tag_name: astro-horoscope-v1.4.0
+          name: Astrologie & Horoscope v1.4.0
           body: |
-            Clone Wine 1:1 — écran Choix 640×480 + ASTROLOGIE 800×600 (roue + boutons DFM).
+            Clone Wine — Choix 640×480 + ASTROLOGIE 800×600 + Atlas des villes (Astrofic32, 267 pays).
 
             ## Téléchargements directs
-            - Android : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.3.0/Astrologie-Horoscope.apk
-            - Windows : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.3.0/Astrologie-Horoscope-Setup.exe
+            - Android : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.4.0/Astrologie-Horoscope.apk
+            - Windows : https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-v1.4.0/Astrologie-Horoscope-Setup.exe
           files: |
             out/Astrologie-Horoscope.apk
             out/Astrologie-Horoscope-Setup.exe

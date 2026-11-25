@@ -198,6 +198,90 @@ html, body {
 .legacy-html { font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
 #skyCanvas { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
 
+/* Atlas — dialog « Choix d'un lieu » (Tfsai_lieu) */
+.atlas-dlg {
+  max-width: 560px;
+  margin: 0 auto;
+  background: rgba(243, 230, 204, 0.97);
+  color: #4a1010;
+  border: 2px solid #6a2a2a;
+  border-radius: 8px;
+  padding: 14px;
+}
+.atlas-dlg h2 {
+  margin: 0 0 12px;
+  text-align: center;
+  font: 700 22px "Times New Roman", Times, serif;
+  color: #7a1f1f;
+  text-shadow: 0 1px 0 #fff;
+}
+.atlas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.atlas-col label {
+  display: block;
+  font: 600 13px system-ui, Tahoma, sans-serif;
+  margin-bottom: 4px;
+}
+.atlas-col select, .atlas-col input {
+  width: 100%;
+  font: 15px system-ui, Tahoma, sans-serif;
+  padding: 8px;
+  border: 1px solid #8a6a3a;
+  border-radius: 6px;
+  background: #fffaf0;
+}
+.atlas-col select[size] {
+  height: 220px;
+  overflow: auto;
+}
+.atlas-meta {
+  margin: 10px 0 0;
+  font: 13px system-ui, Tahoma, sans-serif;
+  color: #3a2010;
+  min-height: 2.4em;
+}
+.atlas-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.atlas-actions button {
+  font: 600 14px system-ui, Tahoma, sans-serif;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #e8e0d0;
+  cursor: pointer;
+}
+.atlas-actions button.primary {
+  background: linear-gradient(#ffe08a, #d4a017);
+  border-color: #8a6a10;
+}
+.lieu-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: end;
+}
+.lieu-row button {
+  font: 600 13px system-ui, Tahoma, sans-serif;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #6a5428;
+  background: linear-gradient(#ffe08a, #d4a017);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .atlas-grid { grid-template-columns: 1fr; }
+  .atlas-col select[size] { height: 160px; }
+}
+
 @media print {
   .fit, .mod-bar { display: none !important; }
   #module { display: block !important; position: static; background: #fff; color: #000; }
