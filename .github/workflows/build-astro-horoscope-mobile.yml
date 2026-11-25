@@ -1,0 +1,69 @@
+name: Astrologie Horoscope Mobile APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "astro-horoscope-mobile/**"
+      - ".github/workflows/build-astro-horoscope-mobile.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    name: APK Astrologie & Horoscope
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: astro-horoscope-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Installer le SDK Android
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"
+        working-directory: .
+      - name: Installer et préparer
+        run: |
+          npm install --no-audit --no-fund
+          npm run build:web
+          npx cap add android
+          npx cap sync android
+          python3 scripts/patch-android-gradle.py
+      - name: Compiler l'APK
+        working-directory: astro-horoscope-mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../../Astrologie-Horoscope.apk
+          file ../../Astrologie-Horoscope.apk | grep -qi apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Astrologie-Horoscope-Android-APK
+          path: Astrologie-Horoscope.apk
+          if-no-files-found: error
+      - name: Publier release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: astro-horoscope-mobile-v1.0.0
+          name: Astrologie & Horoscope Mobile v1.0.0
+          body: |
+            Application mobile autonome (comme le menu Windows Astrologie / Horoscope).
+
+            ## Téléchargement direct
+            https://github.com/DazBot13-boopt/oreac-astro-kabbale/releases/download/astro-horoscope-mobile-v1.0.0/Astrologie-Horoscope.apk
+
+            Accueil → Astrologie (thème + portrait) ou Horoscope (12 signes).
+          files: Astrologie-Horoscope.apk
+          draft: false
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

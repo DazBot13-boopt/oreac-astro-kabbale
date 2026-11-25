@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portrait astral</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="theme-color" content="#1a2230">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme-store.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="astrologie.html">← Astrologie</a>
+  <header class="brand">
+    <div class="mark">Portrait</div>
+    <h1 id="title">Portrait astral</h1>
+    <p id="sub" class="hint"></p>
+  </header>
+  <nav class="sommaire" id="sommaire" aria-label="Sommaire"></nav>
+  <article class="panel" id="reader"><p class="hint">Chargement…</p></article>
+</div>
+<script>
+(async function () {
+  const d = AstroTheme.requireTheme();
+  if (!d) return;
+  document.getElementById("title").textContent = "Portrait — " + d.nom;
+  document.getElementById("sub").textContent =
+    d.villeLabel + " · " + d.jour + "/" + d.mois + "/" + d.annee + " " + d.heureStr +
+    " · Soleil en " + d.signeNom;
+
+  let textes = { planetes: {}, signes: {}, extra: {} };
+  let horo = {};
+  try {
+    const [t, h] = await Promise.all([
+      fetch("data/classique-textes.json").then(r => r.json()),
+      fetch("data/classique-horoscope.json").then(r => r.json())
+    ]);
+    textes = t; horo = h;
+  } catch (e) {}
+
+  const order = ["a","b","c","d","e","f","g","h","i","j","Asc"];
+  const rows = order.map(function (id) {
+    const p = d.theme[id];
+    if (!p) return null;
+    return {
+      id, name: AstroTheme.PLANETES[id],
+      place: p.deg + "° " + p.signeNom + " " + String(p.min).padStart(2,"0") + "′",
+      signe: p.signeNom
+    };
+  }).filter(Boolean);
+
+  function tableHtml() {
+    let html = '<table class="table"><thead><tr><th>Astre</th><th>Position</th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += "<tr><td>" + r.name + "</td><td>" + r.place + "</td></tr>";
+    });
+    return html + "</tbody></table>";
+  }
+
+  const signText =
+    (horo.signs && horo.signs[d.signeFolder] && horo.signs[d.signeFolder].texts && horo.signs[d.signeFolder].texts.Signe) ||
+    (textes.signes && textes.signes[d.signeNom]) || "";
+
+  const sections = [
+    {
+      label: "Identité",
+      html: "<h2>Portrait astral</h2><div class='article'></div>",
+      text: d.nom + "\n" + d.villeLabel + "\n" + d.jour + "/" + d.mois + "/" + d.annee + " à " + d.heureStr + "\nSoleil en " + d.signeNom
+    },
+    { label: "Calcul du ciel", html: "<h2>Calcul du ciel</h2>" + tableHtml() },
+    {
+      label: "Signe solaire",
+      html: "<h2>Signe solaire — " + d.signeNom + "</h2><div class='article'></div>",
+      text: signText || "Texte indisponible."
+    }
+  ];
+  rows.filter(r => r.id !== "Asc").forEach(function (r) {
+    sections.push({
+      label: r.name,
+      html: "<h2>" + r.name + " en " + r.signe + "</h2><p><strong>" + r.place + "</strong></p><div class='article'></div>",
+      text: (textes.planetes && textes.planetes[r.name]) || "Texte planète indisponible."
+    });
+  });
+  if (textes.extra && textes.extra.Maisons) {
+    sections.push({
+      label: "Maisons",
+      html: "<h2>Maisons</h2><div class='article'></div>",
+      text: textes.extra.Maisons
+    });
+  }
+
+  const nav = document.getElementById("sommaire");
+  const reader = document.getElementById("reader");
+  sections.forEach(function (s, i) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = (i + 1) + ". " + s.label;
+    b.addEventListener("click", function () { show(i); });
+    nav.appendChild(b);
+  });
+  function show(i) {
+    nav.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", j === i));
+    const s = sections[i];
+    reader.innerHTML = s.html;
+    const art = reader.querySelector(".article");
+    if (art && s.text != null) art.textContent = s.text;
+    reader.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  show(0);
+})();
+</script>
+</body>
+</html>

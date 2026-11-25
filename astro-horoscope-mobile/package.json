@@ -1,0 +1,16 @@
+{
+  "name": "astro-horoscope-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Astrologie & Horoscope — version mobile autonome",
+  "scripts": {
+    "build:web": "node scripts/prepare-web.mjs"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "8.6.0",
+    "@capacitor/cli": "8.6.0"
+  }
+}

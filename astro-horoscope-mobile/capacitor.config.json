@@ -1,0 +1,8 @@
+{
+  "appId": "com.oreac.astrohoroscope",
+  "appName": "Astrologie & Horoscope",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
